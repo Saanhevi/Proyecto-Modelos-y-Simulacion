@@ -171,7 +171,7 @@
 					<EquationStyle>classic</EquationStyle>
 					<Width>20</Width>
 					<Height>20</Height>
-						<InitialValue><![CDATA[0]]></InitialValue>
+						<InitialValue><![CDATA[465175]]></InitialValue>
 						<Color>-4073239</Color>
 					</Properties>
 				</Variable>
@@ -322,6 +322,27 @@
 						<SdArray>false</SdArray>
 						<ParameterEditor>
 							<Id>1783905059996</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1784045939354</Id>
+					<Name><![CDATA[nChemicalAnalyst]]></Name>
+					<X>770</X><Y>1270</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[int]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1784045939352</Id>
 							<EditorContolType>TEXT_BOX</EditorContolType>
 							<MinSliderValue><![CDATA[0]]></MinSliderValue>
 							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
@@ -1859,6 +1880,7 @@
 						<Point><X>0</X><Y>0</Y></Point>
 						<Point><X>30</X><Y>0</Y></Point>
 						<Point><X>30</X><Y>10</Y></Point>
+						<Point><X>108</X><Y>10</Y></Point>
 						<Point><X>220</X><Y>10</Y></Point>
 					</Points>
 				</Connector>
@@ -2204,7 +2226,7 @@
 						<Condition><![CDATA[goToHospital > 0]]></Condition>
 					</Properties>
 					<Action><![CDATA[goToHospital--;
-orizabaCovidPatient.inject(1);
+orizabaCovidPatients.inject(1);
 event.restart();]]></Action>
 				</Event>
 				<Event>
@@ -2215,7 +2237,7 @@ event.restart();]]></Action>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties TriggerType="condition" Mode="occuresOnce">
+					<Properties TriggerType="timeout" Mode="occuresOnce">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -2237,9 +2259,6 @@ event.restart();]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[goToHospital > 0]]></Condition>
 					</Properties>
-					<Action><![CDATA[goToHospital--;
-orizabaCovidPatient.inject(1);
-event.restart();]]></Action>
 				</Event>
 				<Event>
 					<Id>1783905192978</Id>
@@ -2249,7 +2268,7 @@ event.restart();]]></Action>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties TriggerType="condition" Mode="occuresOnce">
+					<Properties TriggerType="timeout" Mode="occuresOnce">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -2271,9 +2290,6 @@ event.restart();]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[goToHospital > 0]]></Condition>
 					</Properties>
-					<Action><![CDATA[goToHospital--;
-orizabaCovidPatient.inject(1);
-event.restart();]]></Action>
 				</Event>
 				<Event>
 					<Id>1783905207316</Id>
@@ -2283,7 +2299,7 @@ event.restart();]]></Action>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties TriggerType="condition" Mode="occuresOnce">
+					<Properties TriggerType="timeout" Mode="occuresOnce">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -2305,9 +2321,6 @@ event.restart();]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[goToHospital > 0]]></Condition>
 					</Properties>
-					<Action><![CDATA[goToHospital--;
-orizabaCovidPatient.inject(1);
-event.restart();]]></Action>
 				</Event>
 				<Event>
 					<Id>1783905219081</Id>
@@ -2317,7 +2330,7 @@ event.restart();]]></Action>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties TriggerType="condition" Mode="occuresOnce">
+					<Properties TriggerType="timeout" Mode="occuresOnce">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -2339,9 +2352,78 @@ event.restart();]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[goToHospital > 0]]></Condition>
 					</Properties>
-					<Action><![CDATA[goToHospital--;
-orizabaCovidPatient.inject(1);
-event.restart();]]></Action>
+				</Event>
+				<Event>
+					<Id>1784045768719</Id>
+					<Name><![CDATA[eventInfeccion1]]></Name>
+					<X>580</X><Y>960</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties TriggerType="timeout" Mode="cyclic">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</Timeout>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
+						</Rate>
+						<Id>1784045768717</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1784102400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[6]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
+						</RecurrenceCode>
+						<Condition><![CDATA[false]]></Condition>
+					</Properties>
+					<Action><![CDATA[send("Infection", physicianCovids.random());]]></Action>
+				</Event>
+				<Event>
+					<Id>1784045800187</Id>
+					<Name><![CDATA[eventPhysician]]></Name>
+					<X>580</X><Y>990</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties TriggerType="timeout" Mode="cyclic">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</Timeout>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
+						</Rate>
+						<Id>1784045800185</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1784102400000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</RecurrenceCode>
+						<Condition><![CDATA[false]]></Condition>
+					</Properties>
+					<Action><![CDATA[/*Esta accion necesita revisar si el numero 
+de medicos disponibles es menor que el total
+de asignados
+if so, it calculates how many
+Physicians are unavailable and injects them into
+a medical staff pool, recording this information in
+the process
+*/
+]]></Action>
 				</Event>
 			</Events>
 			<AgentLinks>
@@ -2392,6 +2474,10 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[rate]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[28]]></Code>
+								<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[interarrivalTime]]></Name>
@@ -2567,6 +2653,9 @@ event.restart();]]></Action>
 					<Parameters>
 						<Parameter>
 							<Name><![CDATA[arrivalType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.MANUAL]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[rate]]></Name>
@@ -2745,6 +2834,9 @@ event.restart();]]></Action>
 					<Parameters>
 						<Parameter>
 							<Name><![CDATA[arrivalType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.MANUAL]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[rate]]></Name>
@@ -3142,6 +3234,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -3157,12 +3252,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -3281,6 +3385,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -3296,12 +3403,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -3420,6 +3536,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { auxiliaryNurses, chemicalAnalyst, covidPhysicians, nursesCovid }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -3438,6 +3559,10 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[triangular( 5, 12, 25 )]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[sendResources]]></Name>
@@ -3501,9 +3626,16 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[enableTimeout]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[true]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[timeout]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[120]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[enablePreemption]]></Name>
@@ -3601,9 +3733,17 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, auxiliaryNurses, nursesCovid, chemicalAnalyst }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[beds]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceQuantity]]></Name>
@@ -3619,6 +3759,10 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[triangular( 5, 12, 25 )]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[sendResources]]></Name>
@@ -3682,9 +3826,16 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[enableTimeout]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[true]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[timeout]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[120]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[enablePreemption]]></Name>
@@ -3904,6 +4055,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -3919,12 +4073,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -4140,6 +4303,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -4321,6 +4489,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -4502,6 +4675,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds, ventiladores, pronePosition }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -5013,6 +5191,9 @@ event.restart();]]></Action>
 							<ClassName><![CDATA[MoveTo]]></ClassName>
 							<ItemName><![CDATA[1412336243157]]></ItemName>
 						</GenericParameterSubstituteReference>
+						<GenericParameterSubstituteValue Class="CodeValue">
+							<Code><![CDATA[PhysicianCovid]]></Code>
+						</GenericParameterSubstituteValue>
 					</GenericParameterSubstitute>
 					<Parameters>
 						<Parameter>
@@ -5020,6 +5201,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -5035,12 +5219,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -5104,6 +5297,12 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onExit]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[//Cuando llega al final cambia su estado
+if (agent instanceof PhysicianCovid){
+	((PhysicianCovid)agent).statechart.fireEvent("Susceptible");	
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onRemove]]></Name>
@@ -5159,6 +5358,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -5174,12 +5376,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -5395,6 +5606,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -5576,6 +5792,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -5757,6 +5978,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds, ventiladores, pronePosition }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -6275,6 +6501,11 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourceSets]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[{ 
+  { covidPhysicians, covidPhysicians, nursesCovid, nursesCovid, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, auxiliaryNurses, beds }
+}]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
@@ -6526,6 +6757,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -6541,12 +6775,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -6735,6 +6978,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.DEST_XYZ]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationNode]]></Name>
@@ -6750,12 +6996,21 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationX]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationY]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationZ]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[0]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[destinationLatitude]]></Name>
@@ -6877,6 +7132,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[50]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -7121,6 +7379,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[80]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -7365,6 +7626,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[19]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -7609,6 +7873,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[30]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -7853,6 +8120,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[30]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -8097,6 +8367,9 @@ event.restart();]]></Action>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[4]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -8558,22 +8831,23 @@ event.restart();]]></Action>
 					</QuantityColumn>
 				</EmbeddedObject>
 				<EmbeddedObject>
-					<Id>1783977082050</Id>
+					<Id>1784045342056</Id>
 					<Name><![CDATA[physicianCovids]]></Name>
-					<X>140</X><Y>1590</Y>
-					<Label><X>-40</X><Y>-30</Y></Label>
+					<X>580</X><Y>930</Y>
+					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
+					<PresentationId>1784045342058</PresentationId>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
-						<ClassName><![CDATA[Physician]]></ClassName>
+						<ClassName><![CDATA[PhysicianCovid]]></ClassName>
 					</ActiveObjectClass>
 					<GenericParameterSubstitute>
 						<GenericParameterSubstituteReference>
 							<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
-							<ClassName><![CDATA[Physician]]></ClassName>
-							<ItemName><![CDATA[1783977070184]]></ItemName>
+							<ClassName><![CDATA[PhysicianCovid]]></ClassName>
+							<ItemName><![CDATA[1784041531095]]></ItemName>
 						</GenericParameterSubstituteReference>
 					</GenericParameterSubstitute>
 					<Parameters>
@@ -8583,6 +8857,13 @@ event.restart();]]></Action>
 						<Code><![CDATA[19]]></Code>
 					</Replication>
 					<CollectionType>ARRAY_LIST_BASED</CollectionType>
+					<StatisticsItem>
+						<Id>1784045394592</Id>
+						<Name><![CDATA[physicianCovidsStat]]></Name>
+						<Type>count</Type>
+						<Expression><![CDATA[]]></Expression>
+						<Condition><![CDATA[item.inState(PhysicianCovid.Susceptible)]]></Condition>
+					</StatisticsItem>
 					<InEnvironment>true</InEnvironment>
 					<InitialLocationType>XYZ</InitialLocationType>
 					<ColumnCode Class="CodeValue">
@@ -8596,7 +8877,7 @@ event.restart();]]></Action>
 					</LocationNameCode>
 					<InitializationType>SPECIFIED_NUMBER</InitializationType>
 					<InitializationDatabaseTableQuery>
-						<Id>1783977082048</Id>
+						<Id>1784045342054</Id>
 						<TableReference>
 						</TableReference>
 					</InitializationDatabaseTableQuery>
@@ -8623,7 +8904,7 @@ event.restart();]]></Action>
 				<Control Type="Slider">
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1783905353982</Id>
-					<Name><![CDATA[slider]]></Name>
+					<Name><![CDATA[sliderPhysicians]]></Name>
 					<X>585</X><Y>1095</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
@@ -8633,9 +8914,10 @@ event.restart();]]></Action>
 					<BasicProperties Width="100" Height="30">
                         <EmbeddedIcon>false</EmbeddedIcon>	
 						<Enabled>true</Enabled>
+						<ActionCode><![CDATA[covidPhysicians.set_capacity((int)self.getValue())]]></ActionCode>
 					</BasicProperties>
 					<ExtendedProperties>
-						<DefaultValueCode><![CDATA[0]]></DefaultValueCode>
+						<DefaultValueCode><![CDATA[covidPhysicians.capacity]]></DefaultValueCode>
 						<Orientation>HORIZONTAL</Orientation>
 						<MinValue><![CDATA[0]]></MinValue>
 						<MaxValue><![CDATA[100]]></MaxValue>
@@ -8686,28 +8968,6 @@ event.restart();]]></Action>
 						<LinkTo>false</LinkTo>
 					</ExtendedProperties>
 				</Control>
-				<Control Type="Slider">
-				 	<EmbeddedIcon>false</EmbeddedIcon>				
-					<Id>1783905383562</Id>
-					<Name><![CDATA[slider3]]></Name>
-					<X>735</X><Y>1255</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<BasicProperties Width="100" Height="30">
-                        <EmbeddedIcon>false</EmbeddedIcon>	
-						<Enabled>true</Enabled>
-					</BasicProperties>
-					<ExtendedProperties>
-						<DefaultValueCode><![CDATA[0]]></DefaultValueCode>
-						<Orientation>HORIZONTAL</Orientation>
-						<MinValue><![CDATA[0]]></MinValue>
-						<MaxValue><![CDATA[100]]></MaxValue>
-						<LinkTo>false</LinkTo>
-					</ExtendedProperties>
-				</Control>
 				<Text>
 					<Id>1783905411003</Id>
 					<Name><![CDATA[text]]></Name>
@@ -8722,7 +8982,7 @@ event.restart();]]></Action>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[min]]></Text>
-					<TextCode><![CDATA[slider.getMin()]]></TextCode>
+					<TextCode><![CDATA[sliderPhysicians.getMin()]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>10</Size>
@@ -8744,7 +9004,7 @@ event.restart();]]></Action>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[max]]></Text>
-					<TextCode><![CDATA[slider.getMax()]]></TextCode>
+					<TextCode><![CDATA[sliderPhysicians.getMax()]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>10</Size>
@@ -8766,7 +9026,7 @@ event.restart();]]></Action>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[value]]></Text>
-					<TextCode><![CDATA[slider.getValue()]]></TextCode>
+					<TextCode><![CDATA[sliderPhysicians.getValue()]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>10</Size>
@@ -8833,72 +9093,6 @@ event.restart();]]></Action>
 					<Color>-16777216</Color>
 					<Text><![CDATA[value]]></Text>
 					<TextCode><![CDATA[slider1.getValue()]]></TextCode>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>10</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>CENTER</Alignment>
-				</Text>
-				<Text>
-					<Id>1783905420405</Id>
-					<Name><![CDATA[text6]]></Name>
-					<X>735</X><Y>1285</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-16777216</Color>
-					<Text><![CDATA[min]]></Text>
-					<TextCode><![CDATA[slider3.getMin()]]></TextCode>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>10</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>LEFT</Alignment>
-				</Text>
-				<Text>
-					<Id>1783905420407</Id>
-					<Name><![CDATA[text7]]></Name>
-					<X>835</X><Y>1285</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-16777216</Color>
-					<Text><![CDATA[max]]></Text>
-					<TextCode><![CDATA[slider3.getMax()]]></TextCode>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>10</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>RIGHT</Alignment>
-				</Text>
-				<Text>
-					<Id>1783905420409</Id>
-					<Name><![CDATA[text8]]></Name>
-					<X>785</X><Y>1285</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-16777216</Color>
-					<Text><![CDATA[value]]></Text>
-					<TextCode><![CDATA[slider3.getValue()]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>10</Size>
@@ -8975,17 +9169,35 @@ event.restart();]]></Action>
 			</Presentation>
 
 				</Level>
+				<EmbeddedObjectPresentation>
+					<Id>1784045342058</Id>
+					<Name><![CDATA[physicianCovids_presentation]]></Name>
+					<X>690</X><Y>1000</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<ScaleType>AUTOMATICALLY_CALCULATED</ScaleType>
+					<GISScaleForRealEmbeddedObjectPresentationSize>1000</GISScaleForRealEmbeddedObjectPresentationSize>
+					<GISScaleForFixedEmbeddedObjectPresentationSize>1000000000</GISScaleForFixedEmbeddedObjectPresentationSize>
+					<Latitude>0.0</Latitude>
+					<Longitude>0.0</Longitude>
+				</EmbeddedObjectPresentation>
 			</Presentation>
 
 		</ActiveObjectClass>
 		<!--   =========   Active Object Class   ========  -->
 		<ActiveObjectClass>
-			<Id>1783977070189</Id>
-			<Name><![CDATA[Physician]]></Name>
+			<Id>1784041531090</Id>
+			<Name><![CDATA[PhysicianCovid]]></Name>
 			<Generic>false</Generic>
 			<GenericParameter>
-				<Id>1783977070184</Id>
-				<Name><![CDATA[1783977070184]]></Name>
+				<Id>1784041531095</Id>
+				<Name><![CDATA[1784041531095]]></Name>
 				<GenericParameterValue Class="CodeValue">
 					<Code><![CDATA[T extends Agent]]></Code>
 				</GenericParameterValue>
@@ -9047,9 +9259,9 @@ event.restart();]]></Action>
 			</EnvironmentProperties>
 			<DatasetsCreationProperties>
 				<AutoCreate>true</AutoCreate>
-					<Id>1783977070186</Id>
+					<Id>1784041531089</Id>
 					<OccurrenceAtTime>true</OccurrenceAtTime>
-					<OccurrenceDate>1784016000000</OccurrenceDate>
+					<OccurrenceDate>1784102400000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
 						<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -9060,7 +9272,7 @@ event.restart();]]></Action>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
-				<Id>1783977070185</Id>
+				<Id>1784041531093</Id>
 				<Name><![CDATA[scale]]></Name>
 				<X>0</X><Y>-150</Y>
 				<PublicFlag>false</PublicFlag>
@@ -9075,25 +9287,25 @@ event.restart();]]></Action>
 				<Scale>10</Scale>
 				<InheritedFromParentAgentType>true</InheritedFromParentAgentType>
 			</ScaleRuler>
-			<CurrentLevel>1783977070191</CurrentLevel>
-			<ConnectionsId>1783977070217</ConnectionsId>
+			<CurrentLevel>1784041531096</CurrentLevel>
+			<ConnectionsId>1784041531091</ConnectionsId>
 			<StatechartElements>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
-					<Id>1783977070193</Id>
+					<Id>1784041565031</Id>
 					<Name><![CDATA[Susceptible]]></Name>
-					<X>240</X><Y>70</Y>
+					<X>290</X><Y>110</Y>
 					<Label><X>10</X><Y>10</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties Width="140" Height="30">
+					<Properties Width="100" Height="30">
 						<FillColor>-10496</FillColor>
 					</Properties>
 				</StatechartElement>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
-					<Id>1783977070195</Id>
+					<Id>1784041583962</Id>
 					<Name><![CDATA[Infected]]></Name>
-					<X>250</X><Y>150</Y>
+					<X>290</X><Y>200</Y>
 					<Label><X>10</X><Y>10</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -9103,36 +9315,21 @@ event.restart();]]></Action>
 					</Properties>
 				</StatechartElement>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
-					<Id>1783977070197</Id>
-					<Name><![CDATA[Hospitalized]]></Name>
-					<X>80</X><Y>310</Y>
-					<Label><X>10</X><Y>10</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties Width="100" Height="30">
-						<EntryAction><![CDATA[main.covidPhysicians.remove(this);
-main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
-						<FillColor>-10496</FillColor>
-					</Properties>
-				</StatechartElement>
-				<StatechartElement Class="State" ParentState="ROOT_NODE">
-					<Id>1783977070199</Id>
+					<Id>1784041604484</Id>
 					<Name><![CDATA[Recovered]]></Name>
-					<X>250</X><Y>310</Y>
-					<Label><X>10</X><Y>10</Y></Label>
+					<X>285</X><Y>360</Y>
+					<Label><X>17</X><Y>6</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties Width="120" Height="30">
-						<EntryAction><![CDATA[main.covidPhysicians.add(this);]]></EntryAction>
+					<Properties Width="100" Height="30">
 						<FillColor>-10496</FillColor>
 					</Properties>
 				</StatechartElement>
 				<StatechartElement Class="Branch" ParentState="ROOT_NODE">
-					<Id>1783977070201</Id>
+					<Id>1784042392583</Id>
 					<Name><![CDATA[branch]]></Name>
-					<X>300</X><Y>250</Y>
+					<X>335</X><Y>300</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -9140,68 +9337,83 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 					<Properties>	
 					</Properties>	
 				</StatechartElement>
+				<StatechartElement Class="State" ParentState="ROOT_NODE">
+					<Id>1784044798941</Id>
+					<Name><![CDATA[Hospitalized]]></Name>
+					<X>130</X><Y>355</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties Width="100" Height="30">
+						<FillColor>-10496</FillColor>
+					</Properties>
+				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
-					<Id>1783977070203</Id>
+					<Id>1784041667882</Id>
 					<Name><![CDATA[statechart]]></Name>
-					<X>280</X><Y>40</Y>
+					<X>335</X><Y>70</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>30</Y></Point>
+						<Point><X>0</X><Y>40</Y></Point>
 					</Points>
-					<Properties Target="1783977070193">
+					<Properties Target="1784041565031">
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070205</Id>
-					<Name><![CDATA[Infection]]></Name>
-					<X>300</X><Y>100</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>50</Y></Point>
-					</Points>
-					<IconOffset>20.0</IconOffset>
-					<Properties Source="1783977070193" Target="1783977070195" Trigger="message">
-						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
-						</Timeout>
-						<Condition><![CDATA[true]]></Condition>
-						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
-						</Rate>
-						<MessageType><![CDATA[Object]]></MessageType>
-						<DefaultTransition>true</DefaultTransition>
-						<FilterType><![CDATA[unconditionally]]></FilterType>
-						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
-						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
-					</Properties>	
-				</StatechartElement>
-				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070207</Id>
+					<Id>1784041796081</Id>
 					<Name><![CDATA[transition]]></Name>
-					<X>300</X><Y>180</Y>
+					<X>340</X><Y>140</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>32</Y></Point>
 						<Point><X>0</X><Y>60</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1783977070195" Target="1783977070201" Trigger="timeout">
+					<Properties Source="1784041565031" Target="1784041583962" Trigger="message">
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[triangular(3,5,10)]]></Code>
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[equalsTo]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1784042405096</Id>
+					<Name><![CDATA[transition1]]></Name>
+					<X>335</X><Y>230</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>60</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1784041583962" Target="1784042392583" Trigger="timeout">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[triangular(3,5,10)
+/*El articulo dice 
+que se usa la
+probabilidad 
+de infeccion*/]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
 						<Condition><![CDATA[true]]></Condition>
@@ -9217,20 +9429,19 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070209</Id>
-					<Name><![CDATA[transition1]]></Name>
-					<X>300</X><Y>260</Y>
+					<Id>1784044776779</Id>
+					<Name><![CDATA[transition2]]></Name>
+					<X>335</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>9</Y></Point>
 						<Point><X>0</X><Y>50</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1783977070201" Target="1783977070199" Trigger="timeout">
+					<Properties Source="1784042392583" Target="1784041604484" Trigger="timeout">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -9248,29 +9459,33 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070211</Id>
-					<Name><![CDATA[transition2]]></Name>
-					<X>288</X><Y>250</Y>
+					<Id>1784044938725</Id>
+					<Name><![CDATA[transition3]]></Name>
+					<X>323</X><Y>300</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>-73</X><Y>0</Y></Point>
-						<Point><X>-80</X><Y>0</Y></Point>
-						<Point><X>-94</X><Y>0</Y></Point>
-						<Point><X>-118</X><Y>0</Y></Point>
-						<Point><X>-148</X><Y>0</Y></Point>
-						<Point><X>-148</X><Y>60</Y></Point>
+						<Point><X>-143</X><Y>0</Y></Point>
+						<Point><X>-144.33333333333334</X><Y>55</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1783977070201" Target="1783977070197" Trigger="timeout">
+					<Properties Source="1784042392583" Target="1784044798941" Trigger="timeout">
+						<Action><![CDATA[// Lo inyecta al sistema
+main.medicalstaffCovidPatient1.inject(1);
+
+// Reduce el pool en 1
+int nueva_cantidad = main.covidPhysicians.capacity-1;
+main.sliderPhysicians.setValue(nueva_cantidad); // Actualiza la posición visual del slider
+main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del pool]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[uniform(0,1) < 0.3]]></Condition>
+						<Condition><![CDATA[uniform(0,1) < 0.3
+// 30% probabilidad de hospitalizacion]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
@@ -9283,24 +9498,29 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070213</Id>
-					<Name><![CDATA[transition3]]></Name>
-					<X>370</X><Y>330</Y>
+					<Id>1784044979812</Id>
+					<Name><![CDATA[transition4]]></Name>
+					<X>130</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>40</X><Y>0</Y></Point>
-						<Point><X>40</X><Y>-220</Y></Point>
-						<Point><X>40</X><Y>-250</Y></Point>
-						<Point><X>10</X><Y>-250</Y></Point>
+						<Point><X>-30</X><Y>0</Y></Point>
+						<Point><X>-30</X><Y>-250</Y></Point>
+						<Point><X>160</X><Y>-250</Y></Point>
 					</Points>
-					<IconOffset>110.0</IconOffset>
-					<Properties Source="1783977070199" Target="1783977070193" Trigger="timeout">
+					<IconOffset>180.0</IconOffset>
+					<Properties Source="1784044798941" Target="1784041565031" Trigger="message">
+						<Action><![CDATA[//Vuelve al pool
+int nueva_cantidad = main.covidPhysicians.capacity+1;
+main.sliderPhysicians.setValue(nueva_cantidad); // Actualiza la posición visual del slider
+main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del pool]]></Action>
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[exponential(1/90.0)]]></Code>
+							<Code><![CDATA[1
+//Tal vez haya que
+//Cambiarlo]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
 						<Condition><![CDATA[true]]></Condition>
@@ -9310,29 +9530,27 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 						</Rate>
 						<MessageType><![CDATA[Object]]></MessageType>
 						<DefaultTransition>true</DefaultTransition>
-						<FilterType><![CDATA[unconditionally]]></FilterType>
-						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<FilterType><![CDATA[equalsTo]]></FilterType>
+						<EqualsExpression><![CDATA["Susceptible"]]></EqualsExpression>
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1783977070215</Id>
-					<Name><![CDATA[transition4]]></Name>
-					<X>80</X><Y>320</Y>
+					<Id>1784045033626</Id>
+					<Name><![CDATA[transition5]]></Name>
+					<X>385</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>-20</X><Y>0</Y></Point>
-						<Point><X>-20</X><Y>-230</Y></Point>
-						<Point><X>121</X><Y>-230</Y></Point>
-						<Point><X>160</X><Y>-230</Y></Point>
+						<Point><X>85</X><Y>0</Y></Point>
+						<Point><X>85</X><Y>-250</Y></Point>
+						<Point><X>5</X><Y>-250</Y></Point>
 					</Points>
-					<IconOffset>120.0</IconOffset>
-					<Properties Source="1783977070197" Target="1783977070193" Trigger="timeout">
-						<Action><![CDATA[main.covidPhysicians.add(this);]]></Action>
+					<IconOffset>220.0</IconOffset>
+					<Properties Source="1784041604484" Target="1784041565031" Trigger="timeout">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
@@ -9352,7 +9570,7 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 			</StatechartElements>
 			<AgentLinks>
 				<AgentLink>
-					<Id>1783977070217</Id>
+					<Id>1784041531091</Id>
 					<Name><![CDATA[connections]]></Name>
 					<X>50</X><Y>-50</Y>
 					<Label><X>15</X><Y>0</Y></Label>
@@ -9364,8 +9582,8 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 					<AgentLinkBidirectional>true</AgentLinkBidirectional>
 					<MessageType><![CDATA[Object]]></MessageType>
 					<StatechartReference>
-						<PackageName><![CDATA[model_abm]]></PackageName>
-						<ClassName><![CDATA[Physician]]></ClassName>
+						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<ClassName><![CDATA[PhysicianCovid]]></ClassName>
 						<ItemName><![CDATA[statechart]]></ItemName>
 					</StatechartReference>
 					<LineStyle>SOLID</LineStyle>
@@ -9379,7 +9597,7 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 
 			<ContainerLinks>
 				<ContainerLink>
-					<Id>1783977083387</Id>
+					<Id>1784045342069</Id>
 					<Name><![CDATA[main]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
@@ -9395,7 +9613,7 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 
 			<Presentation>
 				<Level>
-					<Id>1783977070191</Id>
+					<Id>1784041531096</Id>
 					<Name><![CDATA[level]]></Name>
 					<X>0</X><Y>0</Y>
 					<Label><X>10</X><Y>0</Y></Label>
@@ -9510,6 +9728,9 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 				<Parameter>
 					<ParameterName><![CDATA[nEspecialBed]]></ParameterName>
 				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[nChemicalAnalyst]]></ParameterName>
+				</Parameter>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -9540,12 +9761,6 @@ main.medicalstaffCovidPatient1.inject(1);]]></EntryAction>
 		<VersionMajor>8</VersionMajor>
 		<VersionMinor>0</VersionMinor>
 		<VersionBuild>5</VersionBuild>
-    </RequiredLibraryReference>
-    <RequiredLibraryReference>
-		<LibraryName><![CDATA[model_abm]]></LibraryName>
-		<VersionMajor>0</VersionMajor>
-		<VersionMinor>0</VersionMinor>
-		<VersionBuild>0</VersionBuild>
     </RequiredLibraryReference>
 </Model>
 <ConvertersApplied>
