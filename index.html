@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modelo híbrido para capacidad hospitalaria · Entrega 5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07161a;
+      --surface: #10272c;
+      --surface-2: #16343a;
+      --text: #f3fbf9;
+      --muted: #a8c6c2;
+      --cyan: #42d6c5;
+      --green: #78dc8c;
+      --amber: #ffc857;
+      --red: #ff6b6b;
+      --blue: #6db9ff;
+      --violet: #ba9cff;
+      --line: rgba(255,255,255,.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: #030b0d; color: var(--text);
+      font-family: "DM Sans", system-ui, sans-serif;
+    }
+    button, a { font: inherit; }
+    #stage { position: fixed; inset: 0; display: grid; place-items: center; }
+    #deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    .slide {
+      position: absolute; inset: 0; visibility: hidden; opacity: 0;
+      transform: translateX(7vw) scale(.96);
+      filter: blur(9px);
+      transition: opacity .72s ease, transform .82s cubic-bezier(.22,1,.36,1), filter .68s ease, clip-path .82s cubic-bezier(.22,1,.36,1);
+      overflow: hidden;
+    }
+    .slide[data-trans="zoom"] { transform: scale(.78); filter: blur(14px) brightness(.65); }
+    .slide[data-trans="rise"] { transform: translateY(12vh) scale(.94); filter: blur(12px); }
+    .slide[data-trans="tilt"] { transform: perspective(1200px) rotateY(18deg) translateX(8vw) scale(.9); filter: blur(10px); }
+    .slide[data-trans="reveal"] { transform: translateX(5vw); clip-path: inset(0 100% 0 0); filter: brightness(.7); }
+    .slide[data-trans="dissolve"] { transform: scale(1.08); filter: blur(24px) brightness(1.3); }
+    .slide.active { visibility: visible; opacity: 1; transform: none !important; filter: none !important; clip-path: inset(0) !important; z-index: 2; }
+    .slide.exit { transform: translateX(-7vw) scale(.96); opacity: 0; }
+    .slide.exit[data-trans="zoom"] { transform: scale(1.12); filter: blur(14px) brightness(1.2); }
+    .slide.exit[data-trans="rise"] { transform: translateY(-10vh) scale(.94); filter: blur(12px); }
+    .slide.exit[data-trans="tilt"] { transform: perspective(1200px) rotateY(-18deg) translateX(-8vw) scale(.9); filter: blur(10px); }
+    .slide.exit[data-trans="reveal"] { transform: translateX(-5vw); clip-path: inset(0 0 0 100%); }
+    .slide.exit[data-trans="dissolve"] { transform: scale(.9); filter: blur(24px) brightness(.45); }
+    .slide::before {
+      content: ""; position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 5% 0%, var(--glow, rgba(66,214,197,.25)), transparent 55%),
+        radial-gradient(ellipse 55% 45% at 100% 100%, var(--glow-2, rgba(109,185,255,.12)), transparent 55%),
+        linear-gradient(145deg, var(--bg-top, #10272c) 0%, var(--bg-mid, #07161a) 58%, var(--bg-bottom, #061014) 100%);
+    }
+    .slide::after {
+      content: ""; position: absolute; inset: 0; z-index: 0; opacity: .12;
+      background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    .slide[data-theme="green"] {
+      --glow: rgba(76,184,151,.23); --glow-2: rgba(81,142,129,.13);
+      --bg-top: #15302e; --bg-mid: #0a1d1d; --bg-bottom: #071315;
+      --theme-accent: #42d6c5; --panel-top: rgba(19,56,55,.94); --panel-bottom: rgba(10,35,35,.92);
+      --panel-border: rgba(66,214,197,.19);
+    }
+    .slide[data-theme="amber"] {
+      --glow: rgba(197,154,73,.22); --glow-2: rgba(129,101,62,.14);
+      --bg-top: #302a20; --bg-mid: #1b1916; --bg-bottom: #101112;
+      --theme-accent: #e7bc68; --panel-top: rgba(63,52,35,.94); --panel-bottom: rgba(37,32,25,.92);
+      --panel-border: rgba(231,188,104,.2);
+    }
+    .slide[data-theme="violet"] {
+      --glow: rgba(124,111,168,.24); --glow-2: rgba(85,107,153,.15);
+      --bg-top: #26243b; --bg-mid: #151725; --bg-bottom: #0c1018;
+      --theme-accent: #a9a0e8; --panel-top: rgba(43,42,70,.94); --panel-bottom: rgba(25,27,48,.92);
+      --panel-border: rgba(169,160,232,.2);
+    }
+    .slide[data-theme="red"] {
+      --glow: rgba(166,83,94,.23); --glow-2: rgba(121,79,92,.14);
+      --bg-top: #352126; --bg-mid: #201418; --bg-bottom: #120f12;
+      --theme-accent: #df9a9f; --panel-top: rgba(66,37,43,.94); --panel-bottom: rgba(39,24,29,.92);
+      --panel-border: rgba(223,154,159,.2);
+    }
+    .slide.active .inner > * { animation: enterUp .78s cubic-bezier(.22,1,.36,1) both; }
+    .slide.active .inner > *:nth-child(2) { animation-delay: .08s; }
+    .slide.active .inner > *:nth-child(3) { animation-delay: .16s; }
+    .slide.active .inner > *:nth-child(4) { animation-delay: .24s; }
+    .slide.active .panel, .slide.active .figure, .slide.active .metric {
+      animation: cardIn .72s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes enterUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .inner {
+      position: relative; z-index: 1; width: 100%; height: 100%;
+      padding: clamp(50px, 6vh, 68px) clamp(42px, 5vw, 76px) clamp(40px, 5vh, 58px);
+      display: flex; flex-direction: column; gap: clamp(12px, 1.7vh, 20px);
+    }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+    .eyebrow, .tag {
+      text-transform: uppercase; letter-spacing: .15em; font-weight: 700;
+      color: var(--theme-accent, var(--cyan)); font-size: clamp(.68rem, 1vw, .82rem);
+    }
+    .draft {
+      padding: 6px 10px; border-radius: 999px; color: var(--amber);
+      border: 1px solid rgba(255,200,87,.5); background: rgba(255,200,87,.08);
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    }
+    h1, h2, h3 { font-family: "Space Grotesk", "DM Sans", sans-serif; }
+    h1 { font-size: clamp(2.6rem, 5.7vw, 5.7rem); line-height: .98; letter-spacing: -.055em; }
+    h1 span { color: var(--cyan); }
+    h2 { font-size: clamp(1.8rem, 3.35vw, 3.35rem); line-height: 1.04; letter-spacing: -.04em; }
+    h3 { font-size: clamp(.9rem, 1.35vw, 1.2rem); color: var(--theme-accent, var(--cyan)); margin-bottom: 8px; }
+    .subtitle { color: var(--muted); font-size: clamp(.95rem, 1.35vw, 1.18rem); line-height: 1.48; max-width: 1100px; }
+    .accent { color: var(--cyan); }
+    .amber { color: var(--amber); }
+    .red { color: var(--red); }
+    .muted { color: var(--muted); }
+    .small { font-size: .78rem; line-height: 1.42; }
+    .tiny { font-size: .68rem; line-height: 1.35; }
+    strong { color: #fff; }
+
+    .grid { flex: 1; min-height: 0; display: grid; gap: clamp(12px, 1.7vw, 22px); }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-2-wide { grid-template-columns: 1.18fr .82fr; }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .rows-2 { grid-template-rows: 1fr 1fr; }
+    .stack { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+    .panel {
+      background: linear-gradient(145deg, var(--panel-top, rgba(22,52,58,.92)), var(--panel-bottom, rgba(13,35,39,.88)));
+      border: 1px solid var(--panel-border, var(--line)); border-radius: 18px;
+      padding: clamp(14px, 1.7vw, 22px); min-height: 0;
+      box-shadow: 0 16px 42px rgba(0,0,0,.18);
+    }
+    .panel.emphasis { border-color: rgba(66,214,197,.5); box-shadow: 0 0 0 1px rgba(66,214,197,.08), 0 18px 55px rgba(0,0,0,.25); }
+    .panel.warn { border-color: rgba(255,200,87,.48); background: rgba(80,60,17,.25); }
+    ul.clean { list-style: none; display: grid; gap: 9px; }
+    ul.clean li { position: relative; padding-left: 17px; color: var(--muted); line-height: 1.42; }
+    ul.clean li::before { content: ""; position: absolute; left: 0; top: .58em; width: 7px; height: 7px; border-radius: 50%; background: var(--theme-accent, var(--cyan)); }
+    ul.clean.compact { gap: 5px; font-size: .84rem; }
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .metric { padding: 14px; border-radius: 15px; background: rgba(0,0,0,.18); border: 1px solid var(--line); }
+    .metric b { display: block; font: 700 clamp(1.35rem,2.2vw,2.15rem) "Space Grotesk"; color: var(--cyan); }
+    .metric span { color: var(--muted); font-size: .74rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px; border-radius: 999px;
+      padding: 5px 9px; background: rgba(66,214,197,.1); color: var(--cyan);
+      font-size: .72rem; font-weight: 700; border: 1px solid rgba(66,214,197,.22);
+    }
+
+    .figure {
+      height: 100%; min-height: 0; display: flex; flex-direction: column;
+      background: #fff; border-radius: 18px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.18); cursor: zoom-in;
+    }
+    .figure img { width: 100%; height: 100%; min-height: 0; object-fit: contain; background: #fff; padding: 8px; }
+    .figure figcaption { flex: 0 0 auto; padding: 7px 10px; color: #294147; background: #edf7f5; font-size: .68rem; text-align: center; }
+    .placeholder {
+      border: 2px dashed rgba(255,200,87,.45); background: rgba(255,200,87,.06);
+      border-radius: 16px; min-height: 130px; display: grid; place-items: center;
+      padding: 18px; color: #f8d989; text-align: center;
+    }
+    .placeholder strong { color: var(--amber); }
+
+    .flow { display: flex; align-items: stretch; gap: 10px; }
+    .flow .node { flex: 1; border-radius: 15px; padding: 14px; background: rgba(0,0,0,.18); border: 1px solid var(--line); }
+    .flow .arrow { display: grid; place-items: center; color: var(--cyan); font-size: 1.5rem; }
+    .agent-cycle { padding-bottom: 4px; }
+    .agent-cycle .flow .node { display: grid; place-items: center; text-align: center; }
+    .return-path {
+      position: relative;
+      height: 34px;
+      margin: 6px 8% 0;
+      border-right: 2px solid var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+      border-left: 2px solid var(--cyan);
+      border-radius: 0 0 16px 16px;
+      color: var(--cyan);
+    }
+    .return-path::before {
+      content: "▲";
+      position: absolute;
+      top: -9px;
+      left: -7px;
+      font-size: .72rem;
+    }
+    .level { border-top: 3px solid var(--cyan); }
+    .level.meso { border-color: var(--violet); }
+    .level.micro { border-color: var(--amber); }
+    .level small { color: var(--muted); }
+    .coupling { display: grid; grid-template-columns: .9fr 1.4fr .9fr; align-items: center; gap: 10px; margin: 8px 0; }
+    .coupling > div { padding: 11px; border-radius: 12px; text-align: center; background: rgba(0,0,0,.2); border: 1px solid var(--line); }
+    .coupling .link { color: var(--cyan); font-size: .74rem; }
+    code, .eq { font-family: Consolas, "SFMono-Regular", monospace; }
+    .eq { display: block; padding: 9px 12px; border-left: 3px solid var(--cyan); background: rgba(0,0,0,.2); color: #dffcf8; font-size: .8rem; margin-top: 7px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: clamp(.64rem, .86vw, .8rem); }
+    th { color: var(--theme-accent, var(--cyan)); text-align: left; font-weight: 700; border-bottom: 1px solid var(--panel-border, rgba(66,214,197,.35)); padding: 7px 8px; }
+    td { color: var(--muted); padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,.075); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    .status { font-size: .65rem; border-radius: 999px; padding: 3px 7px; white-space: nowrap; }
+    .done { color: var(--green); background: rgba(120,220,140,.1); }
+    .pending { color: var(--amber); background: rgba(255,200,87,.1); }
+    .barrow { display: grid; grid-template-columns: 1.25fr 2fr auto; gap: 8px; align-items: center; margin: 8px 0; font-size: .76rem; }
+    .bar { height: 10px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), var(--green)); }
+
+    .footer {
+      flex: 0 0 auto; padding-top: 5px; border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-size: .68rem;
+    }
+    #counter {
+      position: fixed; z-index: 20; top: 10px; right: 26px;
+      min-width: 62px; padding: 6px 10px; text-align: center;
+      color: rgba(255,255,255,.62); font-size: .68rem; letter-spacing: .12em;
+      border-radius: 999px; background: rgba(3,11,13,.35); border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px); pointer-events: none;
+    }
+    #fs {
+      position: fixed; z-index: 21; top: 10px; right: 102px;
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+      border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.7);
+      background: rgba(3,11,13,.4); backdrop-filter: blur(12px);
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+    }
+    #fs:hover { color: #fff; background: rgba(255,255,255,.12); transform: scale(1.06); }
+    #progress { position: fixed; z-index: 20; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; pointer-events: none; }
+    #progress span { width: 7px; height: 7px; border-radius: 99px; background: rgba(255,255,255,.22); transition: width .35s ease, background .35s ease; }
+    #progress span.active { width: 24px; background: var(--cyan); }
+
+    #lightbox { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 40px; background: rgba(0,0,0,.88); }
+    #lightbox.open { display: grid; }
+    #lightbox img { max-width: 94vw; max-height: 88vh; object-fit: contain; background: white; border-radius: 12px; }
+    #lb-close { position: absolute; top: 20px; right: 24px; border: 0; background: transparent; color: white; font-size: 2.2rem; cursor: pointer; }
+
+    .hero-grid { flex: 1; display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 5vw; }
+    .citation { font-size: .82rem; line-height: 1.52; color: var(--muted); }
+    .author-box { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .hero-mark { font: 700 clamp(5rem, 12vw, 11rem) "Space Grotesk"; color: rgba(66,214,197,.09); position: absolute; right: 4vw; bottom: 2vh; }
+    .checklist { counter-reset: item; display: grid; gap: 7px; }
+    .checklist li { list-style: none; color: var(--muted); font-size: .76rem; }
+    .checklist li::before { counter-increment: item; content: counter(item, decimal-leading-zero); color: var(--cyan); font-weight: 700; margin-right: 8px; }
+
+    @media (max-width: 900px) {
+      html { font-size: 12px; }
+      .inner { padding: 52px 24px 42px; gap: 10px; }
+      .grid { gap: 10px; }
+      .panel { padding: 12px; border-radius: 14px; }
+      .hero-grid { gap: 22px; }
+      .metric-row { gap: 7px; }
+      .metric { padding: 9px; }
+      .flow { gap: 5px; }
+      .flow .node { padding: 9px; }
+      .footer { font-size: .62rem; }
+    }
+    @media print {
+      @page { size: 16in 9in; margin: 0; }
+      html, body { overflow: visible; background: #fff; }
+      #counter, #fs, #progress, #lightbox { display: none !important; }
+      #stage, #deck { position: static; width: auto; height: auto; overflow: visible; }
+      .slide { position: relative; display: block; visibility: visible; opacity: 1; transform: none; filter: none; width: 16in; height: 9in; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+  <div id="counter" aria-live="polite">01 / 12</div>
+  <button id="fs" type="button" aria-label="Pantalla completa" title="Pantalla completa (F5)">⛶</button>
+
+  <main id="stage">
+    <div id="deck">
+      <!-- 01 · PORTADA -->
+      <section class="slide active" data-theme="green" data-trans="dissolve">
+        <div class="inner">
+          <div class="topbar"><span class="eyebrow">Modelos y Simulación · UNAL</span><span class="draft">BOCETO · JUL 2026</span></div>
+          <div class="hero-grid">
+            <div>
+              <p class="tag">Simulación híbrida · DS + SED + MBA</p>
+              <h1>Capacidad hospitalaria<br /><span>en emergencias sanitarias</span></h1>
+              <p class="subtitle" style="margin-top:18px">Deconstrucción y réplica computacional en AnyLogic del modelo híbrido propuesto por Meza-Palacios et al.</p>
+            </div>
+            <div class="panel emphasis">
+              <h3>Cita APA 7</h3>
+              <p class="citation">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
+              <div class="author-box">
+                <p><strong>Equipo:</strong> Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</p>
+                <p class="small muted"><strong>Docente:</strong> Angela María Arboleda Restrepo</p>
+                <p class="small muted"><strong>Curso:</strong> Modelos y Simulación (2025970-4)</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Facultad de Ingeniería · Sede Bogotá</span><span>Entrega 5 · Fase A</span></div>
+          <div class="hero-mark">H</div>
+        </div>
+      </section>
+
+      <!-- 02 · PROBLEMA -->
+      <section class="slide" data-theme="green" data-trans="zoom">
+        <div class="inner">
+          <div class="topbar"><span class="tag">01 · Problema</span><span class="draft">DESCRIPCIÓN DEL PROBLEMA</span></div>
+          <div>
+            <h2>Una emergencia afecta simultáneamente <span class="accent">demanda, flujo y capacidad</span></h2>
+            <p class="subtitle">Un modelo puramente agregado o puramente operativo no captura toda la cadena causal del hospital durante una pandemia.</p>
+          </div>
+          <div class="grid cols-2-wide">
+            <div class="stack">
+              <div class="panel">
+                <h3>Problema real</h3>
+                <ul class="clean">
+                  <li>Los picos de contagio aumentan de forma incierta la llegada de pacientes sospechosos de COVID-19.</li>
+                  <li>El triage, las camas, ventiladores y el personal médico son recursos limitados.</li>
+                  <li>El personal también se infecta: la capacidad disponible cambia endógenamente mientras crece la demanda.</li>
+                  <li>Cuando la capacidad se supera, aparecen espera, rechazo y redirección a otros hospitales.</li>
+                </ul>
+              </div>
+              <div class="panel warn">
+                <h3 class="amber">Pregunta de decisión</h3>
+                <p class="muted">¿Cómo anticipar la demanda y reorganizar el departamento COVID-19 para admitir más pacientes, reducir los no atendidos y sostener la capacidad del personal?</p>
+              </div>
+            </div>
+            <figure class="figure" data-zoom>
+              <img src="img/fig2.jpg" alt="Distribución real de las instalaciones hospitalarias" />
+              <figcaption>Figura 2 del artículo · Layout real del hospital (referencia del sistema)</figcaption>
+            </figure>
+          </div>
+          <div class="footer"><span>Delimitación: hospital mexicano, pandemia COVID-19, capacidad del área COVID y personal clínico</span><span>Meza-Palacios et al. (2026)</span></div>
+        </div>
+      </section>
+
+      <!-- 03 · DESGLOSE -->
+      <section class="slide" data-theme="green" data-trans="tilt">
+        <div class="inner">
+          <div class="topbar"><span class="tag">02 · Arquitectura</span><span class="draft">DESGLOSE MULTIMÉTODO</span></div>
+          <div>
+            <h2>Tres escalas, un solo sistema de decisión</h2>
+            <p class="subtitle">La arquitectura MPMF enlaza epidemiología, comportamiento del personal y operación hospitalaria.</p>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel emphasis">
+              <div class="flow" style="height:100%">
+                <div class="node level">
+                  <span class="pill">MACRO · DS</span>
+                  <h3 style="margin-top:12px">Demanda epidémica</h3>
+                  <p class="small muted">Susceptibles, infectados, prevalencia, fuerza de infección y flujo hacia el hospital.</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node level meso">
+                  <span class="pill" style="color:var(--violet)">MESO · MBA</span>
+                  <h3 style="margin-top:12px;color:var(--violet)">Personal clínico</h3>
+                  <p class="small muted">Estados de salud y disponibilidad de médicos, enfermeras y auxiliares.</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node level micro">
+                  <span class="pill" style="color:var(--amber)">MICRO · SED</span>
+                  <h3 style="margin-top:12px;color:var(--amber)">Flujo de pacientes</h3>
+                  <p class="small muted">Llegadas, colas, triage, hospitalización, recursos y egresos.</p>
+                </div>
+              </div>
+            </div>
+            <figure class="figure" data-zoom>
+              <img src="img/fig1.jpg" alt="Diseño metodológico MPMF" />
+              <figcaption>Figura 1 · Diseño metodológico Multi-Perspective Multi-Scale Framework</figcaption>
+            </figure>
+          </div>
+          <div class="footer"><span>DS explica la presión · MBA modifica la capacidad · SED materializa el desempeño</span><span>Marco MPMF</span></div>
+        </div>
+      </section>
+
+      <!-- 04 · DS -->
+      <section class="slide" data-theme="violet" data-trans="reveal">
+        <div class="inner">
+          <div class="topbar"><span class="tag">03 · Nivel macro</span><span class="draft">DINÁMICA DE SISTEMAS</span></div>
+          <div>
+            <h2>DS convierte la epidemia en <span class="accent">demanda hospitalaria variable</span></h2>
+          </div>
+          <div class="grid cols-2-wide">
+            <figure class="figure" data-zoom>
+              <img src="img/fig4.jpg" alt="Modelo de dinámica de sistemas del artículo" />
+              <figcaption>Figura 4 · Modelo de dinámica de sistemas</figcaption>
+            </figure>
+            <div class="stack">
+              <div class="panel">
+                <h3>Variables agregadas</h3>
+                <ul class="clean compact">
+                  <li><strong>Stocks:</strong> Susceptible, Infective y goToHospital.</li>
+                  <li><strong>Auxiliares:</strong> totalPopulation, prevalenceOfInfection y forceOfInfection.</li>
+                  <li><strong>Flujos:</strong> infection y hospitalFlow.</li>
+                </ul>
+                <span class="eq">totalPopulation = Susceptible + Infective</span>
+                <span class="eq">prevalence = Infective / totalPopulation</span>
+                <span class="eq">forceOfInfection = contactRate × prevalence × pTransmission</span>
+                <span class="eq">infection = forceOfInfection × Susceptible</span>
+                <span class="eq">hospitalFlow = Infective × patientToHospital</span>
+              </div>
+              <div class="panel warn">
+                <h3 class="amber">Cambio frente al modelo inicial</h3>
+                <p class="small muted">El arribo determinístico de <strong>28 pacientes/día</strong> se complementa con demanda endógena: cuando <code>goToHospital &gt; 0</code>, DS inyecta un paciente al SED.</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Fuente epidemiológica: prevalencia CONACyT + población Orizaba</span><span>Acoplamiento A · DS → SED</span></div>
+        </div>
+      </section>
+
+      <!-- 05 · SED -->
+      <section class="slide" data-theme="violet" data-trans="rise">
+        <div class="inner">
+          <div class="topbar"><span class="tag">04 · Nivel micro</span><span class="draft">EVENTOS DISCRETOS</span></div>
+          <div>
+            <h2>El SED representa colas, triage y atención COVID-19</h2>
+            <p class="subtitle">La propuesta modifica el área de urgencias COVID mediante triage adyacente, clasificación clínica y posición prona.</p>
+          </div>
+          <div class="grid cols-2-wide">
+            <figure class="figure" data-zoom>
+              <img src="img/fig5.jpg" alt="Departamento COVID-19 modificado" />
+              <figcaption>Figura 5 · Departamento COVID-19 modificado</figcaption>
+            </figure>
+            <div class="stack">
+              <div class="panel">
+                <h3>Tres modificaciones</h3>
+                <ul class="clean compact">
+                  <li><strong>Triage respiratorio adyacente:</strong> médico + enfermera + auxiliar + analista químico.</li>
+                  <li><strong>Clasificación:</strong> estable, severo o intubado; separación niños/adultos.</li>
+                  <li><strong>Área de pronación:</strong> alternativa para mejorar oxigenación en pacientes intubados.</li>
+                </ul>
+              </div>
+              <div class="panel">
+                <h3>Recursos críticos de intubación</h3>
+                <div class="metric-row" style="grid-template-columns:repeat(2,1fr)">
+                  <div class="metric"><b>2</b><span>médicos</span></div>
+                  <div class="metric"><b>2</b><span>enfermeras</span></div>
+                  <div class="metric"><b>4</b><span>auxiliares</span></div>
+                  <div class="metric"><b>+</b><span>camas y ventiladores</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Entidades individuales · colas · delays triangulares · recursos limitados</span><span>Process Modeling Library</span></div>
+        </div>
+      </section>
+
+      <!-- 06 · MBA -->
+      <section class="slide" data-theme="violet" data-trans="dissolve">
+        <div class="inner">
+          <div class="topbar"><span class="tag">05 · Nivel meso</span><span class="draft">MODELADO BASADO EN AGENTES</span></div>
+          <div>
+            <h2>El personal deja de ser una capacidad constante</h2>
+            <p class="subtitle">Cada trabajador cambia de estado y su disponibilidad retroalimenta los recursos del SED.</p>
+          </div>
+          <div class="grid cols-2">
+            <figure class="figure" data-zoom>
+              <img src="img/fig6.jpg" alt="Modelo basado en agentes del personal médico" />
+              <figcaption>Figura 6 · Statecharts del personal médico</figcaption>
+            </figure>
+            <div class="stack">
+              <div class="panel">
+                <h3>Regla del agente</h3>
+                <div class="agent-cycle" aria-label="Ciclo de estados del personal médico">
+                  <div class="flow">
+                    <div class="node"><strong>Susceptible</strong></div><div class="arrow">→</div>
+                    <div class="node"><strong>Infected</strong></div><div class="arrow">→</div>
+                    <div class="node"><strong>Hospitalised / Recovered</strong></div>
+                  </div>
+                  <div class="return-path" aria-hidden="true"></div>
+                </div>
+                <ul class="clean compact" style="margin-top:14px">
+                  <li>19 médicos iniciales; evento de infección cada 6 horas.</li>
+                  <li>La hospitalización del trabajador lo inyecta como paciente al SED.</li>
+                  <li><code>eventPhysician</code> recalcula la capacidad disponible del pool.</li>
+                </ul>
+              </div>
+              <div class="panel warn">
+                <h3 class="amber">Retroalimentación operativa</h3>
+                <p class="small muted">Más contagios → menos personal disponible → menor capacidad de atención → más espera/rechazo. La recuperación devuelve recursos al sistema.</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Agentes: médicos, enfermeras y auxiliares</span><span>Acoplamientos MBA ↔ SED</span></div>
+        </div>
+      </section>
+
+      <!-- 07 · DATOS -->
+      <section class="slide" data-theme="amber" data-trans="zoom">
+        <div class="inner">
+          <div class="topbar"><span class="tag">06 · Datos</span><span class="draft">CONJUNTO DE DATOS · INPUT ANALYSIS</span></div>
+          <div>
+            <h2>Datos hospitalarios 2021 + epidemiología pública</h2>
+            <p class="subtitle">Los tiempos recolectados por personal hospitalario se ajustaron a distribuciones triangulares mínimo–moda–máximo.</p>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Tabla 1 · Urgencias (minutos)</h3>
+              <table>
+                <thead><tr><th>Proceso</th><th>Distribución</th></tr></thead>
+                <tbody>
+                  <tr><td>Registro</td><td>Triangular (1, 3, 6)</td></tr>
+                  <tr><td>Triage</td><td>Triangular (1, 4, 7)</td></tr>
+                  <tr><td>Triage respiratorio</td><td>Triangular (5, 12, 25)</td></tr>
+                  <tr><td>Estabilización</td><td>Triangular (15, 60, 120)</td></tr>
+                  <tr><td>Observación adultos</td><td>Triangular (150, 390, 720)</td></tr>
+                  <tr><td>Área COVID niños</td><td>Triangular (560, 6480, 17280)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="stack">
+              <div class="panel">
+                <h3>Tabla 2 · Especialidades (selección)</h3>
+                <table>
+                  <tbody>
+                    <tr><td>Neonatología</td><td>Triangular (60, 100, 140)</td></tr>
+                    <tr><td>Pediatría</td><td>Triangular (45, 60, 180)</td></tr>
+                    <tr><td>Diálisis</td><td>Triangular (210, 350, 600)</td></tr>
+                    <tr><td>Área COVID adultos</td><td>Triangular (1440, 10080, 36000)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="panel">
+                <h3>Fuentes complementarias</h3>
+                <ul class="clean compact">
+                  <li>CONACyT (2024): prevalencia de infección.</li>
+                  <li>Secretaría de Economía (2024): población de Orizaba.</li>
+                  <li>Pérez-Tezoco et al. (2023): sistema inicial y tasa de 28 pacientes/día.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Pruebas de ajuste reportadas: Chi-cuadrado, p-values &gt; .05</span><span>Tablas 1–2 del artículo</span></div>
+        </div>
+      </section>
+
+      <!-- 08 · RIGOR -->
+      <section class="slide" data-theme="amber" data-trans="tilt">
+        <div class="inner">
+          <div class="topbar"><span class="tag">07 · Rigor estadístico</span><span class="draft">ESTOCASTICIDAD · EXPERIMENTOS · SALIDA</span></div>
+          <div>
+            <h2>Diseño experimental reproducible y validación con IC 95 %</h2>
+          </div>
+          <div class="metric-row">
+            <div class="metric"><b>30 d</b><span>horizonte total</span></div>
+            <div class="metric"><b>8 d</b><span>warm-up</span></div>
+            <div class="metric"><b>22 d</b><span>periodo de interés</span></div>
+            <div class="metric"><b>20</b><span>réplicas</span></div>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Tratamiento de la incertidumbre</h3>
+              <ul class="clean">
+                <li><strong>Entrada:</strong> distribuciones triangulares derivadas de datos 2021.</li>
+                <li><strong>Pseudoaleatoriedad:</strong> semillas controladas; en la réplica se documentarán 20 seeds independientes.</li>
+                <li><strong>Factores:</strong> probabilidad de transmisión (0.02–0.06), disponibilidad del personal y capacidad de atención.</li>
+                <li><strong>Respuestas:</strong> no atendidos, atendidos, adultos/niños admitidos, espera y egresos.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Validación inicial (Tabla 3)</h3>
+              <table>
+                <thead><tr><th>KPI</th><th>Hist.</th><th>Sim. μ</th><th>Dif. %</th></tr></thead>
+                <tbody>
+                  <tr><td>Llegadas COVID</td><td>68.867</td><td>66.680</td><td>−3.279</td></tr>
+                  <tr><td>Triage respiratorio</td><td>8.133</td><td>7.942</td><td>−2.409</td></tr>
+                  <tr><td>No atendidos</td><td>5.000</td><td>4.864</td><td>−2.796</td></tr>
+                  <tr><td>En espera</td><td>6.433</td><td>6.137</td><td>−4.829</td></tr>
+                  <tr><td>Egresos COVID</td><td>72.30</td><td>70.15</td><td>−3.060</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="footer"><span>Criterio del artículo: desviación absoluta &lt; 5 %</span><span>Tabla 3 · IC 95 %</span></div>
+        </div>
+      </section>
+
+      <!-- 09 · INTERFACES -->
+      <section class="slide" data-theme="amber" data-trans="reveal">
+        <div class="inner">
+          <div class="topbar"><span class="tag">08 · Acoplamiento</span><span class="draft">MAPEO DE INTERFASES DE DATOS</span></div>
+          <div>
+            <h2>Los paradigmas se comunican durante la ejecución</h2>
+            <p class="subtitle">El modelo no es una secuencia de tres simulaciones aisladas: intercambia entidades, tasas y capacidad.</p>
+          </div>
+          <div class="grid cols-2-wide">
+            <div class="panel emphasis">
+              <div class="coupling"><div><strong>DS</strong><br><span class="tiny muted">goToHospital</span></div><div class="link">A · inject(1) cuando la demanda crece →</div><div><strong>SED</strong><br><span class="tiny muted">Source COVID</span></div></div>
+              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">estado del personal</span></div><div class="link">B · actualiza capacidad disponible ↔</div><div><strong>SED</strong><br><span class="tiny muted">ResourcePools</span></div></div>
+              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">Hospitalised</span></div><div class="link">C · trabajador enfermo → paciente →</div><div><strong>SED</strong><br><span class="tiny muted">medicalstaffCovidPatient</span></div></div>
+              <div class="coupling"><div><strong>SED</strong><br><span class="tiny muted">demanda / exposición</span></div><div class="link">D · desempeño retroalimenta política ↔</div><div><strong>Decisión</strong><br><span class="tiny muted">escenarios</span></div></div>
+            </div>
+            <div class="stack">
+              <div class="panel">
+                <h3>Implementación AnyLogic</h3>
+                <table>
+                  <tbody>
+                    <tr><td>DS → SED</td><td><code>orizabaCovidPatients.inject(1)</code></td></tr>
+                    <tr><td>MBA → SED</td><td><code>covidPhysicians.set_capacity(...)</code></td></tr>
+                    <tr><td>MBA → entidad</td><td><code>medicalstaffCovidPatient.inject(1)</code></td></tr>
+                    <tr><td>Control</td><td>eventos cíclicos cada 6 h / 1 d</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="placeholder">
+                <div><strong>PENDIENTE CAPTURA DEFINITIVA</strong><br><span class="small">Sustituir por screenshot de Main mostrando DS, SED, MBA y flechas A–C.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>La interfaz computacional debe verificarse en vivo durante el video</span><span>Borshchev (2013)</span></div>
+        </div>
+      </section>
+
+      <!-- 10 · RESULTADOS -->
+      <section class="slide" data-theme="red" data-trans="rise">
+        <div class="inner">
+          <div class="topbar"><span class="tag">09 · Resultados</span><span class="draft">HALLAZGOS DEL ARTÍCULO</span></div>
+          <div>
+            <h2>La propuesta admite más pacientes y reduce los no atendidos</h2>
+            <p class="subtitle">Comparación del modelo inicial frente al híbrido propuesto (Tabla 5).</p>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Medias reportadas</h3>
+              <div class="barrow"><span>No atendidos</span><div class="bar"><i style="width:57%"></i></div><strong>90.5 → 51.58</strong></div>
+              <div class="barrow"><span>Pacientes tratados</span><div class="bar"><i style="width:79%"></i></div><strong>12.68 → 15.90</strong></div>
+              <div class="barrow"><span>Adultos admitidos</span><div class="bar"><i style="width:58%"></i></div><strong>19.48 → 33.32</strong></div>
+              <div class="barrow"><span>Niños admitidos</span><div class="bar"><i style="width:50%"></i></div><strong>4.18 → 2.10</strong></div>
+              <div class="panel warn" style="margin-top:14px;padding:12px">
+                <p class="small muted"><strong>Lectura crítica:</strong> la caída en niños admitidos no implica peor capacidad; el artículo la atribuye a menor prevalencia infantil. El resultado debe interpretarse junto con la demanda.</p>
+              </div>
+            </div>
+            <div class="stack">
+              <figure class="figure" data-zoom>
+                <img src="img/fig8.jpg" alt="Análisis de sensibilidad del flujo de pacientes" />
+                <figcaption>Figura 8 · Sensibilidad del flujo ante probabilidad de transmisión</figcaption>
+              </figure>
+              <div class="panel" style="padding:12px">
+                <h3>Políticas recomendadas</h3>
+                <p class="small muted">Fortalecer triage respiratorio, capacidad de intubación y pronación; proteger al personal con EPP, ventilación y protocolos estrictos; usar sensibilidad para planificar picos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>El híbrido mejora capacidad, pero depende de supuestos y datos del caso hospitalario</span><span>Tablas 4–5 · Figuras 8–9</span></div>
+        </div>
+      </section>
+
+      <!-- 11 · IMPLEMENTACIÓN Y VALIDACIÓN -->
+      <section class="slide" data-theme="red" data-trans="zoom">
+        <div class="inner">
+          <div class="topbar"><span class="tag">10 · Nuestra réplica</span><span class="draft">ANYLOGIC · DASHBOARD · MAPE</span></div>
+          <div>
+            <h2>Estado del prototipo y plan de validación</h2>
+            <p class="subtitle">Diapositiva provisional: reemplazar placeholders cuando el equipo cierre el modelo.</p>
+          </div>
+          <div class="grid cols-2">
+            <div class="stack">
+              <div class="panel">
+                <h3>Implementado en la copia actual</h3>
+                <table>
+                  <tbody>
+                    <tr><td>DS epidemiológico + acoplamiento A</td><td><span class="status done">HECHO</span></td></tr>
+                    <tr><td>SED módulo COVID + NEWS</td><td><span class="status done">HECHO</span></td></tr>
+                    <tr><td>MBA personal + capacidad dinámica</td><td><span class="status done">HECHO</span></td></tr>
+                    <tr><td>Dashboard con KPIs y sliders</td><td><span class="status done">HECHO</span></td></tr>
+                    <tr><td>20 réplicas + IC + MAPE definitivo</td><td><span class="status pending">PENDIENTE</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="placeholder"><div><strong>CAPTURA PENDIENTE</strong><br><span class="small">Insertar dashboard final de AnyLogic: KPIs + sliders + tiempo 30 d.</span></div></div>
+            </div>
+            <div class="stack">
+              <div class="panel emphasis">
+                <h3>Cálculo de fidelidad</h3>
+                <span class="eq">APEᵢ = |(réplicaᵢ − artículoᵢ) / artículoᵢ| × 100</span>
+                <span class="eq">MAPE = (1/n) Σ APEᵢ</span>
+                <p class="small muted" style="margin-top:10px">Meta preliminar: MAPE &lt; 5 % para KPIs comparables; reportar media, desviación, error estándar e IC 95 %.</p>
+              </div>
+              <div class="panel">
+                <h3>Controles del dashboard</h3>
+                <ul class="clean compact">
+                  <li><code>contacRate</code></li>
+                  <li><code>probabilityOfTransmission</code> (0.02–0.06)</li>
+                  <li><code>patientToHospital</code></li>
+                  <li><code>arriveCovidRate</code> (base: 28/día)</li>
+                </ul>
+              </div>
+              <div class="placeholder"><div><strong>RESULTADOS PENDIENTES</strong><br><span class="small">Tabla réplica vs artículo + APE por KPI + MAPE global.</span></div></div>
+            </div>
+          </div>
+          <div class="footer"><span>Demostración en vivo: sliders → cambio de demanda/capacidad → KPIs</span><span>Actualizar antes de entregar</span></div>
+        </div>
+      </section>
+
+      <!-- 12 · CIERRE -->
+      <section class="slide" data-theme="red" data-trans="dissolve">
+        <div class="inner">
+          <div class="topbar"><span class="tag">11 · Cierre</span><span class="draft">APRENDIZAJES · TRANSPARENCIA · ENLACE</span></div>
+          <div>
+            <h2>Conclusiones y pendientes para la entrega final</h2>
+          </div>
+          <div class="grid cols-3">
+            <div class="panel">
+              <h3>Aprendizajes</h3>
+              <ul class="clean compact">
+                <li>La hibridación conecta escalas que un único paradigma oculta.</li>
+                <li>La consistencia de unidades y tipos de agentes es crítica en AnyLogic.</li>
+                <li>Validar exige réplicas e intervalos, no una sola corrida visual.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Contribuciones</h3>
+              <table>
+                <thead><tr><th>Integrante</th><th>Rol / aporte</th></tr></thead>
+                <tbody>
+                  <tr><td>Samuel Herrera</td><td>Arquitectura híbrida e integración DS–SED</td></tr>
+                  <tr><td>Katherinne Olaya</td><td>Análisis del artículo, datos y rigor estadístico</td></tr>
+                  <tr><td>Fredy García</td><td>Implementación SED/MBA y pruebas en AnyLogic</td></tr>
+                  <tr><td>Ever Muñoz</td><td>Dashboard, validación y producción de la sustentación</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="stack">
+              <div class="panel warn">
+                <h3 class="amber">Declaración de IA</h3>
+                <p class="tiny muted">Se utilizaron Gemini, ChatGPT y Claude como guía y asistencia para aprender a usar el software AnyLogic, comprender con mayor profundidad el modelo híbrido y apoyar la revisión técnica. El equipo verificó y adaptó críticamente las respuestas antes de incorporarlas.</p>
+              </div>
+              <div class="panel">
+                <h3>Bibliografía esencial</h3>
+                <p class="tiny muted">Meza-Palacios et al. (2026) · Borshchev (2013) · Pérez-Tezoco et al. (2023) · CONACyT (2024) · Secretaría de Economía (2024).</p>
+              </div>
+              <div class="panel emphasis">
+                <h3>Video de sustentación</h3>
+                <p class="small"><strong>URL de YouTube:</strong></p>
+                <p class="small amber">[PEGAR ENLACE PÚBLICO AQUÍ]</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Video ≤ 20 min · rostros + pantalla · demostración en vivo</span><span>Gracias</span></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="progress" aria-hidden="true"></div>
+  <div id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <button id="lb-close" aria-label="Cerrar">×</button>
+    <img id="lb-img" alt="" />
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var slides = Array.from(document.querySelectorAll(".slide"));
+      var progress = document.getElementById("progress");
+      var counter = document.getElementById("counter");
+      var current = 0;
+
+      slides.forEach(function (_, i) {
+        var mark = document.createElement("span");
+        if (i === 0) mark.className = "active";
+        progress.appendChild(mark);
+      });
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function go(next) {
+        if (next < 0 || next >= slides.length || next === current) return;
+        var old = slides[current];
+        old.classList.add("exit");
+        old.classList.remove("active");
+        slides[next].classList.add("active");
+        current = next;
+        setTimeout(function () { old.classList.remove("exit"); }, 850);
+        counter.textContent = pad(current + 1) + " / " + pad(slides.length);
+        Array.from(progress.children).forEach(function (d, i) { d.classList.toggle("active", i === current); });
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+      }
+      document.getElementById("fs").addEventListener("click", toggleFullscreen);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); go(current + 1); }
+        if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(current - 1); }
+        if (e.key === "Home") go(0);
+        if (e.key === "End") go(slides.length - 1);
+        if (e.key === "F5") { e.preventDefault(); toggleFullscreen(); }
+        if (e.key === "Escape") {
+          if (lightbox.classList.contains("open")) closeLightbox();
+          else if (document.fullscreenElement) document.exitFullscreen();
+        }
+      });
+
+      var lightbox = document.getElementById("lightbox");
+      var lbImg = document.getElementById("lb-img");
+      document.querySelectorAll("[data-zoom]").forEach(function (fig) {
+        fig.onclick = function () {
+          var img = fig.querySelector("img");
+          if (!img) return;
+          lbImg.src = img.src; lbImg.alt = img.alt;
+          lightbox.classList.add("open"); lightbox.setAttribute("aria-hidden", "false");
+        };
+      });
+      function closeLightbox() {
+        lightbox.classList.remove("open"); lightbox.setAttribute("aria-hidden", "true"); lbImg.src = "";
+      }
+      document.getElementById("lb-close").onclick = closeLightbox;
+      lightbox.onclick = function (e) { if (e.target === lightbox || e.target === lbImg) closeLightbox(); };
+    })();
+  </script>
+</body>
+</html>
