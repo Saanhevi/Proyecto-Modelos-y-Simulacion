@@ -282,470 +282,423 @@
 
   <main id="stage">
     <div id="deck">
-      <!-- 01 · PORTADA -->
+
+      <!-- 01 · CITA -->
       <section class="slide active" data-theme="green" data-trans="dissolve">
         <div class="inner">
-          <div class="topbar"><span class="eyebrow">Modelos y Simulación · UNAL</span><span class="draft">BOCETO · JUL 2026</span></div>
+          <div class="topbar"><span class="eyebrow">Modelos y Simulación · UNAL · Entrega 5</span><span class="draft">12 DIAPOSITIVAS</span></div>
           <div class="hero-grid">
             <div>
               <p class="tag">Simulación híbrida · DS + SED + MBA</p>
               <h1>Capacidad hospitalaria<br /><span>en emergencias sanitarias</span></h1>
-              <p class="subtitle" style="margin-top:18px">Deconstrucción y réplica computacional en AnyLogic del modelo híbrido propuesto por Meza-Palacios et al.</p>
+              <p class="subtitle" style="margin-top:18px">Réplica en AnyLogic del modelo híbrido de Meza-Palacios et al. Validación It. 3: MAPE Tabla 5 ≈ 2,1 % (n = 20).</p>
             </div>
             <div class="panel emphasis">
-              <h3>Cita APA 7</h3>
+              <h3>Cita APA 7.ª edición</h3>
               <p class="citation">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
               <div class="author-box">
                 <p><strong>Equipo:</strong> Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</p>
-                <p class="small muted"><strong>Docente:</strong> Angela María Arboleda Restrepo</p>
-                <p class="small muted"><strong>Curso:</strong> Modelos y Simulación (2025970-4)</p>
+                <p class="tiny muted" style="margin-top:8px">AnyLogic 8.9.9 · Horizonte 30 d · Warm-up 8 d · 20 réplicas</p>
               </div>
             </div>
           </div>
-          <div class="footer"><span>Facultad de Ingeniería · Sede Bogotá</span><span>Entrega 5 · Fase A</span></div>
-          <div class="hero-mark">H</div>
+          <div class="footer"><span>FASE A · Sustentación</span><span>01 / 12</span></div>
         </div>
       </section>
 
       <!-- 02 · PROBLEMA -->
       <section class="slide" data-theme="green" data-trans="zoom">
         <div class="inner">
-          <div class="topbar"><span class="tag">01 · Problema</span><span class="draft">DESCRIPCIÓN DEL PROBLEMA</span></div>
+          <div class="topbar"><span class="tag">02 · Problema</span><span class="draft">DESCRIPCIÓN DEL PROBLEMA</span></div>
           <div>
-            <h2>Una emergencia afecta simultáneamente <span class="accent">demanda, flujo y capacidad</span></h2>
-            <p class="subtitle">Un modelo puramente agregado o puramente operativo no captura toda la cadena causal del hospital durante una pandemia.</p>
-          </div>
-          <div class="grid cols-2-wide">
-            <div class="stack">
-              <div class="panel">
-                <h3>Problema real</h3>
-                <ul class="clean">
-                  <li>Los picos de contagio aumentan de forma incierta la llegada de pacientes sospechosos de COVID-19.</li>
-                  <li>El triage, las camas, ventiladores y el personal médico son recursos limitados.</li>
-                  <li>El personal también se infecta: la capacidad disponible cambia endógenamente mientras crece la demanda.</li>
-                  <li>Cuando la capacidad se supera, aparecen espera, rechazo y redirección a otros hospitales.</li>
-                </ul>
-              </div>
-              <div class="panel warn">
-                <h3 class="amber">Pregunta de decisión</h3>
-                <p class="muted">¿Cómo anticipar la demanda y reorganizar el departamento COVID-19 para admitir más pacientes, reducir los no atendidos y sostener la capacidad del personal?</p>
-              </div>
-            </div>
-            <figure class="figure" data-zoom>
-              <img src="img/fig2.jpg" alt="Distribución real de las instalaciones hospitalarias" />
-              <figcaption>Figura 2 del artículo · Layout real del hospital (referencia del sistema)</figcaption>
-            </figure>
-          </div>
-          <div class="footer"><span>Delimitación: hospital mexicano, pandemia COVID-19, capacidad del área COVID y personal clínico</span><span>Meza-Palacios et al. (2026)</span></div>
-        </div>
-      </section>
-
-      <!-- 03 · DESGLOSE -->
-      <section class="slide" data-theme="green" data-trans="tilt">
-        <div class="inner">
-          <div class="topbar"><span class="tag">02 · Arquitectura</span><span class="draft">DESGLOSE MULTIMÉTODO</span></div>
-          <div>
-            <h2>Tres escalas, un solo sistema de decisión</h2>
-            <p class="subtitle">La arquitectura MPMF enlaza epidemiología, comportamiento del personal y operación hospitalaria.</p>
-          </div>
-          <div class="grid cols-2">
-            <div class="panel emphasis">
-              <div class="flow" style="height:100%">
-                <div class="node level">
-                  <span class="pill">MACRO · DS</span>
-                  <h3 style="margin-top:12px">Demanda epidémica</h3>
-                  <p class="small muted">Susceptibles, infectados, prevalencia, fuerza de infección y flujo hacia el hospital.</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="node level meso">
-                  <span class="pill" style="color:var(--violet)">MESO · MBA</span>
-                  <h3 style="margin-top:12px;color:var(--violet)">Personal clínico</h3>
-                  <p class="small muted">Estados de salud y disponibilidad de médicos, enfermeras y auxiliares.</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="node level micro">
-                  <span class="pill" style="color:var(--amber)">MICRO · SED</span>
-                  <h3 style="margin-top:12px;color:var(--amber)">Flujo de pacientes</h3>
-                  <p class="small muted">Llegadas, colas, triage, hospitalización, recursos y egresos.</p>
-                </div>
-              </div>
-            </div>
-            <figure class="figure" data-zoom>
-              <img src="img/fig1.jpg" alt="Diseño metodológico MPMF" />
-              <figcaption>Figura 1 · Diseño metodológico Multi-Perspective Multi-Scale Framework</figcaption>
-            </figure>
-          </div>
-          <div class="footer"><span>DS explica la presión · MBA modifica la capacidad · SED materializa el desempeño</span><span>Marco MPMF</span></div>
-        </div>
-      </section>
-
-      <!-- 04 · DS -->
-      <section class="slide" data-theme="violet" data-trans="reveal">
-        <div class="inner">
-          <div class="topbar"><span class="tag">03 · Nivel macro</span><span class="draft">DINÁMICA DE SISTEMAS</span></div>
-          <div>
-            <h2>DS convierte la epidemia en <span class="accent">demanda hospitalaria variable</span></h2>
-          </div>
-          <div class="grid cols-2-wide">
-            <figure class="figure" data-zoom>
-              <img src="img/fig4.jpg" alt="Modelo de dinámica de sistemas del artículo" />
-              <figcaption>Figura 4 · Modelo de dinámica de sistemas</figcaption>
-            </figure>
-            <div class="stack">
-              <div class="panel">
-                <h3>Variables agregadas</h3>
-                <ul class="clean compact">
-                  <li><strong>Stocks:</strong> Susceptible, Infective y goToHospital.</li>
-                  <li><strong>Auxiliares:</strong> totalPopulation, prevalenceOfInfection y forceOfInfection.</li>
-                  <li><strong>Flujos:</strong> infection y hospitalFlow.</li>
-                </ul>
-                <span class="eq">totalPopulation = Susceptible + Infective</span>
-                <span class="eq">prevalence = Infective / totalPopulation</span>
-                <span class="eq">forceOfInfection = contactRate × prevalence × pTransmission</span>
-                <span class="eq">infection = forceOfInfection × Susceptible</span>
-                <span class="eq">hospitalFlow = Infective × patientToHospital</span>
-              </div>
-              <div class="panel warn">
-                <h3 class="amber">Cambio frente al modelo inicial</h3>
-                <p class="small muted">El arribo determinístico de <strong>28 pacientes/día</strong> se complementa con demanda endógena: cuando <code>goToHospital &gt; 0</code>, DS inyecta un paciente al SED.</p>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>Fuente epidemiológica: prevalencia CONACyT + población Orizaba</span><span>Acoplamiento A · DS → SED</span></div>
-        </div>
-      </section>
-
-      <!-- 05 · SED -->
-      <section class="slide" data-theme="violet" data-trans="rise">
-        <div class="inner">
-          <div class="topbar"><span class="tag">04 · Nivel micro</span><span class="draft">EVENTOS DISCRETOS</span></div>
-          <div>
-            <h2>El SED representa colas, triage y atención COVID-19</h2>
-            <p class="subtitle">La propuesta modifica el área de urgencias COVID mediante triage adyacente, clasificación clínica y posición prona.</p>
-          </div>
-          <div class="grid cols-2-wide">
-            <figure class="figure" data-zoom>
-              <img src="img/fig5.jpg" alt="Departamento COVID-19 modificado" />
-              <figcaption>Figura 5 · Departamento COVID-19 modificado</figcaption>
-            </figure>
-            <div class="stack">
-              <div class="panel">
-                <h3>Tres modificaciones</h3>
-                <ul class="clean compact">
-                  <li><strong>Triage respiratorio adyacente:</strong> médico + enfermera + auxiliar + analista químico.</li>
-                  <li><strong>Clasificación:</strong> estable, severo o intubado; separación niños/adultos.</li>
-                  <li><strong>Área de pronación:</strong> alternativa para mejorar oxigenación en pacientes intubados.</li>
-                </ul>
-              </div>
-              <div class="panel">
-                <h3>Recursos críticos de intubación</h3>
-                <div class="metric-row" style="grid-template-columns:repeat(2,1fr)">
-                  <div class="metric"><b>2</b><span>médicos</span></div>
-                  <div class="metric"><b>2</b><span>enfermeras</span></div>
-                  <div class="metric"><b>4</b><span>auxiliares</span></div>
-                  <div class="metric"><b>+</b><span>camas y ventiladores</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>Entidades individuales · colas · delays triangulares · recursos limitados</span><span>Process Modeling Library</span></div>
-        </div>
-      </section>
-
-      <!-- 06 · MBA -->
-      <section class="slide" data-theme="violet" data-trans="dissolve">
-        <div class="inner">
-          <div class="topbar"><span class="tag">05 · Nivel meso</span><span class="draft">MODELADO BASADO EN AGENTES</span></div>
-          <div>
-            <h2>El personal deja de ser una capacidad constante</h2>
-            <p class="subtitle">Cada trabajador cambia de estado y su disponibilidad retroalimenta los recursos del SED.</p>
-          </div>
-          <div class="grid cols-2">
-            <figure class="figure" data-zoom>
-              <img src="img/fig6.jpg" alt="Modelo basado en agentes del personal médico" />
-              <figcaption>Figura 6 · Statecharts del personal médico</figcaption>
-            </figure>
-            <div class="stack">
-              <div class="panel">
-                <h3>Regla del agente</h3>
-                <div class="agent-cycle" aria-label="Ciclo de estados del personal médico">
-                  <div class="flow">
-                    <div class="node"><strong>Susceptible</strong></div><div class="arrow">→</div>
-                    <div class="node"><strong>Infected</strong></div><div class="arrow">→</div>
-                    <div class="node"><strong>Hospitalised / Recovered</strong></div>
-                  </div>
-                  <div class="return-path" aria-hidden="true"></div>
-                </div>
-                <ul class="clean compact" style="margin-top:14px">
-                  <li>19 médicos iniciales; evento de infección cada 6 horas.</li>
-                  <li>La hospitalización del trabajador lo inyecta como paciente al SED.</li>
-                  <li><code>eventPhysician</code> recalcula la capacidad disponible del pool.</li>
-                </ul>
-              </div>
-              <div class="panel warn">
-                <h3 class="amber">Retroalimentación operativa</h3>
-                <p class="small muted">Más contagios → menos personal disponible → menor capacidad de atención → más espera/rechazo. La recuperación devuelve recursos al sistema.</p>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>Agentes: médicos, enfermeras y auxiliares</span><span>Acoplamientos MBA ↔ SED</span></div>
-        </div>
-      </section>
-
-      <!-- 07 · DATOS -->
-      <section class="slide" data-theme="amber" data-trans="zoom">
-        <div class="inner">
-          <div class="topbar"><span class="tag">06 · Datos</span><span class="draft">CONJUNTO DE DATOS · INPUT ANALYSIS</span></div>
-          <div>
-            <h2>Datos hospitalarios 2021 + epidemiología pública</h2>
-            <p class="subtitle">Los tiempos recolectados por personal hospitalario se ajustaron a distribuciones triangulares mínimo–moda–máximo.</p>
-          </div>
-          <div class="grid cols-2">
-            <div class="panel">
-              <h3>Tabla 1 · Urgencias (minutos)</h3>
-              <table>
-                <thead><tr><th>Proceso</th><th>Distribución</th></tr></thead>
-                <tbody>
-                  <tr><td>Registro</td><td>Triangular (1, 3, 6)</td></tr>
-                  <tr><td>Triage</td><td>Triangular (1, 4, 7)</td></tr>
-                  <tr><td>Triage respiratorio</td><td>Triangular (5, 12, 25)</td></tr>
-                  <tr><td>Estabilización</td><td>Triangular (15, 60, 120)</td></tr>
-                  <tr><td>Observación adultos</td><td>Triangular (150, 390, 720)</td></tr>
-                  <tr><td>Área COVID niños</td><td>Triangular (560, 6480, 17280)</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="stack">
-              <div class="panel">
-                <h3>Tabla 2 · Especialidades (selección)</h3>
-                <table>
-                  <tbody>
-                    <tr><td>Neonatología</td><td>Triangular (60, 100, 140)</td></tr>
-                    <tr><td>Pediatría</td><td>Triangular (45, 60, 180)</td></tr>
-                    <tr><td>Diálisis</td><td>Triangular (210, 350, 600)</td></tr>
-                    <tr><td>Área COVID adultos</td><td>Triangular (1440, 10080, 36000)</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="panel">
-                <h3>Fuentes complementarias</h3>
-                <ul class="clean compact">
-                  <li>CONACyT (2024): prevalencia de infección.</li>
-                  <li>Secretaría de Economía (2024): población de Orizaba.</li>
-                  <li>Pérez-Tezoco et al. (2023): sistema inicial y tasa de 28 pacientes/día.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>Pruebas de ajuste reportadas: Chi-cuadrado, p-values &gt; .05</span><span>Tablas 1–2 del artículo</span></div>
-        </div>
-      </section>
-
-      <!-- 08 · RIGOR -->
-      <section class="slide" data-theme="amber" data-trans="tilt">
-        <div class="inner">
-          <div class="topbar"><span class="tag">07 · Rigor estadístico</span><span class="draft">ESTOCASTICIDAD · EXPERIMENTOS · SALIDA</span></div>
-          <div>
-            <h2>Diseño experimental reproducible y validación con IC 95 %</h2>
-          </div>
-          <div class="metric-row">
-            <div class="metric"><b>30 d</b><span>horizonte total</span></div>
-            <div class="metric"><b>8 d</b><span>warm-up</span></div>
-            <div class="metric"><b>22 d</b><span>periodo de interés</span></div>
-            <div class="metric"><b>20</b><span>réplicas</span></div>
-          </div>
-          <div class="grid cols-2">
-            <div class="panel">
-              <h3>Tratamiento de la incertidumbre</h3>
-              <ul class="clean">
-                <li><strong>Entrada:</strong> distribuciones triangulares derivadas de datos 2021.</li>
-                <li><strong>Pseudoaleatoriedad:</strong> semillas controladas; en la réplica se documentarán 20 seeds independientes.</li>
-                <li><strong>Factores:</strong> probabilidad de transmisión (0.02–0.06), disponibilidad del personal y capacidad de atención.</li>
-                <li><strong>Respuestas:</strong> no atendidos, atendidos, adultos/niños admitidos, espera y egresos.</li>
-              </ul>
-            </div>
-            <div class="panel">
-              <h3>Validación inicial (Tabla 3)</h3>
-              <table>
-                <thead><tr><th>KPI</th><th>Hist.</th><th>Sim. μ</th><th>Dif. %</th></tr></thead>
-                <tbody>
-                  <tr><td>Llegadas COVID</td><td>68.867</td><td>66.680</td><td>−3.279</td></tr>
-                  <tr><td>Triage respiratorio</td><td>8.133</td><td>7.942</td><td>−2.409</td></tr>
-                  <tr><td>No atendidos</td><td>5.000</td><td>4.864</td><td>−2.796</td></tr>
-                  <tr><td>En espera</td><td>6.433</td><td>6.137</td><td>−4.829</td></tr>
-                  <tr><td>Egresos COVID</td><td>72.30</td><td>70.15</td><td>−3.060</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="footer"><span>Criterio del artículo: desviación absoluta &lt; 5 %</span><span>Tabla 3 · IC 95 %</span></div>
-        </div>
-      </section>
-
-      <!-- 09 · INTERFACES -->
-      <section class="slide" data-theme="amber" data-trans="reveal">
-        <div class="inner">
-          <div class="topbar"><span class="tag">08 · Acoplamiento</span><span class="draft">MAPEO DE INTERFASES DE DATOS</span></div>
-          <div>
-            <h2>Los paradigmas se comunican durante la ejecución</h2>
-            <p class="subtitle">El modelo no es una secuencia de tres simulaciones aisladas: intercambia entidades, tasas y capacidad.</p>
-          </div>
-          <div class="grid cols-2-wide">
-            <div class="panel emphasis">
-              <div class="coupling"><div><strong>DS</strong><br><span class="tiny muted">goToHospital</span></div><div class="link">A · inject(1) cuando la demanda crece →</div><div><strong>SED</strong><br><span class="tiny muted">Source COVID</span></div></div>
-              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">estado del personal</span></div><div class="link">B · actualiza capacidad disponible ↔</div><div><strong>SED</strong><br><span class="tiny muted">ResourcePools</span></div></div>
-              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">Hospitalised</span></div><div class="link">C · trabajador enfermo → paciente →</div><div><strong>SED</strong><br><span class="tiny muted">medicalstaffCovidPatient</span></div></div>
-              <div class="coupling"><div><strong>SED</strong><br><span class="tiny muted">demanda / exposición</span></div><div class="link">D · desempeño retroalimenta política ↔</div><div><strong>Decisión</strong><br><span class="tiny muted">escenarios</span></div></div>
-            </div>
-            <div class="stack">
-              <div class="panel">
-                <h3>Implementación AnyLogic</h3>
-                <table>
-                  <tbody>
-                    <tr><td>DS → SED</td><td><code>orizabaCovidPatients.inject(1)</code></td></tr>
-                    <tr><td>MBA → SED</td><td><code>covidPhysicians.set_capacity(...)</code></td></tr>
-                    <tr><td>MBA → entidad</td><td><code>medicalstaffCovidPatient.inject(1)</code></td></tr>
-                    <tr><td>Control</td><td>eventos cíclicos cada 6 h / 1 d</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="placeholder">
-                <div><strong>PENDIENTE CAPTURA DEFINITIVA</strong><br><span class="small">Sustituir por screenshot de Main mostrando DS, SED, MBA y flechas A–C.</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>La interfaz computacional debe verificarse en vivo durante el video</span><span>Borshchev (2013)</span></div>
-        </div>
-      </section>
-
-      <!-- 10 · RESULTADOS -->
-      <section class="slide" data-theme="red" data-trans="rise">
-        <div class="inner">
-          <div class="topbar"><span class="tag">09 · Resultados</span><span class="draft">HALLAZGOS DEL ARTÍCULO</span></div>
-          <div>
-            <h2>La propuesta admite más pacientes y reduce los no atendidos</h2>
-            <p class="subtitle">Comparación del modelo inicial frente al híbrido propuesto (Tabla 5).</p>
-          </div>
-          <div class="grid cols-2">
-            <div class="panel">
-              <h3>Medias reportadas</h3>
-              <div class="barrow"><span>No atendidos</span><div class="bar"><i style="width:57%"></i></div><strong>90.5 → 51.58</strong></div>
-              <div class="barrow"><span>Pacientes tratados</span><div class="bar"><i style="width:79%"></i></div><strong>12.68 → 15.90</strong></div>
-              <div class="barrow"><span>Adultos admitidos</span><div class="bar"><i style="width:58%"></i></div><strong>19.48 → 33.32</strong></div>
-              <div class="barrow"><span>Niños admitidos</span><div class="bar"><i style="width:50%"></i></div><strong>4.18 → 2.10</strong></div>
-              <div class="panel warn" style="margin-top:14px;padding:12px">
-                <p class="small muted"><strong>Lectura crítica:</strong> la caída en niños admitidos no implica peor capacidad; el artículo la atribuye a menor prevalencia infantil. El resultado debe interpretarse junto con la demanda.</p>
-              </div>
-            </div>
-            <div class="stack">
-              <figure class="figure" data-zoom>
-                <img src="img/fig8.jpg" alt="Análisis de sensibilidad del flujo de pacientes" />
-                <figcaption>Figura 8 · Sensibilidad del flujo ante probabilidad de transmisión</figcaption>
-              </figure>
-              <div class="panel" style="padding:12px">
-                <h3>Políticas recomendadas</h3>
-                <p class="small muted">Fortalecer triage respiratorio, capacidad de intubación y pronación; proteger al personal con EPP, ventilación y protocolos estrictos; usar sensibilidad para planificar picos.</p>
-              </div>
-            </div>
-          </div>
-          <div class="footer"><span>El híbrido mejora capacidad, pero depende de supuestos y datos del caso hospitalario</span><span>Tablas 4–5 · Figuras 8–9</span></div>
-        </div>
-      </section>
-
-      <!-- 11 · IMPLEMENTACIÓN Y VALIDACIÓN -->
-      <section class="slide" data-theme="red" data-trans="zoom">
-        <div class="inner">
-          <div class="topbar"><span class="tag">10 · Nuestra réplica</span><span class="draft">ANYLOGIC · DASHBOARD · MAPE</span></div>
-          <div>
-            <h2>Estado del prototipo y plan de validación</h2>
-            <p class="subtitle">Diapositiva provisional: reemplazar placeholders cuando el equipo cierre el modelo.</p>
-          </div>
-          <div class="grid cols-2">
-            <div class="stack">
-              <div class="panel">
-                <h3>Implementado en la copia actual</h3>
-                <table>
-                  <tbody>
-                    <tr><td>DS epidemiológico + acoplamiento A</td><td><span class="status done">HECHO</span></td></tr>
-                    <tr><td>SED módulo COVID + NEWS</td><td><span class="status done">HECHO</span></td></tr>
-                    <tr><td>MBA personal + capacidad dinámica</td><td><span class="status done">HECHO</span></td></tr>
-                    <tr><td>Dashboard con KPIs y sliders</td><td><span class="status done">HECHO</span></td></tr>
-                    <tr><td>20 réplicas + IC + MAPE definitivo</td><td><span class="status pending">PENDIENTE</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="placeholder"><div><strong>CAPTURA PENDIENTE</strong><br><span class="small">Insertar dashboard final de AnyLogic: KPIs + sliders + tiempo 30 d.</span></div></div>
-            </div>
-            <div class="stack">
-              <div class="panel emphasis">
-                <h3>Cálculo de fidelidad</h3>
-                <span class="eq">APEᵢ = |(réplicaᵢ − artículoᵢ) / artículoᵢ| × 100</span>
-                <span class="eq">MAPE = (1/n) Σ APEᵢ</span>
-                <p class="small muted" style="margin-top:10px">Meta preliminar: MAPE &lt; 5 % para KPIs comparables; reportar media, desviación, error estándar e IC 95 %.</p>
-              </div>
-              <div class="panel">
-                <h3>Controles del dashboard</h3>
-                <ul class="clean compact">
-                  <li><code>contacRate</code></li>
-                  <li><code>probabilityOfTransmission</code> (0.02–0.06)</li>
-                  <li><code>patientToHospital</code></li>
-                  <li><code>arriveCovidRate</code> (base: 28/día)</li>
-                </ul>
-              </div>
-              <div class="placeholder"><div><strong>RESULTADOS PENDIENTES</strong><br><span class="small">Tabla réplica vs artículo + APE por KPI + MAPE global.</span></div></div>
-            </div>
-          </div>
-          <div class="footer"><span>Demostración en vivo: sliders → cambio de demanda/capacidad → KPIs</span><span>Actualizar antes de entregar</span></div>
-        </div>
-      </section>
-
-      <!-- 12 · CIERRE -->
-      <section class="slide" data-theme="red" data-trans="dissolve">
-        <div class="inner">
-          <div class="topbar"><span class="tag">11 · Cierre</span><span class="draft">APRENDIZAJES · TRANSPARENCIA · ENLACE</span></div>
-          <div>
-            <h2>Conclusiones y pendientes para la entrega final</h2>
+            <h2>Demanda pandémica vs capacidad hospitalaria limitada</h2>
+            <p class="subtitle">Hospital en Orizaba (México): picos de COVID saturan camas, triage y personal; los no atendidos se redirigen a otros centros.</p>
           </div>
           <div class="grid cols-3">
             <div class="panel">
-              <h3>Aprendizajes</h3>
+              <h3>Problema real</h3>
               <ul class="clean compact">
-                <li>La hibridación conecta escalas que un único paradigma oculta.</li>
-                <li>La consistencia de unidades y tipos de agentes es crítica en AnyLogic.</li>
-                <li>Validar exige réplicas e intervalos, no una sola corrida visual.</li>
+                <li>Reconversión hospitalaria bajo incertidumbre epidemiológica.</li>
+                <li>80 camas COVID; personal expuesto a contagio.</li>
+                <li>Un solo paradigma no captura demanda + flujo + agentes.</li>
               </ul>
             </div>
             <div class="panel">
-              <h3>Contribuciones</h3>
-              <table>
-                <thead><tr><th>Integrante</th><th>Rol / aporte</th></tr></thead>
-                <tbody>
-                  <tr><td>Samuel Herrera</td><td>Arquitectura híbrida e integración DS–SED</td></tr>
-                  <tr><td>Katherinne Olaya</td><td>Análisis del artículo, datos y rigor estadístico</td></tr>
-                  <tr><td>Fredy García</td><td>Implementación SED/MBA y pruebas en AnyLogic</td></tr>
-                  <tr><td>Ever Muñoz</td><td>Dashboard, validación y producción de la sustentación</td></tr>
-                </tbody>
-              </table>
+              <h3>Delimitación</h3>
+              <ul class="clean compact">
+                <li>Foco: módulo COVID (híbrido propuesto), no hospital general completo.</li>
+                <li>Horizonte: 30 días; KPIs días 8–30.</li>
+                <li>Software: AnyLogic (DS + Process + Agents).</li>
+              </ul>
+            </div>
+            <div class="panel emphasis">
+              <h3>Pregunta de diseño</h3>
+              <p class="small muted">¿Cómo anticipar demanda infectada, operar triage/hospitalización y representar contagio del staff de forma acoplada y validable?</p>
+            </div>
+          </div>
+          <div class="footer"><span>Objetivo del curso: deconstruir y replicar un híbrido publicado</span><span>02 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 03 · MULTIMÉTODO -->
+      <section class="slide" data-theme="violet" data-trans="tilt">
+        <div class="inner">
+          <div class="topbar"><span class="tag">03 · Multimétodo</span><span class="draft">DESGLOSE · MACRO / MESO / MICRO</span></div>
+          <div>
+            <h2>Tres escalas, un sistema de decisión</h2>
+          </div>
+          <div class="grid cols-3">
+            <div class="panel">
+              <h3>Macro · DS</h3>
+              <p class="small muted">Poblaciones agregadas S/I, prevalencia, fuerza de infección y flujo a hospital.</p>
+              <ul class="clean compact">
+                <li>Stocks: Susceptible, Infective, goToHospital</li>
+                <li>Flujos: infection, hospitalFlow</li>
+                <li>π ∈ [0,02 ; 0,06]</li>
+              </ul>
+              <span class="eq" style="font-size:.72rem">λ = c · preval · π · S</span>
+            </div>
+            <div class="panel">
+              <h3>Meso · MBA</h3>
+              <p class="small muted">Personal con estados autónomos; la disponibilidad altera la capacidad del SED.</p>
+              <ul class="clean compact">
+                <li>19 médicos; enfermeras y auxiliares análogos</li>
+                <li>Susceptible → Infected → Hosp./Recovered</li>
+                <li>Evento infección cada 6 h</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Micro · SED</h3>
+              <p class="small muted">Colas, triage respiratorio, NEWS, estancias y egreso COVID.</p>
+              <ul class="clean compact">
+                <li>Delays triangulares (Tablas 1–2)</li>
+                <li>80 camas; ventiladores / prone</li>
+                <li>Timeouts → otro hospital (untreated)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer"><span>Justificación: demanda (DS) + operación (SED) + capacidad humana (MBA)</span><span>03 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 04 · DATOS -->
+      <section class="slide" data-theme="amber" data-trans="reveal">
+        <div class="inner">
+          <div class="topbar"><span class="tag">04 · Datos</span><span class="draft">CONJUNTO DE DATOS</span></div>
+          <div>
+            <h2>Históricos hospitalarios + fuentes epidemiológicas</h2>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Input Analysis</h3>
+              <ul class="clean compact">
+                <li>Tiempos 2021 del hospital → <strong>triangulares</strong> (min, moda, máx).</li>
+                <li>Pruebas de ajuste reportadas en el paper (χ², p &gt; 0,05).</li>
+                <li>Triage respiratorio: Triangular(5, 12, 25) min.</li>
+                <li>Estancias COVID: Tablas 1–2 del artículo (días).</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Fuentes</h3>
+              <ul class="clean compact">
+                <li>Pérez-Tezoco et al. (2023): datos del hospital / modelo inicial.</li>
+                <li>Secretaría de Economía (2024): población Orizaba/región.</li>
+                <li>Secretaría de Salud (2024): hospitalización nacional 4–20 %.</li>
+                <li>Tabla 3: llegadas COVID históricas <strong>68,867 / día</strong>.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer"><span>No inventamos tiempos del paper: se fijaron; calibración solo en huecos documentados</span><span>04 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 05 · RIGOR -->
+      <section class="slide" data-theme="amber" data-trans="rise">
+        <div class="inner">
+          <div class="topbar"><span class="tag">05 · Rigor</span><span class="draft">ESTOCASTICIDAD · EXPERIMENTOS · SALIDA</span></div>
+          <div>
+            <h2>Diseño experimental y análisis de salida</h2>
+          </div>
+          <div class="metric-row">
+            <div class="metric"><b>30 d</b><span>horizonte</span></div>
+            <div class="metric"><b>8 d</b><span>warm-up</span></div>
+            <div class="metric"><b>20</b><span>réplicas</span></div>
+            <div class="metric"><b>IC 95 %</b><span>media</span></div>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Entrada · RNG · DoE</h3>
+              <ul class="clean compact">
+                <li><strong>Entrada:</strong> triangulares del paper + gate/split derivados de ratios Tabla 3↔5.</li>
+                <li><strong>RNG:</strong> semilla aleatoria por réplica (ExperimentoReplicas).</li>
+                <li><strong>Factores:</strong> π ∈ {0,02…0,06} (Fig. 8); base π = 0,04.</li>
+                <li><strong>Respuestas:</strong> untreated, treated, adultAdmit, childAdmit, flujo DS.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Salida (It. 3)</h3>
+              <ul class="clean compact">
+                <li>n = 20 · media ± IC 95 % · MAPE vs Tabla 5.</li>
+                <li>Criterio paper: |desvío| &lt; 5 % en validación.</li>
+                <li>Nuestra It. 3: MAPE ≈ <strong>2,1 %</strong> en 4 KPIs híbridos.</li>
+              </ul>
+              <span class="eq">MAPE = (1/n) Σ |ŷ − y| / |y|</span>
+              <figure class="figure" data-zoom style="margin-top:10px;min-height:140px">
+                <img src="img/tabla3_it3.png" alt="Tabla 3 validación It.3" />
+                <figcaption>Tabla 3 · histórico vs It. 3</figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="footer"><span>Law · Simulation Modeling and Analysis (réplicas / IC)</span><span>05 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 06 · INTERFACES -->
+      <section class="slide" data-theme="amber" data-trans="zoom">
+        <div class="inner">
+          <div class="topbar"><span class="tag">06 · Interfaces</span><span class="draft">MAPEO DE ACOPLAMIENTO · BORSHCHEV</span></div>
+          <div>
+            <h2>Comunicación bidireccional en tiempo de ejecución</h2>
+          </div>
+          <div class="grid cols-2-wide">
+            <div class="panel emphasis">
+              <div class="coupling"><div><strong>DS</strong><br><span class="tiny muted">goToHospital</span></div><div class="link">A · inject(1) →</div><div><strong>SED</strong><br><span class="tiny muted">Source COVID</span></div></div>
+              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">estado staff</span></div><div class="link">B · set_capacity ↔</div><div><strong>SED</strong><br><span class="tiny muted">ResourcePools</span></div></div>
+              <div class="coupling"><div><strong>MBA</strong><br><span class="tiny muted">Hospitalised</span></div><div class="link">C · staff→paciente →</div><div><strong>SED</strong><br><span class="tiny muted">medicalstaffCovid</span></div></div>
+              <div class="coupling"><div><strong>SED</strong><br><span class="tiny muted">KPIs / saturación</span></div><div class="link">D · política / escenarios ↔</div><div><strong>Decisión</strong><br><span class="tiny muted">Dashboard</span></div></div>
             </div>
             <div class="stack">
-              <div class="panel warn">
-                <h3 class="amber">Declaración de IA</h3>
-                <p class="tiny muted">Se utilizaron Gemini, ChatGPT y Claude como guía y asistencia para aprender a usar el software AnyLogic, comprender con mayor profundidad el modelo híbrido y apoyar la revisión técnica. El equipo verificó y adaptó críticamente las respuestas antes de incorporarlas.</p>
-              </div>
               <div class="panel">
-                <h3>Bibliografía esencial</h3>
-                <p class="tiny muted">Meza-Palacios et al. (2026) · Borshchev (2013) · Pérez-Tezoco et al. (2023) · CONACyT (2024) · Secretaría de Economía (2024).</p>
+                <h3>Diagramas (deconstrucción)</h3>
+                <ul class="clean compact">
+                  <li><strong>DS:</strong> Forrester S/I + bucles (+) prevalencia → infection → I.</li>
+                  <li><strong>MBA:</strong> statecharts Susceptible/Infected/Hosp./Recovered.</li>
+                  <li><strong>SED:</strong> Source → cola → triage → NEWS → estancia → sink.</li>
+                </ul>
               </div>
-              <div class="panel emphasis">
-                <h3>Video de sustentación</h3>
-                <p class="small"><strong>URL de YouTube:</strong></p>
-                <p class="small amber">[PEGAR ENLACE PÚBLICO AQUÍ]</p>
+              <div class="panel warn">
+                <h3 class="amber">Consistencia</h3>
+                <p class="small muted"><code>forceOfInfection</code> = <strong>producto</strong> (SEIR), no suma tipográfica del PDF: evita explosión dimensional y preserva ~69 llegadas/día (Tabla 3).</p>
               </div>
             </div>
           </div>
-          <div class="footer"><span>Video ≤ 20 min · rostros + pantalla · demostración en vivo</span><span>Gracias</span></div>
+          <div class="footer"><span>Borshchev (2013) · hibridación en runtime</span><span>06 / 12</span></div>
         </div>
       </section>
+
+      <!-- 07 · RESULTADOS ARTÍCULO -->
+      <section class="slide" data-theme="red" data-trans="tilt">
+        <div class="inner">
+          <div class="topbar"><span class="tag">07 · Artículo</span><span class="draft">RESULTADOS Y POLÍTICAS</span></div>
+          <div>
+            <h2>El híbrido propuesto reduce no atendidos y admite más adultos</h2>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Tabla 5 · medias (inicial → propuesto)</h3>
+              <div class="barrow"><span>No atendidos</span><div class="bar"><i style="width:57%"></i></div><strong>90,5 → 51,58</strong></div>
+              <div class="barrow"><span>Tratados</span><div class="bar"><i style="width:79%"></i></div><strong>12,68 → 15,90</strong></div>
+              <div class="barrow"><span>Adultos</span><div class="bar"><i style="width:58%"></i></div><strong>19,48 → 33,32</strong></div>
+              <div class="barrow"><span>Niños</span><div class="bar"><i style="width:50%"></i></div><strong>4,18 → 2,10</strong></div>
+            </div>
+            <div class="stack">
+              <figure class="figure" data-zoom>
+                <img src="img/fig8_it3.png" alt="Fig. 8 sensibilidad flujo It.3" />
+                <figcaption>Fig. 8 réplica · flujo vs π (It. 3)</figcaption>
+              </figure>
+              <div class="panel warn" style="padding:10px">
+                <p class="tiny muted">↑π → ↑flujo (tendencia OK). Escala paper no compatible con ~69 llegadas/día en el mismo ajuste.</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>Hallazgos originales del paper · no son aún nuestra réplica</span><span>07 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 08 · ANYLOGIC -->
+      <section class="slide" data-theme="red" data-trans="reveal">
+        <div class="inner">
+          <div class="topbar"><span class="tag">08 · Implementación</span><span class="draft">ANYLOGIC · DASHBOARD</span></div>
+          <div>
+            <h2>Parametrización y cuadro de mando interactivo</h2>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Lógica clave</h3>
+              <table>
+                <tbody>
+                  <tr><td>DS→SED</td><td><code>orizabaCovidPatients.inject(1)</code></td></tr>
+                  <tr><td>MBA→SED</td><td><code>set_capacity</code> pools</td></tr>
+                  <tr><td>Producto</td><td><code>c * preval * π</code></td></tr>
+                  <tr><td>Gate / untreated</td><td>0,02336 / 0,03484</td></tr>
+                  <tr><td>Camas</td><td>80 (paper)</td></tr>
+                </tbody>
+              </table>
+              <p class="tiny muted" style="margin-top:10px">Unidades: tasas /día; delays en min/días según Tablas 1–2; KPIs desde día 8.</p>
+            </div>
+            <div class="panel emphasis">
+              <h3>Dashboard</h3>
+              <ul class="clean compact">
+                <li>Sliders: <code>contacRate</code>, <code>pTransmit</code>, <code>patientToHospital</code>.</li>
+                <li>Estado S/I · capacidad Med/Enf/Aux.</li>
+                <li>Comparativa KPIs vs artículo (días 8–30).</li>
+                <li>Marcos claros bajo iconos de ResourcePool (legibilidad).</li>
+              </ul>
+              <p class="small" style="margin-top:12px"><strong>Archivo:</strong> <code>Modelo_hospital_tercera_version1k.alp</code></p>
+              <p class="tiny muted">Evidencia It. 3: carpeta <code>It3_referencia/</code> (CSV + gráficas + README).</p>
+            </div>
+          </div>
+          <div class="footer"><span>Demostración en vivo obligatoria en el video</span><span>08 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 09 · VALIDACIÓN -->
+      <section class="slide" data-theme="red" data-trans="rise">
+        <div class="inner">
+          <div class="topbar"><span class="tag">09 · Validación</span><span class="draft">MAPE · IC 95 % · IT. 3</span></div>
+          <div>
+            <h2>Fidelidad cuantitativa de la réplica (n = 20)</h2>
+            <p class="subtitle">KPIs acumulados días 8–30 vs Tabla 5 (modelo propuesto).</p>
+          </div>
+          <div class="grid cols-2">
+            <div class="panel">
+              <h3>Tabla 5 · It. 3 vs paper</h3>
+              <table>
+                <thead><tr><th>KPI</th><th>Media</th><th>Paper</th><th>Desvío</th></tr></thead>
+                <tbody>
+                  <tr><td>No atendidos</td><td>52,90</td><td>51,58</td><td><strong>+2,6 %</strong></td></tr>
+                  <tr><td>Tratados</td><td>16,10</td><td>15,90</td><td><strong>+1,3 %</strong></td></tr>
+                  <tr><td>Adultos</td><td>32,55</td><td>33,32</td><td><strong>−2,3 %</strong></td></tr>
+                  <tr><td>Niños</td><td>2,15</td><td>2,10</td><td><strong>+2,4 %</strong></td></tr>
+                </tbody>
+              </table>
+              <p class="small" style="margin-top:10px">MAPE ≈ <strong class="accent">2,1 %</strong> · Llegadas/día ≈ 68,8 (Tabla 3: 68,9).</p>
+            </div>
+            <div class="stack">
+              <figure class="figure" data-zoom>
+                <img src="img/fig9_it3.png" alt="Boxplots It.3 vs Tabla 5" />
+                <figcaption>Fig. 9 · boxplots híbrido It. 3</figcaption>
+              </figure>
+              <div class="grid cols-2" style="gap:8px">
+                <figure class="figure" data-zoom style="min-height:120px">
+                  <img src="img/desvios_tabla5_it3.png" alt="Desvíos Tabla 5" />
+                  <figcaption>Desvíos %</figcaption>
+                </figure>
+                <figure class="figure" data-zoom style="min-height:120px">
+                  <img src="img/fig7_it3.png" alt="Fig. 7 no atendidos" />
+                  <figcaption>Fig. 7</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="footer"><span>csv: It3_referencia/replicas_kpis_n20.csv</span><span>09 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 10 · APRENDIZAJES -->
+      <section class="slide" data-theme="green" data-trans="dissolve">
+        <div class="inner">
+          <div class="topbar"><span class="tag">10 · Aprendizajes</span><span class="draft">CONCLUSIONES DEL EQUIPO</span></div>
+          <div>
+            <h2>Qué aprendimos al hibridar de verdad</h2>
+          </div>
+          <div class="grid cols-3">
+            <div class="panel">
+              <h3>Académicos</h3>
+              <ul class="clean compact">
+                <li>DS, SED y MBA resuelven preguntas distintas; el valor está en el acoplamiento.</li>
+                <li>Validar es MAPE/IC, no “se ve bien”.</li>
+                <li>Un paper puede dejar huecos: hay que justificarlos con teoría/datos.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Técnicos</h3>
+              <ul class="clean compact">
+                <li>Suma tipográfica de forceOfInfection vs producto SEIR.</li>
+                <li>PLE 50k agentes; saturación → untreated sin crash.</li>
+                <li>Gates implicados por ratios Tabla 3↔5.</li>
+              </ul>
+            </div>
+            <div class="panel emphasis">
+              <h3>Decisión de entrega</h3>
+              <p class="small muted">Anclar la calificación a <strong>It. 3</strong> (Tabla 5/Fig. 9). Fig. 8 como sensibilidad de tendencia. No sacrificar MAPE 2 % por forzar la escala de la figura SD.</p>
+            </div>
+          </div>
+          <div class="footer"><span>Desafío central: consistencia dimensional + validación estadística</span><span>10 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 11 · CONTRIBUCIONES -->
+      <section class="slide" data-theme="violet" data-trans="zoom">
+        <div class="inner">
+          <div class="topbar"><span class="tag">11 · Equipo</span><span class="draft">CONTRIBUCIONES DE LOS MIEMBROS</span></div>
+          <div>
+            <h2>Matriz de transparencia</h2>
+          </div>
+          <div class="panel" style="flex:1">
+            <table>
+              <thead>
+                <tr><th>Miembro</th><th>Rol</th><th>Actividades / contribuciones</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Samuel Herrera</strong></td>
+                  <td>Arquitectura híbrida</td>
+                  <td>Integración DS–SED–MBA, fórmulas de acoplamiento, consistencia de unidades</td>
+                </tr>
+                <tr>
+                  <td><strong>Katherinne Olaya</strong></td>
+                  <td>Análisis y rigor</td>
+                  <td>Deconstrucción del artículo, datos, diseño experimental, revisión de justificación de parámetros</td>
+                </tr>
+                <tr>
+                  <td><strong>Fredy García</strong></td>
+                  <td>Implementación AnyLogic</td>
+                  <td>SED/MBA, experimentos de réplicas y sensibilidad, depuración de flujos</td>
+                </tr>
+                <tr>
+                  <td><strong>Ever Muñoz</strong></td>
+                  <td>Validación y entrega</td>
+                  <td>Dashboard, MAPE/IC, carpeta It. 3, presentación y producción de sustentación</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="footer"><span>Todos los integrantes suben la misma presentación a Moodle (FASE A)</span><span>11 / 12</span></div>
+        </div>
+      </section>
+
+      <!-- 12 · IA · BIBLIO · YOUTUBE -->
+      <section class="slide" data-theme="amber" data-trans="rise">
+        <div class="inner">
+          <div class="topbar"><span class="tag">12 · Cierre</span><span class="draft">IA · BIBLIOGRAFÍA · YOUTUBE</span></div>
+          <div>
+            <h2>Integridad, referencias y video</h2>
+          </div>
+          <div class="grid cols-3">
+            <div class="panel warn">
+              <h3 class="amber">Declaración de IA</h3>
+              <p class="tiny muted">Se utilizó asistencia de IA generativa (p. ej. ChatGPT/Claude/Cursor) para estructurar redacción, revisar código AnyLogic/XML y apoyar scripts de análisis (~25–40 % del apoyo escrito/técnico). <strong>Todo el contenido fue auditado y verificado por el equipo</strong>; no se pegó material sin revisión. La validez técnica es responsabilidad del equipo.</p>
+            </div>
+            <div class="panel">
+              <h3>Bibliografía (APA 7)</h3>
+              <p class="tiny muted">Meza-Palacios et al. (2026). <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
+              <p class="tiny muted">Borshchev, A. (2013). <em>The Big Book of Simulation Modeling</em>.</p>
+              <p class="tiny muted">Pérez-Tezoco et al. (2023). Datos hospitalarios (citados en el artículo).</p>
+              <p class="tiny muted">Anderson &amp; May (1991). Fuerza de infección.</p>
+              <p class="tiny muted">RCP (NEWS2). Umbrales clínicos.</p>
+            </div>
+            <div class="panel emphasis">
+              <h3>URL de YouTube</h3>
+              <p class="small muted">Video ≤ 20 min · rostros + pantalla · demo AnyLogic en vivo.</p>
+              <p class="small amber" style="margin-top:14px;word-break:break-all"><strong>[PEGAR ENLACE PÚBLICO AQUÍ]</strong></p>
+              <p class="tiny muted" style="margin-top:12px">Obligatorio en la última diapositiva (rúbrica FASE A).</p>
+            </div>
+          </div>
+          <div class="footer"><span>Gracias · Modelos y Simulación 2025970-4</span><span>12 / 12</span></div>
+        </div>
+      </section>
+
     </div>
   </main>
 
