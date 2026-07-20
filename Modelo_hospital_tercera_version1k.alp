@@ -18,8 +18,60 @@
 		<ActiveObjectClass>
 			<Id>1783897912797</Id>
 			<Name><![CDATA[Main]]></Name>
-			<StartupCode><![CDATA[archivoCSV.println("Dia,NoTratados,TasaTransmision,FlujoHospital");]]></StartupCode>
-			<DestroyCode><![CDATA[archivoCSV.close();]]></DestroyCode>
+			<StartupCode><![CDATA[archivoCSV.println("Dia,NoTratados,TasaTransmision,FlujoHospital");
+// Registro de pacientes ADMITIDOS dentro de la ventana de medicion (dia >= 8):
+// kpiTreated solo cuenta a quien esta aqui Y egresa antes del dia 30 (consistencia con Tabla 5).
+admitidosVentana = new java.util.HashSet<Agent>();]]></StartupCode>
+			<DestroyCode><![CDATA[// Cierra la serie diaria (Fig. 7/8: no atendidos y flujo por dia)
+archivoCSV.close();
+
+// Exporta UNA fila por corrida/replica al terminar (dia 30) para boxplots Tabla 5 / validacion Tabla 3.
+// Contadores acumulados 8-30; el script de Python normaliza a /dia lo que corresponde a Tabla 3.
+try {
+	// Ruta absoluta: el working dir de AnyLogic PLE no es predecible (una ruta
+	// relativa puede caer en Program Files y fallar sin aviso).
+	java.io.File dir = new java.io.File(System.getProperty("user.home"), "Documents");
+	if (!dir.exists()) dir = new java.io.File(System.getProperty("user.home"));
+	java.io.File f = new java.io.File(dir, "replicas_kpis.csv");
+	boolean writeHeader = !f.exists() || f.length() == 0;
+	java.io.FileWriter fw = new java.io.FileWriter(f, true);
+	if (writeHeader) {
+		fw.write("run_id,pTransmit,arrive,triage,untreated,treated,adultAdmit,childAdmit,discharge,ambulatory,staffInfected,waitAvg,dsToHospital,S,I\n");
+	}
+	fw.write(String.format(java.util.Locale.US,
+		"%d,%.4f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%.4f,%d,%.2f,%.2f\n",
+		System.currentTimeMillis(),
+		(double) probabilityOfTransmission,
+		(long) kpiArriveCovid, (long) kpiTriageResp, (long) kpiUntreated,
+		(long) kpiTreated, (long) kpiAdultAdmit, (long) kpiChildAdmit,
+		(long) kpiDischargeCovid, (long) kpiAmbulatory, (long) kpiStaffInfected,
+		(double) kpiWaitAvg, (long) kpiDsToHospital,
+		(double) Susceptible, (double) Infective));
+	fw.close();
+	traceln(String.format(java.util.Locale.US,
+		"%s <- p=%.3f arrive=%d untreated=%d treated=%d adult=%d child=%d",
+		f.getAbsolutePath(),
+		(double) probabilityOfTransmission,
+		(long) kpiArriveCovid, (long) kpiUntreated, (long) kpiTreated,
+		(long) kpiAdultAdmit, (long) kpiChildAdmit));
+	// Actualiza la pantalla del experimento ParametersVariation (AfterSimulationRun
+	// del .alp a veces no se engancha; DestroyCode si corre siempre al dia 30).
+	try {
+		if (getExperiment() instanceof ParametersVariation) {
+			ParametersVariation pv = (ParametersVariation) getExperiment();
+			pv.uiArrive = (int) kpiArriveCovid;
+			pv.uiUntreated = (int) kpiUntreated;
+			pv.uiTreated = (int) kpiTreated;
+			pv.uiAdult = (int) kpiAdultAdmit;
+			pv.uiChild = (int) kpiChildAdmit;
+			pv.uiDs = (int) kpiDsToHospital;
+		}
+	} catch (Exception e2) {
+		traceln("No se pudo actualizar UI de sensibilidad: " + e2);
+	}
+} catch (Exception e) {
+	traceln("No se pudo escribir replicas_kpis.csv: " + e);
+}]]></DestroyCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1783897912802</Id>
@@ -261,6 +313,18 @@
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
+					<Id>1999421000099</Id>
+					<Name><![CDATA[admitidosVentana]]></Name>
+					<X>1000</X><Y>605</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="default" StaticVariable="false">
+						<Type><![CDATA[java.util.HashSet<Agent>]]></Type>        
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
 					<Id>1999411000010</Id>
 					<Name><![CDATA[kpiDsToHospital]]></Name>
 					<X>970</X><Y>410</Y>
@@ -329,7 +393,7 @@
 					<EquationStyle>classic</EquationStyle>
 					<Width>20</Width>
 					<Height>20</Height>
-						<InitialValue><![CDATA[464675]]></InitialValue>
+						<InitialValue><![CDATA[121460]]></InitialValue>
 						<Color>-4073239</Color>
 					</Properties>
 				</Variable>
@@ -345,7 +409,7 @@
 					<EquationStyle>classic</EquationStyle>
 					<Width>20</Width>
 					<Height>20</Height>
-						<InitialValue><![CDATA[500]]></InitialValue>
+						<InitialValue><![CDATA[1722]]></InitialValue>
 						<Color>-4073239</Color>
 					</Properties>
 				</Variable>
@@ -464,7 +528,7 @@
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[0.0957]]></Code>
+							<Code><![CDATA[0.04]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1783902833044</Id>
@@ -2604,8 +2668,26 @@ if (sliderPhysicians != null) {
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[// Esto escribe el día actual y el valor de tus variables separados por comas
-archivoCSV.println(time() + "," + kpiUntreated + "," + probabilityOfTransmission + "," + hospitalFlow);]]></Action>
+					<Action><![CDATA[// Serie diaria para Fig. 8 (flujo acumulado al hospital).
+// Append en Documents para que ParametersVariation junte las 5 curvas (π).
+archivoCSV.println(time() + "," + kpiUntreated + "," + probabilityOfTransmission + "," + hospitalFlow);
+try {
+	java.io.File dir = new java.io.File(System.getProperty("user.home"), "Documents");
+	if (!dir.exists()) dir = new java.io.File(System.getProperty("user.home"));
+	java.io.File f = new java.io.File(dir, "fig8_flujo_diario.csv");
+	boolean writeHeader = !f.exists() || f.length() == 0;
+	java.io.FileWriter fw = new java.io.FileWriter(f, true);
+	if (writeHeader) {
+		fw.write("day,pTransmit,flujoHospital,untreated\n");
+	}
+	// Flujo acumulado hacia el hospital (stock ya enviado + pendiente de convertir).
+	double flujoAcum = kpiDsToHospital + goToHospital;
+	fw.write(String.format(java.util.Locale.US, "%.0f,%.4f,%.2f,%d\n",
+		time(), (double) probabilityOfTransmission, flujoAcum, (long) kpiUntreated));
+	fw.close();
+} catch (Exception e) {
+	traceln("No se pudo escribir fig8_flujo_diario.csv: " + e);
+}]]></Action>
 				</Event>
 			</Events>
 			<Connectivity>
@@ -3327,7 +3409,7 @@ archivoCSV.println(time() + "," + kpiUntreated + "," + probabilityOfTransmission
 						<Parameter>
 							<Name><![CDATA[probability]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[0.236]]></Code>
+								<Code><![CDATA[0.02336]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -3345,11 +3427,10 @@ archivoCSV.println(time() + "," + kpiUntreated + "," + probabilityOfTransmission
 						<Parameter>
 							<Name><![CDATA[onExitFalse]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[// Calib. Rust: p_amb=0.974 y p_seize_ok=0.222 → True=0.216 a triage.
-// False=0.784 se reparte en ambulatorios reales (~0.026) y no atendidos por cupo (~0.758).
+								<Code><![CDATA[// It.3 restaurada: True=0.02336; untreated 0.03484 del False (mejor MAPE 3.9%).
 if (time() >= 8) {
-	if (uniform() < 0.026 / 0.784) { kpiAmbulatory++; }
-	else { kpiUntreated++; }
+	if (uniform() < 0.03484) { kpiUntreated++; }
+	else { kpiAmbulatory++; }
 }]]></Code>
 							</Value>
 						</Parameter>
@@ -3854,9 +3935,6 @@ if (time() >= 8) {
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onExit]]></Name>
-							<Value Class="CodeValue">
-								<Code><![CDATA[if (time() >= 8) { kpiTreated++; }]]></Code>
-							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onTaskTerminated]]></Name>
@@ -4058,9 +4136,6 @@ if (time() >= 8) {
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onExit]]></Name>
-							<Value Class="CodeValue">
-								<Code><![CDATA[if (time() >= 8) { kpiTreated++; }]]></Code>
-							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[onTaskTerminated]]></Name>
@@ -4443,7 +4518,7 @@ if (time() >= 8) {
 						<Parameter>
 							<Name><![CDATA[onEnter]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[if (time() >= 8) { kpiChildAdmit++; }]]></Code>
+								<Code><![CDATA[if (time() >= 8) { kpiChildAdmit++; admitidosVentana.add(agent); }]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -5465,7 +5540,13 @@ if (time() >= 8) {
 						<Parameter>
 							<Name><![CDATA[onEnter]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[if (time() >= 8) { kpiDischargeCovid++; }]]></Code>
+								<Code><![CDATA[// Alta hospitalaria dentro de la ventana 8-30: cuenta como egreso.
+// 'Tratado' (Tabla 5) exige ademas haber sido ADMITIDO dentro de la ventana:
+// asi el KPI mide quien completa el ciclo admision->alta en los 22 dias, igual que los demas contadores.
+if (time() >= 8) {
+	kpiDischargeCovid++;
+	if (admitidosVentana.contains(agent)) { kpiTreated++; }
+}]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -5724,7 +5805,7 @@ if (agent instanceof PhysicianCovid){
 						<Parameter>
 							<Name><![CDATA[onEnter]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[if (time() >= 8) { kpiAdultAdmit++; }]]></Code>
+								<Code><![CDATA[if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -8786,6 +8867,9 @@ if (agent instanceof PhysicianCovid){
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[50]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -9203,6 +9287,72 @@ if (agent instanceof PhysicianCovid){
 					<Height>600</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-15788246</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Rectangle>
+					<Id>1999400000101</Id>
+					<Name><![CDATA[DASH_RES_BG_PHYS]]></Name>
+					<X>1498</X><Y>186</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-10197916</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>88</Width>
+					<Height>42</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Rectangle>
+					<Id>1999400000102</Id>
+					<Name><![CDATA[DASH_RES_BG_NURSES]]></Name>
+					<X>1498</X><Y>286</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-10197916</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>88</Width>
+					<Height>42</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Rectangle>
+					<Id>1999400000103</Id>
+					<Name><![CDATA[DASH_RES_BG_AUX]]></Name>
+					<X>1498</X><Y>386</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-10197916</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>88</Width>
+					<Height>42</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Rectangle>
 				<Text>
@@ -9693,7 +9843,7 @@ if (agent instanceof PhysicianCovid){
 					<Z>2</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-3289651</Color>
-					<Text><![CDATA[Pacientes No Atendidos (ref. 51.58/día)]]></Text>
+					<Text><![CDATA[Pacientes No Atendidos (ref. 51.58/corrida)]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>10</Size>
@@ -12299,7 +12449,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 				</Text>
 			</Presentation>
 
-			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<AllowParallelEvaluations>false</AllowParallelEvaluations>
 			<UseFreeformParameters>false</UseFreeformParameters>
 			<NumberOfRuns>1</NumberOfRuns>
 			<FreeformParamValue>	
@@ -12365,6 +12515,15 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 		<ParamVariationExperiment ActiveObjectClassId="1783897912797">
 			<Id>1784407521038</Id>
 			<Name><![CDATA[ParametersVariation]]></Name>
+			<AdditionalClassCode><![CDATA[
+// KPIs de la ultima corrida (rellenados desde Main.DestroyCode) para la pantalla.
+public int uiArrive = 0;
+public int uiUntreated = 0;
+public int uiTreated = 0;
+public int uiAdult = 0;
+public int uiChild = 0;
+public int uiDs = 0;
+]]></AdditionalClassCode>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>512</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
@@ -12375,81 +12534,603 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 			<LoadRootFromSnapshot>false</LoadRootFromSnapshot>
 
 			<Presentation>
-    			<TimePlot>
-					<Id>1784407844723</Id>
-					<Name><![CDATA[plot]]></Name>
-					<X>40</X><Y>120</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
+				<Text>
+					<Id>1999500001001</Id>
+					<Name><![CDATA[pvTitle]]></Name>
+					<X>40</X><Y>25</Y>
+					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<AutoUpdate>true</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1784407844721</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1784448000000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>260</Width>
-					<Height>210</Height>
-					<BackgroundColor/>
-					<BorderColor/>
-					<ChartArea>
-						<XOffset>50</XOffset>
-						<YOffset>30</YOffset>
-						<Width>180</Width>
-						<Height>120</Height>
-						<BackgroundColor>-1</BackgroundColor>
-						<BorderColor>-16777216</BorderColor>
-						<GridColor>-12566464</GridColor>
-					</ChartArea>
-					<Legend>
-						<Place>SOUTH</Place>
-						<TextColor>-16777216</TextColor>
-						<Size>30</Size>
-					</Legend>
-					<Labels>
-						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
-						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
-						<TextColor>-12566464</TextColor>
-					</Labels>
-					<ShowLegend>true</ShowLegend>
-					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>MODEL_TIME_UNIT</TimeWindowUnits>
-					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
-					<VerScaleType>AUTO</VerScaleType>
-					<DrawLine>true</DrawLine>
-					<Interpolation>LINEAR</Interpolation>
-					<DatasetExpression>  
-						<Title><![CDATA[Title]]></Title>
-					<Id>1784407846880</Id>
-					<Expression><![CDATA[dataset]]></Expression>
-					<Color>-10496</Color>
-					<Expression2><![CDATA[root.hospitalFlow]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>1.0</LineWidth>
-					</DatasetExpression>
-					<SamplesToKeep>100</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[100]]></TimeWindowExpression>
-					<FillAreaUnderLine>false</FillAreaUnderLine>
-					<LabelFormat>MODEL_TIME_UNITS</LabelFormat>
-    			</TimePlot>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12490271</Color>
+					<Text><![CDATA[Sensibilidad Fig. 8 — ParametersVariation]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>20</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001002</Id>
+					<Name><![CDATA[pvSub]]></Name>
+					<X>40</X><Y>55</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[π = probabilityOfTransmission  |  rango paper 0.02 → 0.06 (paso 0.01)]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001003</Id>
+					<Name><![CDATA[pvIterL]]></Name>
+					<X>50</X><Y>90</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Iteraciones completadas:]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001004</Id>
+					<Name><![CDATA[pvIterV]]></Name>
+					<X>320</X><Y>90</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[0]]></Text>
+					<TextCode><![CDATA[format(getNumberOfCompletedIterations()) + " / 5"]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>14</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001005</Id>
+					<Name><![CDATA[pvSec1]]></Name>
+					<X>50</X><Y>125</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[Parámetro en esta corrida]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Line>
+					<Id>1999500001006</Id>
+					<Name><![CDATA[pvLine1]]></Name>
+					<X>40</X><Y>145</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-12566464</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<Dx>300</Dx>
+					<Dy>0</Dy>
+					<Dz>0</Dz>
+				</Line>
+				<Rectangle>
+					<Id>1999500001007</Id>
+					<Name><![CDATA[pvRectPi]]></Name>
+					<X>40</X><Y>155</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>40</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999500001008</Id>
+					<Name><![CDATA[pvPiL]]></Name>
+					<X>50</X><Y>165</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[π  probabilityOfTransmission]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>13</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001009</Id>
+					<Name><![CDATA[pvPiV]]></Name>
+					<X>320</X><Y>165</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16738048</Color>
+					<Text><![CDATA[?]]></Text>
+					<TextCode><![CDATA[format(probabilityOfTransmission)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>16</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001010</Id>
+					<Name><![CDATA[pvSec2]]></Name>
+					<X>50</X><Y>215</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[KPIs última corrida (acum. días 8–30)]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Line>
+					<Id>1999500001011</Id>
+					<Name><![CDATA[pvLine2]]></Name>
+					<X>40</X><Y>235</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-12566464</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<Dx>300</Dx>
+					<Dy>0</Dy>
+					<Dz>0</Dz>
+				</Line>
+				<Rectangle>
+					<Id>1999500001100</Id>
+					<Name><![CDATA[pvR0]]></Name>
+					<X>40</X><Y>245</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999500001012</Id>
+					<Name><![CDATA[pvKL0]]></Name>
+					<X>50</X><Y>250</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Llegadas COVID]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001013</Id>
+					<Name><![CDATA[pvKV0]]></Name>
+					<X>320</X><Y>250</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiArrive)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001014</Id>
+					<Name><![CDATA[pvKL1]]></Name>
+					<X>50</X><Y>278</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[No atendidos]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001015</Id>
+					<Name><![CDATA[pvKV1]]></Name>
+					<X>320</X><Y>278</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiUntreated)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Rectangle>
+					<Id>1999500001102</Id>
+					<Name><![CDATA[pvR2]]></Name>
+					<X>40</X><Y>301</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999500001016</Id>
+					<Name><![CDATA[pvKL2]]></Name>
+					<X>50</X><Y>306</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Tratados]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001017</Id>
+					<Name><![CDATA[pvKV2]]></Name>
+					<X>320</X><Y>306</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiTreated)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001018</Id>
+					<Name><![CDATA[pvKL3]]></Name>
+					<X>50</X><Y>334</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Adultos admitidos]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001019</Id>
+					<Name><![CDATA[pvKV3]]></Name>
+					<X>320</X><Y>334</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiAdult)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Rectangle>
+					<Id>1999500001104</Id>
+					<Name><![CDATA[pvR4]]></Name>
+					<X>40</X><Y>357</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999500001020</Id>
+					<Name><![CDATA[pvKL4]]></Name>
+					<X>50</X><Y>362</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Niños admitidos]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001021</Id>
+					<Name><![CDATA[pvKV4]]></Name>
+					<X>320</X><Y>362</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiChild)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001022</Id>
+					<Name><![CDATA[pvKL5]]></Name>
+					<X>50</X><Y>390</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Flujo DS→hospital]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001023</Id>
+					<Name><![CDATA[pvKV5]]></Name>
+					<X>320</X><Y>390</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiDs)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999500001030</Id>
+					<Name><![CDATA[pvHint]]></Name>
+					<X>40</X><Y>430</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[Al terminar: Documents\\replicas_kpis.csv  →  python analyze_sensitivity.py]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>10</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
 			</Presentation>
 
-			<AllowParallelEvaluations>true</AllowParallelEvaluations>
+			<AllowParallelEvaluations>false</AllowParallelEvaluations>
 			<UseFreeformParameters>false</UseFreeformParameters>
-			<NumberOfRuns>10</NumberOfRuns>
+			<NumberOfRuns>5</NumberOfRuns>
 			<FreeformParamValue>	
 				<Id>1783902568621</Id>
 			</FreeformParamValue>
@@ -12473,16 +13154,16 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 				<Id>1783902798747</Id>
 				<Type>RANGE</Type>
 				<Expression Class="CodeValue">
-					<Code><![CDATA[0.1 0.5 0.1]]></Code>
+					<Code><![CDATA[0.02 0.06 0.01]]></Code>
 				</Expression>
 				<From Class="CodeValue">
-					<Code><![CDATA[0.1]]></Code>
+					<Code><![CDATA[0.02]]></Code>
 				</From>
 				<To Class="CodeValue">
-					<Code><![CDATA[0.5]]></Code>
+					<Code><![CDATA[0.06]]></Code>
 				</To>
 				<Step Class="CodeValue">
-					<Code><![CDATA[0.1]]></Code>
+					<Code><![CDATA[0.01]]></Code>
 				</Step>
 			</RangeVariationParamValue>
 			<RangeVariationParamValue>	
