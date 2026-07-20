@@ -1,11 +1,15 @@
-﻿# Proyecto Modelos y Simulacion
-
-Presentacion Entrega 5 (It. 3) + modelos AnyLogic.
+﻿# Proyecto Modelos y Simulacion — Entrega 5
 
 ## Presentacion
-- Abrir `index.html` en el navegador (12 diapositivas).
-- Graficas en `img/`.
-- Paquete completo It.3: carpeta `It3_referencia/` (CSV, graficas, README de validacion).
+- Abrir `Entrega5_paquete_joint/index.html` o la raiz `index.html`
+- PDF: `Entrega5_paquete_joint/presentacion.pdf`
+- Online: https://saanhevi.github.io/Proyecto-Modelos-y-Simulacion/
 
-## AnyLogic
-Modelos `.alp` en la raiz del repositorio.
+## Modelo de entrega
+`Entrega5_paquete_joint/Modelo_Entrega5_Hospital_Hibrido.alp`
+
+## Validacion
+Carpeta `Entrega5_paquete_joint/` (csv, graficas, MAPE Tabla 5 ~3.7%, Fig.8 ~8.7%).
+
+## Modelos AnyLogic del equipo
+Los `.alp` en la raiz del repositorio se conservan.
