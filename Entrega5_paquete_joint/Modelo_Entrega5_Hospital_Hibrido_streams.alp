@@ -12027,6 +12027,9 @@ public int uiTreated = 0;
 public int uiAdult = 0;
 public int uiChild = 0;
 public int uiDs = 0;
+// Debe coincidir con Properties → Replications → Replications per iteration
+// (AnyLogic no expone un getter público del total configurado).
+public int nReplicasTotal = 200;
 ]]></AdditionalClassCode>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>512</MaximumMemory>
@@ -12073,6 +12076,7 @@ public int uiDs = 0;
 					<Rotation>0.0</Rotation>
 					<Color>-12566464</Color>
 					<Text><![CDATA[200 réplicas · streams independientes · π fijo = 0.04]]></Text>
+					<TextCode><![CDATA[nReplicasTotal + " réplicas · streams independientes · π fijo = 0.04"]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>11</Size>
@@ -12115,7 +12119,7 @@ public int uiDs = 0;
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
 					<Text><![CDATA[0]]></Text>
-					<TextCode><![CDATA[format(getCurrentReplication()) + " / 200"]]></TextCode>
+					<TextCode><![CDATA[format(getCurrentReplication()) + " / " + format(nReplicasTotal)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>14</Size>
