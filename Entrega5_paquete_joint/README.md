@@ -3,7 +3,7 @@
 Réplica AnyLogic del artículo Meza-Palacios et al. (2026).
 
 ## Abrir la presentación
-- **Rúbrica (12 diapositivas):** doble clic en `presentacion_rubrica_12.html` ← usar esta para Moodle / video.
+- **Rúbrica (10 diapositivas, ≤12):** doble clic en `presentacion_rubrica_12.html` ← usar esta para Moodle / video.
 - Copia extendida (14 slides, más detalle visual): `index.html`
 - PDF: `presentacion.pdf` (regenerar si hace falta desde la versión de 12)
 

@@ -194,7 +194,7 @@
   </style>
 </head>
 <body>
-  <div id="counter">01 / 12</div>
+  <div id="counter">01 / 10</div>
   <button id="fs" type="button" title="Pantalla completa">⛶</button>
   <main id="stage"><div id="deck">
 
@@ -213,7 +213,10 @@
           <span class="chip"><b>Horizonte</b> · 30 días (calentamiento 8)</span>
           <span class="chip"><b>Fuera</b> · Figura 7 del modelo inicial</span>
         </div>
-        <div class="footer"><span>Meza-Palacios et al. (2026) · cita APA al final</span><span>01 / 12</span></div>
+        <div class="hero-meta" style="margin-top:4px">
+          <span class="chip"><b>Equipo</b> · Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</span>
+        </div>
+        <div class="footer"><span>Meza-Palacios et al. (2026) · cita APA al cierre</span><span>01 / 10</span></div>
       </div>
     </section>
 
@@ -225,12 +228,12 @@
           <span class="pill">MACRO · MESO · MICRO</span>
         </div>
         <h2>Tres niveles, una simulación</h2>
-        <div class="grid cols-3">
+        <div class="grid cols-3" style="flex:0.85">
           <div class="panel">
             <h3>Macro · System Dynamics</h3>
             <ul class="clean">
               <li>Niveles: Susceptible, Infective, goToHospital</li>
-              <li>Cinco expresiones del artículo (panel inferior)</li>
+              <li>Demanda epidémica agregada</li>
               <li>¿Cuánta gente busca hospital?</li>
             </ul>
           </div>
@@ -251,15 +254,19 @@
             </ul>
           </div>
         </div>
-        <div class="eq" style="flex:0 0 auto">
-          <strong>Expresiones del artículo (nombres en inglés):</strong><br />
-          totalPopulation = Susceptible + Infective<br />
-          prevalenceOfInfection = Infective / totalPopulation<br />
-          forceOfInfection = contacRate × prevalenceOfInfection × probabilityOfTransmission<br />
-          infection = forceOfInfection × Susceptible<br />
+        <div class="ph" style="flex:0.95;min-height:120px">
+          <strong>Diagrama de comunicación entre paradigmas</strong>
+          <span>Cómo opera cada nivel y cómo se habla con los otros en tiempo de ejecución (sustituir por tu figura)</span>
+        </div>
+        <div class="eq" style="flex:0 0 auto;font-size:clamp(0.82rem,1.05vw,0.95rem)">
+          <strong>Expresiones del artículo:</strong>
+          totalPopulation = Susceptible + Infective ·
+          prevalenceOfInfection = Infective / totalPopulation ·
+          forceOfInfection = contacRate × prevalenceOfInfection × probabilityOfTransmission ·
+          infection = forceOfInfection × Susceptible ·
           hospitalFlow = Infective × patientToHospital
         </div>
-        <div class="footer"><span>Cada nivel responde una pregunta distinta</span><span>02 / 12</span></div>
+        <div class="footer"><span>Detalle de acoplamiento también en la diapositiva de mapeo</span><span>02 / 10</span></div>
       </div>
     </section>
 
@@ -290,7 +297,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Huecos no publicados se documentan y se validan con el error porcentual absoluto medio</span><span>03 / 12</span></div>
+        <div class="footer"><span>Huecos no publicados se documentan y se validan con el error porcentual absoluto medio</span><span>03 / 10</span></div>
       </div>
     </section>
 
@@ -299,32 +306,41 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">04 · Rigor estadístico</span>
-          <span class="pill">ENTRADA · SEMILLAS · EXPERIMENTOS · SALIDA</span>
+          <span class="pill">ENTRADA · STREAMS · EXPERIMENTOS · SALIDA</span>
         </div>
-        <h2>Cómo tratamos la incertidumbre</h2>
-        <div class="metric-row">
-          <div class="metric"><b>Triangular</b><span>análisis de entrada</span></div>
-          <div class="metric"><b>4</b><span>streams independientes</span></div>
-          <div class="metric"><b>0,04</b><span>probabilityOfTransmission base</span></div>
-          <div class="metric"><b>200</b><span>réplicas + intervalo 95%</span></div>
-        </div>
+        <h2>Tratamiento de la estocasticidad</h2>
         <div class="grid cols-2">
-          <div class="panel">
-            <h3>Entrada y semillas</h3>
+          <div class="panel accent">
+            <h3>i. Análisis de entrada</h3>
             <ul class="clean">
-              <li>Análisis de entrada: triangulares del paper (mínimo / moda / máximo)</li>
-              <li>Streams: rngSed · rngAbm · rngGate · rngBranch</li>
+              <li>Ajuste de distribuciones: tiempos de estancia y demoras con <strong>triangular</strong> (mínimo / moda / máximo de Tablas 1–2 del artículo)</li>
+              <li>No se recalibraron esas distribuciones: se respetó el paper</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Diseño de experimentos y salida</h3>
+            <h3>ii. Semillas pseudoaleatorias (streams)</h3>
             <ul class="clean">
-              <li>Factor: probabilityOfTransmission ∈ {0,02…0,06} · caso base 0,04</li>
-              <li>Salida: media ± intervalo de confianza 95% · error porcentual absoluto medio vs Tabla 5 / Figura 8</li>
+              <li>Cuatro streams independientes: <code>rngSed</code>, <code>rngAbm</code>, <code>rngGate</code>, <code>rngBranch</code></li>
+              <li>Semilla distinta por réplica (<code>randomSeed</code>) para no correlacionar corridas</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>iii. Diseño de experimentos</h3>
+            <ul class="clean">
+              <li><strong>Factor:</strong> probabilityOfTransmission ∈ {0,02; 0,03; 0,04; 0,05; 0,06} (Figura 8)</li>
+              <li><strong>Escenario base:</strong> probabilityOfTransmission = 0,04 · modelo con streams</li>
+              <li><strong>Respuestas:</strong> untreated, treated, adultAdmit, childAdmit, hospitalFlow acumulado</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>iv. Análisis de salida</h3>
+            <ul class="clean">
+              <li>200 réplicas independientes · media ± intervalo de confianza 95%</li>
+              <li>Error porcentual absoluto medio frente a Tabla 5 y Figura 8</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>ExperimentoReplicas · ParametersVariation</span><span>04 / 12</span></div>
+        <div class="footer"><span>ExperimentoReplicas · ParametersVariation</span><span>04 / 10</span></div>
       </div>
     </section>
 
@@ -357,7 +373,7 @@
             </div>
           </div>
         </div>
-        <div class="footer"><span>Sustituye los recuadros por tus diagramas exportados</span><span>05 / 12</span></div>
+        <div class="footer"><span>Sustituye los recuadros por tus diagramas exportados</span><span>05 / 10</span></div>
       </div>
     </section>
 
@@ -387,7 +403,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Validamos el híbrido (Tabla 5 / Figura 9 + forma Figura 8)</span><span>06 / 12</span></div>
+        <div class="footer"><span>Validamos el híbrido (Tabla 5 / Figura 9 + forma Figura 8)</span><span>06 / 10</span></div>
       </div>
     </section>
 
@@ -415,11 +431,10 @@
               <li>Sliders: contacRate, probabilityOfTransmission, patientToHospital</li>
               <li>Indicadores: untreated, treated, admits, Susceptible / Infective</li>
               <li>Capacidad de personal ajustable</li>
-              <li><a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion/tree/main/Entrega5_paquete_joint" target="_blank" rel="noopener">Paquete en GitHub</a></li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Demo: sliders + inject System Dynamics → Discrete-Event Simulation + caída de capacity</span><span>07 / 12</span></div>
+        <div class="footer"><span>Demo: sliders + inject System Dynamics → Discrete-Event Simulation + caída de capacity</span><span>07 / 10</span></div>
       </div>
     </section>
 
@@ -466,7 +481,7 @@
             </div>
           </div>
         </div>
-        <div class="footer"><span>csv/replicas_kpis_streams_n200.csv</span><span>08 / 12</span></div>
+        <div class="footer"><span>csv/replicas_kpis_streams_n200.csv</span><span>08 / 10</span></div>
       </div>
     </section>
 
@@ -498,89 +513,55 @@
             <p class="note">Priorizamos Tabla 5 / Figura 9 (error porcentual absoluto medio 3,0%) y la forma de la Figura 8 (8,7%), con demo en vivo.</p>
           </div>
         </div>
-        <div class="footer"><span>Unidades, relojes y semántica de “persona” en tres paradigmas</span><span>09 / 12</span></div>
+        <div class="footer"><span>Unidades, relojes y semántica de “persona” en tres paradigmas</span><span>09 / 10</span></div>
       </div>
     </section>
 
-    <!-- 10 -->
+    <!-- 10 CIERRE: contribuciones + IA + bibliografía + repo -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">10 · Contribuciones</span>
-          <span class="pill">TRANSPARENCIA</span>
+          <span class="tag">10 · Cierre</span>
+          <span class="pill">EQUIPO · IA · APA · REPOSITORIO</span>
         </div>
-        <h2>Matriz del equipo</h2>
-        <div class="panel" style="flex:1">
-          <table>
-            <thead>
-              <tr><th>Miembro</th><th>Rol</th><th>Contribuciones</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>Samuel Herrera</strong></td><td>Arquitectura híbrida</td><td>Integración System Dynamics – Discrete-Event Simulation – Agent-Based Modeling y unidades</td></tr>
-              <tr><td><strong>Katherinne Olaya</strong></td><td>Análisis y rigor</td><td>Artículo, datos y diseño experimental</td></tr>
-              <tr><td><strong>Fredy García</strong></td><td>Implementación</td><td>Flujos Discrete-Event Simulation, réplicas y sensibilidad</td></tr>
-              <tr><td><strong>Ever Muñoz</strong></td><td>Validación / entrega</td><td>Dashboard, error porcentual absoluto medio, paquete y presentación</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="footer"><span>Misma presentación para todos en Moodle</span><span>10 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 11 -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">11 · Uso de inteligencia artificial</span>
-          <span class="pill">INTEGRIDAD</span>
-        </div>
-        <h2>Declaración explícita</h2>
-        <div class="grid cols-2">
-          <div class="panel warn">
-            <h3>Qué usamos</h3>
-            <p class="note">ChatGPT, Gemini y Claude (~30–40% del material auxiliar) para ideas, organización, revisión de código y gráficas. <strong>El equipo auditó ecuaciones, corridas y números.</strong></p>
+        <h2>Transparencia, referencias y entrega</h2>
+        <div class="grid cols-2" style="flex:1.1">
+          <div class="panel" style="overflow:auto">
+            <h3>Contribuciones del equipo</h3>
+            <table>
+              <thead>
+                <tr><th>Miembro</th><th>Rol</th><th>Contribuciones</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Samuel Herrera</strong></td><td>Arquitectura híbrida</td><td>Integración de paradigmas y unidades</td></tr>
+                <tr><td><strong>Katherinne Olaya</strong></td><td>Análisis y rigor</td><td>Artículo, datos y diseño experimental</td></tr>
+                <tr><td><strong>Fredy García</strong></td><td>Implementación</td><td>Flujos, réplicas y sensibilidad</td></tr>
+                <tr><td><strong>Ever Muñoz</strong></td><td>Validación / entrega</td><td>Dashboard, errores, paquete y presentación</td></tr>
+              </tbody>
+            </table>
+            <h3 style="margin-top:14px">Declaración de inteligencia artificial</h3>
+            <p class="note">Se usaron ChatGPT, Gemini y Claude (~30–40% del material auxiliar) para ideas, organización, revisión de código y gráficas. <strong>El equipo auditó ecuaciones, corridas y resultados.</strong> Sin plagio directo.</p>
           </div>
-          <div class="panel accent">
-            <h3>Qué no hicimos</h3>
-            <ul class="clean">
-              <li>No hay copia literal sin verificación</li>
-              <li>La validez técnica es responsabilidad del equipo</li>
-            </ul>
+          <div class="stack" style="display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div class="panel accent" style="overflow:auto;flex:1">
+              <h3>Cita del artículo (APA 7.ª)</h3>
+              <p class="cite" style="font-size:clamp(0.92rem,1.15vw,1.05rem)">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
+              <h3 style="margin-top:12px">Bibliografía complementaria</h3>
+              <ul class="refs">
+                <li><span class="ref-tag">Teoría</span> Anderson, R. M., &amp; May, R. M. (1991). <em>Infectious diseases of humans</em>. Oxford University Press.</li>
+                <li><span class="ref-tag">Híbridos</span> Borshchev, A. (2013). <em>The big book of simulation modeling</em>. AnyLogic.</li>
+                <li><span class="ref-tag">Datos</span> Pérez-Tezoco et al. (2023); Secretaría de Economía (2024); Secretaría de Salud (2024).</li>
+              </ul>
+            </div>
+            <div class="panel warn" style="flex:0 0 auto">
+              <h3>Repositorio del proyecto</h3>
+              <p class="note">Modelos AnyLogic, CSV, gráficas, diagramas y documentación completa:</p>
+              <p class="note" style="margin-top:12px;color:var(--amber)"><strong>[PEGAR ENLACE DEL REPOSITORIO GITHUB]</strong></p>
+              <p class="note" style="margin-top:8px;font-size:0.92rem">Sugerido: https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion</p>
+            </div>
           </div>
         </div>
-        <div class="footer"><span>Uso ético · sin plagio directo</span><span>11 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 12 -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">12 · Cita y bibliografía</span>
-          <span class="pill">APA 7 · VIDEO</span>
-        </div>
-        <h2>Referencias</h2>
-        <div class="grid cols-2-wide">
-          <div class="panel accent" style="overflow:auto">
-            <h3>Cita del artículo</h3>
-            <p class="cite">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. <a class="link-out" href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a></p>
-            <h3 style="margin-top:16px">Complementarias</h3>
-            <ul class="refs">
-              <li><span class="ref-tag">Teoría</span> Anderson, R. M., &amp; May, R. M. (1991). <em>Infectious diseases of humans</em>. Oxford University Press.</li>
-              <li><span class="ref-tag">Híbridos</span> Borshchev, A. (2013). <em>The big book of simulation modeling</em>. AnyLogic.</li>
-              <li><span class="ref-tag">Datos</span> Pérez-Tezoco et al. (2023); Secretaría de Economía (2024); Secretaría de Salud (2024).</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h3>Video</h3>
-            <p class="note">≤ 20 min · rostros + pantalla (PiP) · demo AnyLogic.</p>
-            <p class="note" style="margin-top:18px;color:var(--amber)"><strong>[PEGAR ENLACE DE YOUTUBE]</strong></p>
-            <p class="note" style="margin-top:18px">
-              <a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">GitHub</a>
-            </p>
-          </div>
-        </div>
-        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>12 / 12</span></div>
+        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>10 / 10</span></div>
       </div>
     </section>
 
