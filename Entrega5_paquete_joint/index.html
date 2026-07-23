@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -7,6 +7,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "dark",
+      securityLevel: "loose",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#1a3d3a",
+        primaryTextColor: "#f5fbf9",
+        primaryBorderColor: "#4fe0cf",
+        lineColor: "#9ec9c2",
+        secondaryColor: "#2c261c",
+        tertiaryColor: "#143330",
+        fontFamily: "DM Sans, sans-serif",
+        fontSize: "14px"
+      }
+    });
+    window.__mermaid = mermaid;
+  </script>
   <style>
     :root {
       --text: #f5fbf9;
@@ -37,6 +57,27 @@
         linear-gradient(150deg, var(--bg1, #123038) 0%, var(--bg2, #07161a) 55%, #050d10 100%);
     }
     .slide.active { visibility: visible; opacity: 1; transform: none; z-index: 2; }
+    .mermaid-wrap {
+      background: rgba(0,0,0,.28);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 14px;
+      overflow: auto;
+      max-height: min(58vh, 520px);
+    }
+    .mermaid-wrap .mermaid { display: flex; justify-content: center; }
+    .mermaid-wrap svg { max-width: 100%; height: auto; }
+    .eq-box {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--muted);
+      background: rgba(0,0,0,.22);
+      border-left: 3px solid var(--accent, var(--cyan));
+      padding: 10px 12px;
+      border-radius: 0 10px 10px 0;
+      margin-top: 10px;
+    }
     .slide[data-theme="amber"] {
       --glow: rgba(255,209,102,.18);
       --bg1: #2c261c; --bg2: #161410;
@@ -336,7 +377,7 @@
   </style>
 </head>
 <body>
-  <div id="counter">01 / 12</div>
+  <div id="counter">01 / 14</div>
   <button id="fs" type="button" title="Pantalla completa">⛶</button>
   <main id="stage"><div id="deck">
 
@@ -356,7 +397,7 @@
               <li>Meza-Palacios et al. (2026), <em>Journal of Simulation</em>.</li>
               <li>Tema: capacidad hospitalaria en emergencias sanitarias.</li>
               <li>Enfoque: simulación híbrida DS + eventos + agentes.</li>
-              <li>Referencia completa APA al final (diapositiva 12).</li>
+              <li>Referencia completa APA al final (diapositiva 14).</li>
             </ul>
           </div>
           <div class="panel">
@@ -367,10 +408,10 @@
               <li>Fredy García</li>
               <li>Ever Muñoz</li>
             </ul>
-            <p class="note" style="margin-top:14px">Archivo a abrir en AnyLogic:<br /><code>Modelo_Entrega5_Hospital_Hibrido.alp</code></p>
+            <p class="note" style="margin-top:14px">Archivo a abrir en AnyLogic:<br /><code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code></p>
           </div>
         </div>
-        <div class="footer"><span>Modelos y Simulación · 2025970-4</span><span>01 / 12</span></div>
+        <div class="footer"><span>Modelos y Simulación · 2025970-4</span><span>01 / 14</span></div>
       </div>
     </section>
 
@@ -401,7 +442,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Delimitación: modelo híbrido del paper (no todo el hospital general)</span><span>02 / 12</span></div>
+        <div class="footer"><span>Delimitación: modelo híbrido del paper (no todo el hospital general)</span><span>02 / 14</span></div>
       </div>
     </section>
 
@@ -439,15 +480,108 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Justificación: cada nivel responde una pregunta distinta; juntos cierran el ciclo demanda–capacidad</span><span>03 / 12</span></div>
+        <div class="footer"><span>Justificación: cada nivel responde una pregunta distinta; juntos cierran el ciclo demanda–capacidad</span><span>03 / 14</span></div>
       </div>
     </section>
 
-    <!-- 04 DATOS -->
+    <!-- 04 CICLOS CAUSALES -->
+    <section class="slide" data-theme="green">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">04 · Ciclos causales DS</span>
+          <span class="pill">MACRO · DINÁMICA DE SISTEMAS</span>
+        </div>
+        <h2>Diagrama de ciclos causales (comunidad)</h2>
+        <div class="grid cols-2-wide">
+          <div class="mermaid-wrap">
+            <pre class="mermaid">
+flowchart TB
+  subgraph R1["R1 Reforzador — contagio"]
+    S((S))
+    I((I))
+    Prev[prevalence]
+    FOI[FOI = c·prev·π]
+    Inf[infection]
+    S -->|"−"| Inf
+    Inf -->|"+"| I
+    I -->|"+"| Prev
+    Prev -->|"+"| FOI
+    FOI -->|"+"| Inf
+    Inf -->|"−"| S
+  end
+  subgraph B1["B1 Balanceador — hospital"]
+    HF[hospitalFlow]
+    GTH[(goToHospital)]
+    I -->|"+"| HF
+    HF -->|"+"| GTH
+    HF -->|"−"| I
+  end
+            </pre>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <h3>Lectura</h3>
+              <ul class="clean">
+                <li><strong>R1:</strong> más infectados → más prevalencia → más contagios.</li>
+                <li><strong>B1:</strong> hospitalización drena \(I\) y alimenta la demanda SED.</li>
+                <li>\(+\) mismo sentido · \(−\) sentido opuesto.</li>
+              </ul>
+            </div>
+            <div class="panel accent">
+              <h3>Entrega</h3>
+              <p class="note">\(c=2.65\), \(\pi=0.04\), \(p_{2h}=0.009\), \(N=123\,182\). Detalle Mermaid: <code>DIAGRAMAS_HIBRIDO.md</code>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>El stock goToHospital es el puente DS → arribos discretos</span><span>04 / 14</span></div>
+      </div>
+    </section>
+
+    <!-- 05 ACOPLAMIENTO -->
+    <section class="slide" data-theme="violet">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">05 · Comunicación en runtime</span>
+          <span class="pill">DS ↔ MBA ↔ SED</span>
+        </div>
+        <h2>Acoplamiento bidireccional (mismo reloj)</h2>
+        <div class="grid cols-2-wide">
+          <div class="mermaid-wrap">
+            <pre class="mermaid">
+flowchart LR
+  DS[DS macro<br/>S I goToHospital]
+  SED[SED micro<br/>cola triage camas]
+  MBA[MBA meso<br/>staff statecharts]
+  DS -->|"① inject si GTH>0"| SED
+  MBA -->|"② capacity pools"| SED
+  SED -->|"③ send Infection"| MBA
+  MBA -->|"④ staff→paciente"| SED
+            </pre>
+          </div>
+          <div class="stack">
+            <div class="panel accent">
+              <h3>Matemática del puente ①</h3>
+              <div class="eq-box">
+                hospitalFlow = I · p<sub>2h</sub><br/>
+                d(GTH)/dt = hospitalFlow<br/>
+                si GTH &gt; 0 ⇒ GTH−− y inject(1)
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Lazo cerrado ②–③</h3>
+              <p class="note">SED expone al staff → MBA infecta → baja <code>ResourcePool.capacity</code> → más espera / untreated en SED.</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>No son tres modelos pegados al final: hablan mientras corre la simulación</span><span>05 / 14</span></div>
+      </div>
+    </section>
+
+    <!-- 06 DATOS -->
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">04 · Conjunto de datos</span>
+          <span class="tag">06 · Conjunto de datos</span>
           <span class="pill">FUENTES DEL PAPER</span>
         </div>
         <h2>De dónde salen los números</h2>
@@ -469,7 +603,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Entrada = datos del artículo + parámetros justificados cuando el paper no los da</span><span>04 / 12</span></div>
+        <div class="footer"><span>Entrada = datos del artículo + parámetros justificados cuando el paper no los da</span><span>06 / 14</span></div>
       </div>
     </section>
 
@@ -477,7 +611,7 @@
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">05 · Rigor estadístico</span>
+          <span class="tag">07 · Rigor estadístico</span>
           <span class="pill">ALEATORIEDAD · RÉPLICAS</span>
         </div>
         <h2>Cómo tratamos la incertidumbre</h2>
@@ -507,7 +641,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Sin fórmulas densas en pantalla: el detalle numérico va en la diapositiva de validación</span><span>05 / 12</span></div>
+        <div class="footer"><span>Sin fórmulas densas en pantalla: el detalle numérico va en la diapositiva de validación</span><span>07 / 14</span></div>
       </div>
     </section>
 
@@ -515,7 +649,7 @@
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">06 · Mapeo de interfaces</span>
+          <span class="tag">08 · Mapeo de interfaces</span>
           <span class="pill">ACOPLAMIENTO EN VIVO</span>
         </div>
         <h2>Cómo se hablan los tres paradigmas</h2>
@@ -544,11 +678,11 @@
           </div>
           <div class="stack">
             <div class="panel">
-              <h3>Diagramas (idea)</h3>
+              <h3>Diagramas</h3>
               <ul class="clean">
-                <li><strong>DS:</strong> niveles y flujos (susceptibles / infectados).</li>
-                <li><strong>Agentes:</strong> máquina de estados del personal.</li>
-                <li><strong>Eventos:</strong> flujo operativo cola → triage → cama → salida.</li>
+                <li><strong>DS:</strong> ciclos causales R1 / B1 (slide 04).</li>
+                <li><strong>Acoplamiento:</strong> inject · capacity · Infection (slide 05).</li>
+                <li><strong>Completo:</strong> <code>DIAGRAMAS_HIBRIDO.md</code> (flujo SED + statecharts).</li>
               </ul>
             </div>
             <div class="panel warn">
@@ -557,7 +691,7 @@
             </div>
           </div>
         </div>
-        <div class="footer"><span>Demo en vivo: mostrar inject DS→SED y cambio de capacidad del personal</span><span>06 / 12</span></div>
+        <div class="footer"><span>Demo en vivo: mostrar inject DS→SED y cambio de capacidad del personal</span><span>08 / 14</span></div>
       </div>
     </section>
 
@@ -565,7 +699,7 @@
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">07 · Resultados del artículo</span>
+          <span class="tag">09 · Resultados del artículo</span>
           <span class="pill">HALLAZGOS ORIGINALES</span>
         </div>
         <h2>Qué concluye el paper (antes de nuestra réplica)</h2>
@@ -592,7 +726,7 @@
             </div>
           </div>
         </div>
-        <div class="footer"><span>Esta diapositiva resume al artículo; la siguiente muestra nuestra implementación</span><span>07 / 12</span></div>
+        <div class="footer"><span>Esta diapositiva resume al artículo; la siguiente muestra nuestra implementación</span><span>09 / 14</span></div>
       </div>
     </section>
 
@@ -600,7 +734,7 @@
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">08 · Codificación en AnyLogic</span>
+          <span class="tag">10 · Codificación en AnyLogic</span>
           <span class="pill">DASHBOARD · JUSTIFICACIÓN DE PARÁMETROS</span>
         </div>
         <h2>Implementación y por qué esos valores</h2>
@@ -627,7 +761,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Dashboard: deslizadores de contacto, transmisión y tasa hospital · demo en vivo</span><span>08 / 12</span></div>
+        <div class="footer"><span>Dashboard: deslizadores de contacto, transmisión y tasa hospital · demo en vivo</span><span>10 / 14</span></div>
       </div>
     </section>
 
@@ -635,7 +769,7 @@
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">09 · Validación y errores</span>
+          <span class="tag">11 · Validación y errores</span>
           <span class="pill">TABLA 5 · FIGURA 8 · FIGURA 9</span>
         </div>
         <h2>Fidelidad de la réplica (200 corridas · streams)</h2>
@@ -664,7 +798,7 @@
             </figure>
           </div>
         </div>
-        <div class="footer"><span>Datos: carpeta csv/ · gráficas alineadas al artículo</span><span>09 / 12</span></div>
+        <div class="footer"><span>Datos: carpeta csv/ · gráficas alineadas al artículo</span><span>11 / 14</span></div>
       </div>
     </section>
 
@@ -672,7 +806,7 @@
     <section class="slide" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">10 · Aprendizajes del equipo</span>
+          <span class="tag">12 · Aprendizajes del equipo</span>
           <span class="pill">CONCLUSIONES · FIGURA 8</span>
         </div>
         <h2>Qué aprendimos · y la Figura 8 de nuestra réplica</h2>
@@ -706,7 +840,7 @@
             <figcaption>Figura 8 · escala frente al artículo</figcaption>
           </figure>
         </div>
-        <div class="footer"><span>Clic en una gráfica para ampliarla</span><span>10 / 12</span></div>
+        <div class="footer"><span>Clic en una gráfica para ampliarla</span><span>12 / 14</span></div>
       </div>
     </section>
 
@@ -714,7 +848,7 @@
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">11 · Contribuciones del equipo</span>
+          <span class="tag">13 · Contribuciones del equipo</span>
           <span class="pill">TRANSPARENCIA</span>
         </div>
         <h2>Quién hizo qué</h2>
@@ -747,7 +881,7 @@
             </tbody>
           </table>
         </div>
-        <div class="footer"><span>Todos suben la misma presentación a Moodle (FASE A)</span><span>11 / 12</span></div>
+        <div class="footer"><span>Todos suben la misma presentación a Moodle (FASE A)</span><span>13 / 14</span></div>
       </div>
     </section>
 
@@ -755,7 +889,7 @@
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">12 · Cierre</span>
+          <span class="tag">14 · Cierre</span>
           <span class="pill">IA · BIBLIOGRAFÍA · VIDEO</span>
         </div>
         <h2>Integridad, referencias y sustentación</h2>
@@ -781,7 +915,7 @@
             <p class="note" style="margin-top:12px">Obligatorio en la última diapositiva.</p>
           </div>
         </div>
-        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>12 / 12</span></div>
+        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>14 / 14</span></div>
       </div>
     </section>
 

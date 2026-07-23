@@ -16,6 +16,7 @@ Detalle: `RESULTADOS_STREAMS.md` · `README_STREAMS.md` · `PARAMETROS_COMPROMIS
 ## Contenido
 - `index.html` + `img/` — presentación
 - `presentacion.pdf` — misma presentación en PDF
+- `DIAGRAMAS_HIBRIDO.md` — ciclos causales DS + desglose macro/meso/micro + acoplamiento bidireccional (Mermaid)
 - `graficas/` — Fig. 8, Fig. 9 / Tabla 5 y desvíos
 - `csv/` — réplicas (incl. `replicas_kpis_streams_n200.csv`) y resúmenes
 - `scripts/` — regenerar gráficas y PDF
