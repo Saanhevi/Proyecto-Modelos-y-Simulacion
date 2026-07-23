@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -188,42 +188,15 @@
   <button id="fs" type="button" title="Pantalla completa">⛶</button>
   <main id="stage"><div id="deck">
 
-    <!-- 01 CITA -->
+    <!-- 01 PROBLEMA (sin APA; la cita completa va al final) -->
     <section class="slide active" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">01 · Cita del artículo</span>
-          <span class="pill">APA 7 · 12 DIAPOSITIVAS</span>
+          <span class="tag">01 · Descripción del problema</span>
+          <span class="pill">RESUMEN EJECUTIVO · 12 DIAPOSITIVAS</span>
         </div>
         <h1>Capacidad hospitalaria<br /><span>en emergencias sanitarias</span></h1>
-        <p class="lead">Réplica híbrida en AnyLogic (DS + MBA + SED) · Entrega 5 · Modelos y Simulación.</p>
-        <div class="grid cols-2">
-          <div class="panel accent">
-            <h3>Referencia APA (7.ª edición)</h3>
-            <p class="cite">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. <a class="link-out" href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a></p>
-          </div>
-          <div class="panel">
-            <h3>Equipo</h3>
-            <ul class="clean">
-              <li>Samuel Herrera · Katherinne Olaya</li>
-              <li>Fredy García · Ever Muñoz</li>
-              <li>Modelo: <code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code></li>
-              <li>Repo: <a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">GitHub · Proyecto-Modelos-y-Simulacion</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer"><span>Estructura rúbrica · máximo 12 diapositivas</span><span>01 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 02 PROBLEMA -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">02 · Descripción del problema</span>
-          <span class="pill">RESUMEN EJECUTIVO</span>
-        </div>
-        <h2>Qué problema resuelven los autores</h2>
+        <p class="lead">Réplica híbrida en AnyLogic (DS + MBA + SED) del modelo de Meza-Palacios et al. (2026) · Entrega 5.</p>
         <div class="grid cols-2">
           <div class="panel accent">
             <h3>Resumen ejecutivo</h3>
@@ -234,23 +207,24 @@
             </ul>
           </div>
           <div class="panel">
-            <h3>Delimitación (qué sí / qué no)</h3>
+            <h3>Delimitación · equipo</h3>
             <ul class="clean">
-              <li><strong>Sí:</strong> modelo híbrido del paper (DS + agentes + eventos) y validación Tabla 5 / Fig. 8–9.</li>
-              <li><strong>No:</strong> hospital general completo ni la Fig. 7 del “modelo inicial” (no híbrido).</li>
-              <li>Horizonte: 30 días · calentamiento 8 · KPIs acum. días 8–30.</li>
+              <li><strong>Sí:</strong> híbrido del paper + validación Tabla 5 / Fig. 8–9.</li>
+              <li><strong>No:</strong> hospital general ni Fig. 7 del modelo inicial.</li>
+              <li>Horizonte 30 días · warm-up 8 · KPIs días 8–30.</li>
+              <li>Samuel · Katherinne · Fredy · Ever · <code>…_streams.alp</code></li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Delimitación: réplica del híbrido publicado, no de todo el sistema de salud</span><span>02 / 12</span></div>
+        <div class="footer"><span>Referencia APA completa al cierre (diapositiva 12)</span><span>01 / 12</span></div>
       </div>
     </section>
 
-    <!-- 03 MULTIMÉTODO -->
+    <!-- 02 MULTIMÉTODO -->
     <section class="slide" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">03 · Desglose multimétodo</span>
+          <span class="tag">02 · Desglose multimétodo</span>
           <span class="pill">MACRO · MESO · MICRO</span>
         </div>
         <h2>Tres niveles jerárquicos, una sola simulación</h2>
@@ -280,7 +254,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Justificación: cada nivel responde una pregunta distinta; juntos cierran demanda–capacidad</span><span>03 / 12</span></div>
+        <div class="footer"><span>Criterio rúbrica: desglose impecable de los tres niveles</span><span>02 / 12</span></div>
       </div>
     </section>
 
@@ -288,7 +262,7 @@
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">04 · Conjunto de datos</span>
+          <span class="tag">03 · Conjunto de datos</span>
           <span class="pill">FUENTES · SERIES</span>
         </div>
         <h2>Datos históricos y fuentes del artículo</h2>
@@ -311,7 +285,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Entrada = datos del artículo + parámetros documentados cuando el paper no los publica</span><span>04 / 12</span></div>
+        <div class="footer"><span>Entrada = datos del artículo + parámetros documentados cuando el paper no los publica</span><span>03 / 12</span></div>
       </div>
     </section>
 
@@ -319,7 +293,7 @@
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">05 · Rigor estadístico</span>
+          <span class="tag">04 · Rigor estadístico</span>
           <span class="pill">ENTRADA · STREAMS · DoE · SALIDA</span>
         </div>
         <h2>Tratamiento de la estocasticidad</h2>
@@ -346,7 +320,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>ExperimentoReplicas · ParametersVariation · ver RESULTADOS_STREAMS.md</span><span>05 / 12</span></div>
+        <div class="footer"><span>ExperimentoReplicas · ParametersVariation · ver RESULTADOS_STREAMS.md</span><span>04 / 12</span></div>
       </div>
     </section>
 
@@ -354,7 +328,7 @@
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">06 · Mapeo de interfaces</span>
+          <span class="tag">05 · Mapeo de interfaces</span>
           <span class="pill">BORSCHEV 2013 · BIDIRECCIONAL</span>
         </div>
         <h2>Deconstrucción DS · MBA · SED en runtime</h2>
@@ -427,7 +401,7 @@ flowchart LR
           ④ MBA→SED: staff hospitalizado como paciente ·
           Detalle: <code>DIAGRAMAS_HIBRIDO.md</code>
         </div>
-        <div class="footer"><span>Comunicación en el mismo reloj de simulación (no post-proceso)</span><span>06 / 12</span></div>
+        <div class="footer"><span>Comunicación en el mismo reloj de simulación (no post-proceso)</span><span>05 / 12</span></div>
       </div>
     </section>
 
@@ -435,7 +409,7 @@ flowchart LR
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">07 · Resultados del artículo</span>
+          <span class="tag">06 · Resultados del artículo</span>
           <span class="pill">HALLAZGOS · POLÍTICAS</span>
         </div>
         <h2>Análisis crítico de los hallazgos originales</h2>
@@ -458,7 +432,7 @@ flowchart LR
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Políticas del paper se interpretan como escenarios de capacidad, no como “botón mágico”</span><span>07 / 12</span></div>
+        <div class="footer"><span>Políticas del paper se interpretan como escenarios de capacidad, no como “botón mágico”</span><span>06 / 12</span></div>
       </div>
     </section>
 
@@ -466,7 +440,7 @@ flowchart LR
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">08 · Codificación AnyLogic</span>
+          <span class="tag">07 · Codificación AnyLogic</span>
           <span class="pill">DASHBOARD · UNIDADES · DEMO</span>
         </div>
         <h2>Parametrización, consistencia y cuadro de mando</h2>
@@ -496,7 +470,7 @@ flowchart LR
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Demo: manipular sliders y mostrar inject DS→SED + caída de capacity por infección</span><span>08 / 12</span></div>
+        <div class="footer"><span>Demo: manipular sliders y mostrar inject DS→SED + caída de capacity por infección</span><span>07 / 12</span></div>
       </div>
     </section>
 
@@ -504,7 +478,7 @@ flowchart LR
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">09 · Validación y errores</span>
+          <span class="tag">08 · Validación y errores</span>
           <span class="pill">MAPE · TABLA 5 · FIG. 8–9</span>
         </div>
         <h2>Fidelidad cuantitativa de la réplica</h2>
@@ -542,7 +516,7 @@ flowchart LR
             </div>
           </div>
         </div>
-        <div class="footer"><span>Contraste gráfico + MAPE · csv/replicas_kpis_streams_n200.csv</span><span>09 / 12</span></div>
+        <div class="footer"><span>Contraste gráfico + MAPE · csv/replicas_kpis_streams_n200.csv</span><span>08 / 12</span></div>
       </div>
     </section>
 
@@ -550,7 +524,7 @@ flowchart LR
     <section class="slide" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">10 · Aprendizajes del equipo</span>
+          <span class="tag">09 · Aprendizajes del equipo</span>
           <span class="pill">ACADEMICOS · TECNICOS</span>
         </div>
         <h2>Conclusiones y desafíos del modelado híbrido</h2>
@@ -576,82 +550,104 @@ flowchart LR
             <p class="note">Priorizamos <strong>Tabla 5 / Fig. 9</strong> (MAPE 3,0 %, n=200) y la <strong>forma</strong> de la Fig. 8 (MAPE 8,7 %), con demo en vivo del dashboard.</p>
           </div>
         </div>
-        <div class="footer"><span>El híbrido obliga a pensar unidades, relojes y semántica de “persona” en tres paradigmas</span><span>10 / 12</span></div>
+        <div class="footer"><span>El híbrido obliga a pensar unidades, relojes y semántica de “persona” en tres paradigmas</span><span>09 / 12</span></div>
       </div>
     </section>
 
-    <!-- 11 CONTRIBUCIONES + IA -->
+    <!-- 10 CONTRIBUCIONES -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">11 · Contribuciones e integridad</span>
-          <span class="pill">MATRIZ · DECLARACIÓN IA</span>
+          <span class="tag">10 · Contribuciones del equipo</span>
+          <span class="pill">MATRIZ DE TRANSPARENCIA</span>
         </div>
-        <h2>Transparencia del equipo y uso de IA</h2>
-        <div class="grid cols-2-wide">
-          <div class="panel" style="overflow:auto">
-            <h3>Matriz de contribuciones</h3>
-            <table>
-              <thead>
-                <tr><th>Miembro</th><th>Rol</th><th>Actividades / contribuciones</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Samuel Herrera</strong></td>
-                  <td>Arquitectura híbrida</td>
-                  <td>Integración DS–SED–MBA, acoplamientos, consistencia de unidades</td>
-                </tr>
-                <tr>
-                  <td><strong>Katherinne Olaya</strong></td>
-                  <td>Análisis y rigor</td>
-                  <td>Deconstrucción del artículo, datos, diseño experimental</td>
-                </tr>
-                <tr>
-                  <td><strong>Fredy García</strong></td>
-                  <td>Implementación AnyLogic</td>
-                  <td>Flujos SED, experimentos de réplicas y sensibilidad</td>
-                </tr>
-                <tr>
-                  <td><strong>Ever Muñoz</strong></td>
-                  <td>Validación y entrega</td>
-                  <td>Dashboard, MAPE/gráficas, paquete y presentación</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="panel warn">
-            <h3>Declaración de integridad (IA)</h3>
-            <p class="note">Se utilizaron <strong>ChatGPT, Gemini y Claude</strong> para co-creación de ideas, organización documental, revisión de código y graficación auxiliar (aprox. <strong>30–40 %</strong> del material de apoyo). <strong>El equipo auditó ecuaciones, corridas AnyLogic y resultados numéricos.</strong> No hubo plagio directo: todo contenido se verificó antes de entregar.</p>
-          </div>
+        <h2>Quién hizo qué</h2>
+        <div class="panel" style="flex:1;overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Miembro del equipo</th><th>Rol</th><th>Actividades / contribuciones</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Samuel Herrera</strong></td>
+                <td>Arquitectura híbrida</td>
+                <td>Integración DS–SED–MBA, acoplamientos, consistencia de unidades</td>
+              </tr>
+              <tr>
+                <td><strong>Katherinne Olaya</strong></td>
+                <td>Análisis y rigor</td>
+                <td>Deconstrucción del artículo, datos, diseño experimental</td>
+              </tr>
+              <tr>
+                <td><strong>Fredy García</strong></td>
+                <td>Implementación AnyLogic</td>
+                <td>Flujos SED, experimentos de réplicas y sensibilidad</td>
+              </tr>
+              <tr>
+                <td><strong>Ever Muñoz</strong></td>
+                <td>Validación y entrega</td>
+                <td>Dashboard, MAPE/gráficas, paquete y presentación</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="footer"><span>Todos los integrantes suben la misma presentación a Moodle (FASE A)</span><span>11 / 12</span></div>
+        <div class="footer"><span>Todos los integrantes suben la misma presentación a Moodle (FASE A)</span><span>10 / 12</span></div>
       </div>
     </section>
 
-    <!-- 12 BIBLIOGRAFÍA -->
+    <!-- 11 IA -->
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">12 · Bibliografía</span>
+          <span class="tag">11 · Uso de inteligencia artificial</span>
+          <span class="pill">DECLARACIÓN DE INTEGRIDAD</span>
+        </div>
+        <h2>Uso ético de herramientas generativas</h2>
+        <div class="grid cols-2">
+          <div class="panel warn">
+            <h3>Declaración explícita</h3>
+            <p class="note">Se utilizaron <strong>ChatGPT, Gemini y Claude</strong> para co-creación de ideas, organización documental, revisión de código y graficación auxiliar (aprox. <strong>30–40 %</strong> del material de apoyo). <strong>El equipo auditó ecuaciones, corridas AnyLogic y resultados numéricos.</strong></p>
+          </div>
+          <div class="panel accent">
+            <h3>Límites respetados</h3>
+            <ul class="clean">
+              <li>Prohibido el plagio directo (copiar/pegar sin edición ni verificación).</li>
+              <li>Responsabilidad técnica del equipo sobre la validez de lo entregado.</li>
+              <li>IA como apoyo, no como autoría no revisada.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer"><span>Obligatorio en rúbrica · transparencia del proceso</span><span>11 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 12 CITA APA + BIBLIOGRAFÍA + VIDEO -->
+    <section class="slide" data-theme="amber">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">12 · Cita y bibliografía</span>
           <span class="pill">APA 7 · VIDEO</span>
         </div>
-        <h2>Referencias y sustentación</h2>
+        <h2>Referencia del artículo y fuentes complementarias</h2>
         <div class="grid cols-2-wide">
-          <div class="panel" style="overflow:auto">
-            <h3>Referencias (APA 7.ª)</h3>
+          <div class="panel accent" style="overflow:auto">
+            <h3>Cita del artículo (APA 7.ª)</h3>
+            <p class="cite">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. <a class="link-out" href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a></p>
+            <h3 style="margin-top:14px">Bibliografía complementaria</h3>
             <ul class="refs">
-              <li><span class="ref-tag">Artículo</span> Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</li>
               <li><span class="ref-tag">Teoría</span> Anderson, R. M., &amp; May, R. M. (1991). <em>Infectious diseases of humans: Dynamics and control</em>. Oxford University Press.</li>
               <li><span class="ref-tag">Híbridos</span> Borshchev, A. (2013). <em>The big book of simulation modeling: Multimethod modeling with AnyLogic 6</em>. AnyLogic.</li>
               <li><span class="ref-tag">Datos</span> Pérez-Tezoco, et al. (2023). Datos hospitalarios citados por Meza-Palacios et al. (2026).</li>
-              <li><span class="ref-tag">Fuentes</span> Secretaría de Economía. (2024). Demografía regional (citada en el artículo). Secretaría de Salud. (2024). Hospitalización 4–20 % (citada en el artículo).</li>
+              <li><span class="ref-tag">Fuentes</span> Secretaría de Economía. (2024); Secretaría de Salud. (2024). Demografía y hospitalización 4–20 % (citadas en el artículo).</li>
             </ul>
           </div>
-          <div class="panel accent">
+          <div class="panel">
             <h3>Video de sustentación</h3>
             <p class="note">≤ 20 min · rostros en primer plano + pantallas en picture-in-picture · demo AnyLogic en vivo.</p>
             <p class="note" style="margin-top:16px;color:var(--amber)"><strong>[PEGAR ENLACE PÚBLICO DE YOUTUBE AQUÍ]</strong></p>
-            <p class="note" style="margin-top:12px">Diagramas extendidos: <code>DIAGRAMAS_HIBRIDO.md</code> · Presentación Pages: <a class="link-out" href="https://saanhevi.github.io/Proyecto-Modelos-y-Simulacion/" target="_blank" rel="noopener">GitHub Pages</a></p>
+            <p class="note" style="margin-top:12px">Modelo: <code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code><br />
+            <a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">GitHub</a> ·
+            <a class="link-out" href="https://saanhevi.github.io/Proyecto-Modelos-y-Simulacion/" target="_blank" rel="noopener">Pages</a></p>
           </div>
         </div>
         <div class="footer"><span>Gracias · Modelos y Simulación · 2025970-4</span><span>12 / 12</span></div>
