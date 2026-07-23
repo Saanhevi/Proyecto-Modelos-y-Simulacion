@@ -12027,9 +12027,30 @@ public int uiTreated = 0;
 public int uiAdult = 0;
 public int uiChild = 0;
 public int uiDs = 0;
-// Debe coincidir con Properties → Replications → Replications per iteration
-// (AnyLogic no expone un getter público del total configurado).
-public int nReplicasTotal = 200;
+
+/**
+ * Total de réplicas fijas = Properties → Replications per iteration.
+ * AnyLogic 8.9 lo guarda en ExperimentParamVariation.hk vía setFixedReplicationsNumber
+ * (no hay getter público; el nombre está ofuscado en el engine).
+ */
+public int nReplicasConfig() {
+	try {
+		java.lang.reflect.Field f =
+			com.anylogic.engine.ExperimentParamVariation.class.getDeclaredField("hk");
+		f.setAccessible(true);
+		int v = f.getInt(this);
+		if (v > 0) return v;
+	} catch (Throwable ignore) {}
+	// Fallback por si cambia el ofuscado entre versiones
+	try {
+		java.lang.reflect.Field f =
+			com.anylogic.engine.ExperimentParamVariation.class.getDeclaredField("ig");
+		f.setAccessible(true);
+		int v = f.getInt(this);
+		if (v > 0) return v;
+	} catch (Throwable ignore) {}
+	return 0;
+}
 ]]></AdditionalClassCode>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>512</MaximumMemory>
@@ -12075,8 +12096,8 @@ public int nReplicasTotal = 200;
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12566464</Color>
-					<Text><![CDATA[200 réplicas · streams independientes · π fijo = 0.04]]></Text>
-					<TextCode><![CDATA[nReplicasTotal + " réplicas · streams independientes · π fijo = 0.04"]]></TextCode>
+					<Text><![CDATA[réplicas · streams independientes · π fijo = 0.04]]></Text>
+					<TextCode><![CDATA[(nReplicasConfig() > 0 ? nReplicasConfig() : "…") + " réplicas · streams independientes · π fijo = 0.04"]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>11</Size>
@@ -12119,7 +12140,7 @@ public int nReplicasTotal = 200;
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
 					<Text><![CDATA[0]]></Text>
-					<TextCode><![CDATA[format(getCurrentReplication()) + " / " + format(nReplicasTotal)]]></TextCode>
+					<TextCode><![CDATA[format(getCurrentReplication()) + " / " + (nReplicasConfig() > 0 ? format(nReplicasConfig()) : "…")]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>14</Size>
@@ -12779,7 +12800,7 @@ public int nReplicasTotal = 200;
 			<ReplicationsProperties>
 				<UseReplication>true</UseReplication>
 				<FixedReplicationsNumber>true</FixedReplicationsNumber>
-				<ReplicationPerIteration>200</ReplicationPerIteration>
+				<ReplicationPerIteration>20</ReplicationPerIteration>
 				<MinimumReplication>2</MinimumReplication>
 				<MaximumReplication>10</MaximumReplication>
 				<ConfidenceLevel>LEVEL_95</ConfidenceLevel>

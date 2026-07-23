@@ -6,8 +6,9 @@ Archivo: `Modelo_Entrega5_Hospital_Hibrido_streams.alp`
 La rúbrica pide *streams* independientes. Con n=20 el MAPE aún “baila” (vimos ~10 % y ~4 %).  
 Para ver a qué tiende: **200 réplicas**.
 
-`ExperimentoReplicas` usa **ReplicationPerIteration = 200** y el campo `nReplicasTotal = 200` (Additional class code) para el contador de pantalla.  
-Si cambias el nº de réplicas en Properties, actualiza también `nReplicasTotal` para que el texto “X / N” coincida.
+`ExperimentoReplicas` usa **ReplicationPerIteration = 200** por defecto.  
+El contador de pantalla lee el total con `nReplicasConfig()` (desde Properties → Replications per iteration).  
+Si cambias ese número en Properties, haz **Build** y vuelve a lanzar el experimento: el texto “X / N” debe seguir el nuevo N.
 
 ## Protocolo de corrida limpia
 1. Cierra el modelo original; abre solo el `_streams.alp` (reabrir si ya estaba abierto).
