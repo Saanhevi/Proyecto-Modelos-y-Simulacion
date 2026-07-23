@@ -3,8 +3,9 @@
 Réplica AnyLogic del artículo Meza-Palacios et al. (2026).
 
 ## Abrir la presentación
-Doble clic en `index.html` (flechas del teclado / pantalla completa).  
-PDF: `presentacion.pdf`
+- **Rúbrica (12 diapositivas):** doble clic en `presentacion_rubrica_12.html` ← usar esta para Moodle / video.
+- Copia extendida (14 slides, más detalle visual): `index.html`
+- PDF: `presentacion.pdf` (regenerar si hace falta desde la versión de 12)
 
 ## Modelo AnyLogic (entrega final)
 **`Modelo_Entrega5_Hospital_Hibrido_streams.alp`** — streams independientes + 200 réplicas.
