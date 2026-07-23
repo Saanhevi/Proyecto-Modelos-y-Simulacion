@@ -9,7 +9,7 @@ pip install -r requirements.txt
 python generar_graficas.py
 ```
 
-Lee `../csv/replicas_kpis_n21.csv` y `../csv/fig8_flujo_diario.csv`.  
+Lee `../csv/replicas_kpis_streams_n200.csv` (preferido) o `replicas_kpis_n21.csv`, y `../csv/fig8_flujo_diario.csv`.  
 Escribe PNG en `../graficas/` y aliases en `../img/` para `index.html`.
 
 ## Regenerar el PDF de la presentación

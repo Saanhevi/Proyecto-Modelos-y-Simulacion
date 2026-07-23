@@ -52,7 +52,11 @@ def main() -> None:
     OUT_G.mkdir(exist_ok=True)
     OUT_I.mkdir(exist_ok=True)
 
-    rep_all = pd.read_csv(CSV / "replicas_kpis_n21.csv")
+    # Entrega final: streams independientes, n=200 (MAPE T5 ~3.0%).
+    # Fallback al n21 histórico si falta el CSV streams.
+    streams = CSV / "replicas_kpis_streams_n200.csv"
+    src = streams if streams.exists() else (CSV / "replicas_kpis_n21.csv")
+    rep_all = pd.read_csv(src)
     rep = rep_all[
         (rep_all["pTransmit"].round(2) == 0.04) & (rep_all["arrive"] > 500)
     ].copy()

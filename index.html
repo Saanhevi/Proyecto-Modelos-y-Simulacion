@@ -484,7 +484,7 @@
         <div class="metric-row">
           <div class="metric"><b>30 días</b><span>horizonte total</span></div>
           <div class="metric"><b>8 días</b><span>calentamiento</span></div>
-          <div class="metric"><b>21</b><span>corridas independientes</span></div>
+          <div class="metric"><b>200</b><span>corridas independientes</span></div>
           <div class="metric"><b>95 %</b><span>intervalo de confianza</span></div>
         </div>
         <div class="grid cols-2">
@@ -492,7 +492,7 @@
             <h3>Entrada y experimentos</h3>
             <ul class="clean">
               <li><strong>Entrada:</strong> tiempos con distribución triangular del paper.</li>
-              <li><strong>Aleatoriedad:</strong> cada réplica usa una semilla distinta.</li>
+              <li><strong>Aleatoriedad:</strong> streams independientes (SED / ABM / gates) + semilla distinta por réplica.</li>
               <li><strong>Factor explorado:</strong> probabilidad de transmisión del virus (0,02 a 0,06), como en la Figura 8.</li>
               <li><strong>Caso base:</strong> probabilidad = 0,04.</li>
             </ul>
@@ -503,7 +503,7 @@
               <li>Promedio ± intervalo de confianza al 95 %.</li>
               <li>Error porcentual medio (MAPE) frente a la Tabla 5 del paper.</li>
               <li>Meta del artículo: desvíos menores al 5 % en validación.</li>
-              <li>Nuestra réplica: <strong>MAPE Tabla 5 ≈ 3,7 %</strong> · <strong>Fig. 8 ≈ 8,7 %</strong>.</li>
+              <li>Nuestra réplica: <strong>MAPE Tabla 5 ≈ 3,0 %</strong> (n=200, streams) · <strong>Fig. 8 ≈ 8,7 %</strong>.</li>
             </ul>
           </div>
         </div>
@@ -638,22 +638,22 @@
           <span class="tag">09 · Validación y errores</span>
           <span class="pill">TABLA 5 · FIGURA 8 · FIGURA 9</span>
         </div>
-        <h2>Fidelidad de la réplica (21 corridas)</h2>
+        <h2>Fidelidad de la réplica (200 corridas · streams)</h2>
         <div class="grid cols-2">
           <div class="panel">
             <h3>Tabla 5 (como la Fig. 9 del paper)</h3>
             <table>
               <thead><tr><th>Indicador</th><th>Nuestra media</th><th>Paper</th><th>Desvío</th></tr></thead>
               <tbody>
-                <tr><td>No atendidos</td><td>52,8</td><td>51,6</td><td><strong>+2,4 %</strong></td></tr>
-                <tr><td>Tratados</td><td>15,2</td><td>15,9</td><td><strong>−4,5 %</strong></td></tr>
-                <tr><td>Adultos</td><td>33,7</td><td>33,3</td><td><strong>+1,0 %</strong></td></tr>
-                <tr><td>Niños</td><td>2,0</td><td>2,1</td><td><strong>−7,0 %</strong></td></tr>
+                <tr><td>No atendidos</td><td>52,2</td><td>51,6</td><td><strong>+1,1 %</strong></td></tr>
+                <tr><td>Tratados</td><td>15,6</td><td>15,9</td><td><strong>−1,8 %</strong></td></tr>
+                <tr><td>Adultos</td><td>34,4</td><td>33,3</td><td><strong>+3,3 %</strong></td></tr>
+                <tr><td>Niños</td><td>2,0</td><td>2,1</td><td><strong>−5,7 %</strong></td></tr>
               </tbody>
             </table>
             <p class="note" style="margin-top:12px">
               Error porcentual medio (MAPE) Tabla 5:
-              <span class="big-num" style="font-size:1.6rem;display:inline;margin-left:6px">3,7 %</span>
+              <span class="big-num" style="font-size:1.6rem;display:inline;margin-left:6px">3,0 %</span>
               · Figura 8 ≈ <strong>8,7 %</strong>
             </p>
           </div>
@@ -693,7 +693,7 @@
           </div>
           <div class="panel accent">
             <h3>Decisión</h3>
-            <p class="note">Priorizamos <strong>Tabla 5 / Fig. 9</strong> (MAPE 3,7 %) y la forma de la <strong>Fig. 8</strong> (MAPE 8,7 %).</p>
+            <p class="note">Priorizamos <strong>Tabla 5 / Fig. 9</strong> (MAPE 3,0 %, n=200 streams) y la forma de la <strong>Fig. 8</strong> (MAPE 8,7 %).</p>
           </div>
         </div>
         <div class="grid cols-2" style="flex:1;min-height:0">

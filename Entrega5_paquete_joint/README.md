@@ -1,24 +1,29 @@
 # Entrega 5 — Paquete de entrega
 
-Replica AnyLogic del articulo Meza-Palacios et al. (2026).
+Réplica AnyLogic del artículo Meza-Palacios et al. (2026).
 
-## Abrir la presentacion
-Doble clic en `index.html` (flechas del teclado / pantalla completa).
+## Abrir la presentación
+Doble clic en `index.html` (flechas del teclado / pantalla completa).  
 PDF: `presentacion.pdf`
 
-## Modelo AnyLogic (este es el de entrega)
-`Modelo_Entrega5_Hospital_Hibrido.alp`
+## Modelo AnyLogic (entrega final)
+**`Modelo_Entrega5_Hospital_Hibrido_streams.alp`** — streams independientes + 200 réplicas.
+
+Baseline (sin streams, calibración n=21): `Modelo_Entrega5_Hospital_Hibrido.alp`
+
+Detalle: `RESULTADOS_STREAMS.md` · `README_STREAMS.md` · `PARAMETROS_COMPROMISO_JOINT.md`
 
 ## Contenido
-- `index.html` + `img/` — presentacion
-- `presentacion.pdf` — misma presentacion en PDF
-- `graficas/` — Fig. 8, Fig. 9 / Tabla 5 y desvios
-- `csv/` — replicas y resumenes
-- `scripts/` — codigos para regenerar graficas y PDF
+- `index.html` + `img/` — presentación
+- `presentacion.pdf` — misma presentación en PDF
+- `graficas/` — Fig. 8, Fig. 9 / Tabla 5 y desvíos
+- `csv/` — réplicas (incl. `replicas_kpis_streams_n200.csv`) y resúmenes
+- `scripts/` — regenerar gráficas y PDF
 
-## Regenerar graficas / PDF
+## Regenerar gráficas / PDF
 Ver `scripts/README.md`.
 
-## Resultados
-- MAPE Tabla 5 ~ 3.7% (n=21)
-- MAPE Fig. 8 ~ 8.7%
+## Resultados (entrega)
+- **MAPE Tabla 5 ≈ 3.0 %** (streams, **n=200**)
+- MAPE Fig. 8 ≈ 8.7 %
+- Baseline histórico: MAPE T5 ≈ 3.7 % (n=21, 1 RNG)

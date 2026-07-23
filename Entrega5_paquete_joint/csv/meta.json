@@ -1,17 +1,17 @@
 {
-  "mape_t5": 3.73,
+  "mape_t5": 2.99,
   "mape_fig8": 8.73,
-  "n": 21,
-  "untreated": 52.81,
-  "treated": 15.19,
-  "adult": 33.67,
-  "child": 1.95,
-  "arrive_day": 185.54,
+  "n": 200,
+  "untreated": 52.16,
+  "treated": 15.62,
+  "adult": 34.42,
+  "child": 1.98,
+  "arrive_day": 185.55,
   "abanico": 7008.0,
   "desv": {
-    "untreated": 2.4,
-    "treated": -4.5,
-    "adultAdmit": 1.0,
-    "childAdmit": -7.0
+    "untreated": 1.1,
+    "treated": -1.8,
+    "adultAdmit": 3.3,
+    "childAdmit": -5.7
   }
 }

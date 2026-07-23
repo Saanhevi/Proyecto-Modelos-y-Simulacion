@@ -110,7 +110,21 @@ Parámetros finales del escenario exploración: los de la tabla superior con **p
 | **MAPE T5** | | | **3.7 %** |
 | MAPE Fig.8 | | | **8.7 %** |
 
-Misma configuración; la diferencia vs 5.3 % es ruido Monte Carlo (n=21). **Congelar aquí.**
+Misma configuración; la diferencia vs 5.3 % es ruido Monte Carlo (n=21). **Congelar baseline aquí.**
+
+### Entrega final 22-jul-2026 — streams independientes · **MAPE T5 3.0 % (n=200)**
+
+Misma parametrización + 4 RNGs (`rngSed` / `rngAbm` / `rngGate` / `rngBranch`).  
+Ver `RESULTADOS_STREAMS.md` y `Modelo_Entrega5_Hospital_Hibrido_streams.alp`.
+
+| KPI | Paper | Media AL (n=200) | Desvío |
+|---|---:|---:|---:|
+| untreated | 51.58 | 52.16 | **+1.1 %** |
+| treated | 15.90 | 15.62 | **−1.8 %** |
+| adultAdmit | 33.32 | 34.42 | +3.3 % |
+| childAdmit | 2.10 | 1.98 | −5.7 % |
+| **MAPE T5** | | | **3.0 %** |
+| MAPE Fig.8 | | | **8.7 %** |
 
 ### Pasada final (enteros + gate×1.05) — validado AL n=21
 
