@@ -208,10 +208,10 @@
         <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
         <p class="lead">¿Cómo anticipar demanda, colas y personal cuando la epidemia satura el hospital?</p>
         <div class="hero-meta">
-          <span class="chip"><b>Alcance</b> · híbrido DS + MBA + SED</span>
+          <span class="chip"><b>Alcance</b> · híbrido System Dynamics + Agent-Based Modeling + Discrete-Event Simulation</span>
           <span class="chip"><b>Sitio</b> · Orizaba / región</span>
-          <span class="chip"><b>Horizonte</b> · 30 días (warm-up 8)</span>
-          <span class="chip"><b>Fuera</b> · Fig. 7 del modelo inicial</span>
+          <span class="chip"><b>Horizonte</b> · 30 días (calentamiento 8)</span>
+          <span class="chip"><b>Fuera</b> · Figura 7 del modelo inicial</span>
         </div>
         <div class="footer"><span>Meza-Palacios et al. (2026) · cita APA al final</span><span>01 / 12</span></div>
       </div>
@@ -227,29 +227,37 @@
         <h2>Tres niveles, una simulación</h2>
         <div class="grid cols-3">
           <div class="panel">
-            <h3>Macro · DS</h3>
+            <h3>Macro · System Dynamics</h3>
             <ul class="clean">
-              <li>Poblaciones S / I y tasas globales</li>
-              <li>FOI = c · prev · π</li>
+              <li>Niveles: Susceptible, Infective, goToHospital</li>
+              <li>Cinco expresiones del artículo (panel inferior)</li>
               <li>¿Cuánta gente busca hospital?</li>
             </ul>
           </div>
           <div class="panel">
-            <h3>Meso · MBA</h3>
+            <h3>Meso · Agent-Based Modeling</h3>
             <ul class="clean">
-              <li>Médicos, enfermeras, auxiliares</li>
+              <li>Médicos, enfermeras y auxiliares</li>
               <li>Estados + mensaje Infection</li>
               <li>¿Cuánto personal sano queda?</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Micro · SED</h3>
+            <h3>Micro · Discrete-Event Simulation</h3>
             <ul class="clean">
-              <li>Cola, triage, camas, egreso</li>
+              <li>Cola, triage, camas y egreso</li>
               <li>80 camas · tiempos triangulares</li>
               <li>¿Quién entra o se va sin atención?</li>
             </ul>
           </div>
+        </div>
+        <div class="eq" style="flex:0 0 auto">
+          <strong>Expresiones del artículo (nombres en inglés):</strong><br />
+          totalPopulation = Susceptible + Infective<br />
+          prevalenceOfInfection = Infective / totalPopulation<br />
+          forceOfInfection = contacRate × prevalenceOfInfection × probabilityOfTransmission<br />
+          infection = forceOfInfection × Susceptible<br />
+          hospitalFlow = Infective × patientToHospital
         </div>
         <div class="footer"><span>Cada nivel responde una pregunta distinta</span><span>02 / 12</span></div>
       </div>
@@ -270,19 +278,19 @@
               <li>Historial hospitalario → Tabla 3</li>
               <li>Población ≈ 123 182 (Orizaba)</li>
               <li>Hospitalización 4–20 % (fuente nacional)</li>
-              <li>LOS: triangulares Tablas 1–2 (sin tocar)</li>
+              <li>Tiempos de estancia: triangulares Tablas 1–2 (sin tocar)</li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Parámetros de entrega</h3>
             <ul class="clean">
-              <li>Fijos: 80 camas · 50 vent · 50 prone</li>
-              <li>Calibrados: c = 2,65 · I₀ = 3400 · p₂ₕ = 0,009</li>
-              <li>π base = 0,04 (rango Fig. 8: 0,02–0,06)</li>
+              <li>Fijos: 80 camas · 50 ventiladores · 50 prono</li>
+              <li>contacRate = 2,65 · Infective inicial = 3400 · patientToHospital = 0,009</li>
+              <li>probabilityOfTransmission base = 0,04 (rango Figura 8: 0,02–0,06)</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Huecos no publicados se documentan y se validan con MAPE</span><span>03 / 12</span></div>
+        <div class="footer"><span>Huecos no publicados se documentan y se validan con el error porcentual absoluto medio</span><span>03 / 12</span></div>
       </div>
     </section>
 
@@ -291,28 +299,28 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">04 · Rigor estadístico</span>
-          <span class="pill">ENTRADA · STREAMS · DoE · SALIDA</span>
+          <span class="pill">ENTRADA · SEMILLAS · EXPERIMENTOS · SALIDA</span>
         </div>
         <h2>Cómo tratamos la incertidumbre</h2>
         <div class="metric-row">
-          <div class="metric"><b>Triang.</b><span>ajuste de entrada</span></div>
-          <div class="metric"><b>4 RNG</b><span>streams indep.</span></div>
-          <div class="metric"><b>π</b><span>factor Fig. 8</span></div>
-          <div class="metric"><b>200</b><span>réplicas + IC95%</span></div>
+          <div class="metric"><b>Triangular</b><span>análisis de entrada</span></div>
+          <div class="metric"><b>4</b><span>streams independientes</span></div>
+          <div class="metric"><b>0,04</b><span>probabilityOfTransmission base</span></div>
+          <div class="metric"><b>200</b><span>réplicas + intervalo 95%</span></div>
         </div>
         <div class="grid cols-2">
           <div class="panel">
             <h3>Entrada y semillas</h3>
             <ul class="clean">
-              <li>Input: triangulares del paper (mín / moda / máx)</li>
-              <li>Streams: <code>rngSed</code> · <code>rngAbm</code> · <code>rngGate</code> · <code>rngBranch</code></li>
+              <li>Análisis de entrada: triangulares del paper (mínimo / moda / máximo)</li>
+              <li>Streams: rngSed · rngAbm · rngGate · rngBranch</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Experimentos y salida</h3>
+            <h3>Diseño de experimentos y salida</h3>
             <ul class="clean">
-              <li>DoE: π ∈ {0,02…0,06} · caso base 0,04</li>
-              <li>Salida: media ± IC95% · MAPE vs Tabla 5 / Fig. 8</li>
+              <li>Factor: probabilityOfTransmission ∈ {0,02…0,06} · caso base 0,04</li>
+              <li>Salida: media ± intervalo de confianza 95% · error porcentual absoluto medio vs Tabla 5 / Figura 8</li>
             </ul>
           </div>
         </div>
@@ -330,22 +338,22 @@
         <h2>Comunicación bidireccional en vivo</h2>
         <div class="grid cols-2" style="flex:1.15">
           <div class="grid cols-2" style="gap:12px">
-            <div class="ph"><strong>Causales DS</strong><span>polaridades + / − · ciclos R1 / B1</span></div>
-            <div class="ph"><strong>Forrester</strong><span>niveles S, I, goToHospital + flujos</span></div>
-            <div class="ph"><strong>Statechart MBA</strong><span>Susceptible → Infected → …</span></div>
-            <div class="ph"><strong>Flujo SED</strong><span>inject → triage → camas → egreso</span></div>
+            <div class="ph"><strong>Ciclos causales</strong><span>System Dynamics · polaridades + / −</span></div>
+            <div class="ph"><strong>Diagrama de Forrester</strong><span>Susceptible, Infective, goToHospital + flujos</span></div>
+            <div class="ph"><strong>Máquina de estados</strong><span>Agent-Based Modeling · Susceptible → Infected → …</span></div>
+            <div class="ph"><strong>Flujo de proceso</strong><span>Discrete-Event Simulation · inject → triage → camas → egreso</span></div>
           </div>
           <div class="panel accent">
             <h3>Acoplamiento (mismo reloj)</h3>
             <div class="eq">
-              ① DS → SED<br />
-              si goToHospital &gt; 0 ⇒ −− e inject(1)<br /><br />
-              ② MBA → SED<br />
-              capacity = #{staff sano}<br /><br />
-              ③ SED → MBA<br />
+              ① System Dynamics → Discrete-Event Simulation<br />
+              si goToHospital &gt; 0 ⇒ goToHospital−− e inject(1)<br /><br />
+              ② Agent-Based Modeling → Discrete-Event Simulation<br />
+              capacity = número de personal en Susceptible<br /><br />
+              ③ Discrete-Event Simulation → Agent-Based Modeling<br />
               send("Infection", staff.random())<br /><br />
-              ④ MBA → SED<br />
-              staff hospitalizado como paciente
+              ④ Agent-Based Modeling → Discrete-Event Simulation<br />
+              personal hospitalizado como paciente
             </div>
           </div>
         </div>
@@ -366,20 +374,20 @@
             <h3>Hallazgos / políticas</h3>
             <ul class="clean">
               <li>Triage dual, módulos COVID y prono mejoran Tabla 5</li>
-              <li>Fig. 8: más π → más flujo al hospital</li>
+              <li>Figura 8: mayor probabilityOfTransmission → mayor hospitalFlow</li>
               <li>Proponen anticipar saturación con el híbrido</li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Lectura crítica</h3>
             <ul class="clean">
-              <li>Fig. 8 y Tabla 5 son análisis distintos</li>
+              <li>Figura 8 y Tabla 5 son análisis distintos</li>
               <li>No hay un único ajuste publicado que clave ambos</li>
-              <li>Fig. 7 no es del híbrido → fuera de alcance</li>
+              <li>Figura 7 no es del híbrido → fuera de alcance</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Validamos el híbrido (T5 / Fig. 9 + forma Fig. 8)</span><span>06 / 12</span></div>
+        <div class="footer"><span>Validamos el híbrido (Tabla 5 / Figura 9 + forma Figura 8)</span><span>06 / 12</span></div>
       </div>
     </section>
 
@@ -395,23 +403,23 @@
           <div class="panel">
             <h3>Implementación</h3>
             <ul class="clean">
-              <li>FOI producto · unidades personas / día</li>
-              <li>Puente goToHospital → inject SED</li>
-              <li>Streams en Additional class code</li>
+              <li>forceOfInfection = contacRate × prevalenceOfInfection × probabilityOfTransmission</li>
+              <li>Puente goToHospital → inject en Discrete-Event Simulation</li>
+              <li>Streams independientes en Additional class code</li>
               <li><code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code></li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Dashboard en vivo</h3>
             <ul class="clean">
-              <li>Sliders: c, π, patientToHospital</li>
-              <li>KPIs: untreated, treated, admits, S/I</li>
+              <li>Sliders: contacRate, probabilityOfTransmission, patientToHospital</li>
+              <li>Indicadores: untreated, treated, admits, Susceptible / Infective</li>
               <li>Capacidad de personal ajustable</li>
               <li><a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion/tree/main/Entrega5_paquete_joint" target="_blank" rel="noopener">Paquete en GitHub</a></li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Demo: sliders + inject DS→SED + caída de capacity</span><span>07 / 12</span></div>
+        <div class="footer"><span>Demo: sliders + inject System Dynamics → Discrete-Event Simulation + caída de capacity</span><span>07 / 12</span></div>
       </div>
     </section>
 
@@ -420,14 +428,14 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">08 · Validación y errores</span>
-          <span class="pill">MAPE · n = 200</span>
+          <span class="pill">ERROR PORCENTUAL ABSOLUTO MEDIO · n = 200</span>
         </div>
         <h2>Fidelidad cuantitativa</h2>
         <div class="grid cols-2">
           <div class="panel">
-            <h3>Tabla 5 / Fig. 9</h3>
+            <h3>Tabla 5 / Figura 9</h3>
             <table>
-              <thead><tr><th>KPI</th><th>Réplica</th><th>Paper</th><th>Desvío</th></tr></thead>
+              <thead><tr><th>Indicador</th><th>Réplica</th><th>Paper</th><th>Desvío</th></tr></thead>
               <tbody>
                 <tr><td>No atendidos</td><td>52,2</td><td>51,6</td><td><strong>+1,1%</strong></td></tr>
                 <tr><td>Tratados</td><td>15,6</td><td>15,9</td><td><strong>−1,8%</strong></td></tr>
@@ -436,23 +444,24 @@
               </tbody>
             </table>
             <p class="note" style="margin-top:14px">
-              MAPE T5 <span class="big-num" style="font-size:1.8rem;margin-left:6px">3,0%</span>
-              &nbsp;·&nbsp; MAPE Fig. 8 ≈ <strong>8,7%</strong>
+              Error porcentual absoluto medio Tabla 5
+              <span class="big-num" style="font-size:1.8rem;margin-left:6px">3,0%</span>
+              &nbsp;·&nbsp; Figura 8 ≈ <strong>8,7%</strong>
             </p>
           </div>
           <div class="grid cols-2" style="gap:12px">
             <figure class="figure" data-zoom>
-              <img src="img/fig9_tabla5.png" alt="Fig. 9" />
-              <figcaption>Fig. 9 · boxplots</figcaption>
+              <img src="img/fig9_tabla5.png" alt="Figura 9" />
+              <figcaption>Figura 9 · boxplots</figcaption>
             </figure>
             <div class="stack" style="display:flex;flex-direction:column;gap:12px;min-height:0">
               <figure class="figure" data-zoom>
-                <img src="img/fig8_flujo.png" alt="Fig. 8 flujo" />
-                <figcaption>Fig. 8 · flujo</figcaption>
+                <img src="img/fig8_flujo.png" alt="Figura 8 flujo" />
+                <figcaption>Figura 8 · flujo</figcaption>
               </figure>
               <figure class="figure" data-zoom>
-                <img src="img/fig8_escala.png" alt="Fig. 8 escala" />
-                <figcaption>Fig. 8 · escala</figcaption>
+                <img src="img/fig8_escala.png" alt="Figura 8 escala" />
+                <figcaption>Figura 8 · escala</figcaption>
               </figure>
             </div>
           </div>
@@ -474,19 +483,19 @@
             <h3>Académico</h3>
             <ul class="clean">
               <li>El valor está en el acoplamiento, no en tres modelos sueltos</li>
-              <li>Validar = MAPE / IC, no “se ve parecido”</li>
+              <li>Validar = error porcentual absoluto medio e intervalos de confianza</li>
             </ul>
           </div>
           <div class="panel">
             <h3>Técnico</h3>
             <ul class="clean">
               <li>Puente continuo → discreto con goToHospital</li>
-              <li>Streams sin romper la calibración</li>
+              <li>Streams independientes sin romper la calibración</li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Entrega</h3>
-            <p class="note">Priorizamos Tabla 5 / Fig. 9 (MAPE 3,0%) y la forma de la Fig. 8 (8,7%), con demo en vivo.</p>
+            <p class="note">Priorizamos Tabla 5 / Figura 9 (error porcentual absoluto medio 3,0%) y la forma de la Figura 8 (8,7%), con demo en vivo.</p>
           </div>
         </div>
         <div class="footer"><span>Unidades, relojes y semántica de “persona” en tres paradigmas</span><span>09 / 12</span></div>
@@ -507,10 +516,10 @@
               <tr><th>Miembro</th><th>Rol</th><th>Contribuciones</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Samuel Herrera</strong></td><td>Arquitectura híbrida</td><td>Integración DS–SED–MBA y unidades</td></tr>
+              <tr><td><strong>Samuel Herrera</strong></td><td>Arquitectura híbrida</td><td>Integración System Dynamics – Discrete-Event Simulation – Agent-Based Modeling y unidades</td></tr>
               <tr><td><strong>Katherinne Olaya</strong></td><td>Análisis y rigor</td><td>Artículo, datos y diseño experimental</td></tr>
-              <tr><td><strong>Fredy García</strong></td><td>Implementación</td><td>Flujos SED, réplicas y sensibilidad</td></tr>
-              <tr><td><strong>Ever Muñoz</strong></td><td>Validación / entrega</td><td>Dashboard, MAPE, paquete y presentación</td></tr>
+              <tr><td><strong>Fredy García</strong></td><td>Implementación</td><td>Flujos Discrete-Event Simulation, réplicas y sensibilidad</td></tr>
+              <tr><td><strong>Ever Muñoz</strong></td><td>Validación / entrega</td><td>Dashboard, error porcentual absoluto medio, paquete y presentación</td></tr>
             </tbody>
           </table>
         </div>
