@@ -8,7 +8,7 @@ Validado AnyLogic n=200 · MAPE T5 **0,5 %** · Fig. 8 **4,4 %**
 | Parámetro | Valor | Fuente |
 |---|---:|---|
 | Fórmula `forceOfInfection` | producto `c·prev·π` | SEIR / It.3 |
-| N población | 123 182 | Orizaba |
+| N población | 123 182 | **Consulta propia** · Secretaría de Economía (México); no numérica en el cuerpo del paper |
 | `contacRate` | **3,0** | barrido Rust Fig.8 |
 | `Infective` / `Susceptible` | **4000** / **119182** | barrido Rust |
 | `patientToHospital` | **0,007** | barrido Rust |
