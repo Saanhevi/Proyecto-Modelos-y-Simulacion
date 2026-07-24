@@ -167,18 +167,6 @@
       font-size: clamp(0.9rem, 1.1vw, 1.05rem); color: var(--muted); background: rgba(0,0,0,.2);
     }
     .chip b { color: var(--text); font-weight: 700; }
-    .formula-list {
-      list-style: none; display: flex; flex-direction: column; gap: 14px; flex: 1;
-      justify-content: center;
-    }
-    .formula-list li {
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: clamp(1rem, 1.35vw, 1.2rem); line-height: 1.45;
-      padding: 14px 18px; border-radius: 14px;
-      background: var(--card); border: 1px solid var(--line);
-      color: #e8f6f3;
-    }
-    .formula-list li b { color: var(--cyan); font-family: "Space Grotesk", sans-serif; margin-right: 8px; }
     .team-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 0;
     }
@@ -189,10 +177,6 @@
     .team-card strong { display: block; font-size: 1.15rem; margin-bottom: 4px; }
     .team-card span { color: var(--muted); font-size: 0.98rem; }
 
-    #counter {
-      position: fixed; top: 14px; right: 18px; z-index: 20; color: var(--muted); font-weight: 700;
-      font-size: .95rem; background: rgba(0,0,0,.4); padding: 6px 10px; border-radius: 8px;
-    }
     #progress { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20; display: flex; gap: 7px; }
     #progress span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.22); }
     #progress span.active { background: var(--cyan); }
@@ -216,7 +200,6 @@
 </head>
 
 <body>
-  <div id="counter">01 / 12</div>
   <button id="fs" type="button" title="Pantalla completa">⛶</button>
   <main id="stage"><div id="deck">
 
@@ -224,7 +207,41 @@
     <section class="slide active" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">01 · Descripción del problema</span>
+          <span class="tag">01 · Resumen ejecutivo</span>
+          <span class="pill">DELIMITACIÓN</span>
+        </div>
+        <h2>Qué problema resolvieron los autores</h2>
+        <div class="grid cols-2">
+          <div class="panel accent">
+            <h3>Problema real</h3>
+            <ul class="clean">
+              <li>En picos COVID, el hospital no sabe si tendrá camas, personal y cola suficientes</li>
+              <li>Caso: hospital regional de Orizaba (México), datos 2021</li>
+              <li>Necesitan anticipar saturación y probar políticas antes de aplicarlas</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Qué aportó el artículo</h3>
+            <ul class="clean">
+              <li>Un modelo híbrido: epidemia + personal + flujo de atención</li>
+              <li>Comparó el hospital “como estaba” vs el rediseño COVID</li>
+              <li>Concluyó que triage dual, módulos COVID y posición prono bajan no atendidos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel warn" style="flex:0 0 auto">
+          <h3>Delimitación de nuestra entrega</h3>
+          <p class="note">Replicamos el <strong>híbrido del área COVID</strong> y validamos contra <strong>Tabla 5</strong> y <strong>Figura 8</strong>. No reconstruimos el hospital completo de la Figura 7 ni el modelo inicial solo de eventos.</p>
+        </div>
+        <div class="footer"><span>Meza-Palacios et al. (2026) · cita al cierre</span><span>01 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="slide" data-theme="green">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">02 · Descripción del problema</span>
           <span class="pill">ENTREGA 5</span>
         </div>
         <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
@@ -235,20 +252,17 @@
           <span class="chip"><b>Tiempo</b> · 30 días simulados (8 de calentamiento)</span>
         </div>
         <div class="hero-meta" style="margin-top:8px">
-          <span class="chip"><b>Delimitación</b> · Réplica del híbrido COVID (Tabla 5 y Figura 8); no el hospital completo de la Figura 7</span>
-        </div>
-        <div class="hero-meta" style="margin-top:8px">
           <span class="chip"><b>Equipo</b> · Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</span>
         </div>
-        <div class="footer"><span>Artículo base: Meza-Palacios et al. (2026) · cita al cierre</span><span>01 / 12</span></div>
+        <div class="footer"><span>Pregunta guía de la demostración</span><span>02 / 12</span></div>
       </div>
     </section>
 
-    <!-- 02 -->
+    <!-- 03 -->
     <section class="slide" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">02 · Desglose multimétodo</span>
+          <span class="tag">03 · Desglose multimétodo</span>
           <span class="pill">TRES NIVELES</span>
         </div>
         <h2>Tres escalas, una sola simulación</h2>
@@ -278,15 +292,15 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Cada nivel responde una pregunta distinta</span><span>02 / 12</span></div>
+        <div class="footer"><span>Cada nivel responde una pregunta distinta</span><span>03 / 12</span></div>
       </div>
     </section>
 
-    <!-- 03 -->
+    <!-- 04 -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">03 · Comunicación entre paradigmas</span>
+          <span class="tag">04 · Comunicación entre paradigmas</span>
           <span class="pill">MISMO RELOJ</span>
         </div>
         <h2>Cómo se conectan mientras corre el modelo</h2>
@@ -310,26 +324,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Comunicación bidireccional en ejecución (Borshchev, 2013)</span><span>03 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 04 -->
-    <section class="slide" data-theme="green">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">04 · Expresiones del artículo</span>
-          <span class="pill">EPIDEMIA</span>
-        </div>
-        <h2>Cinco relaciones del bloque epidémico</h2>
-        <ol class="formula-list">
-          <li><b>1</b> Población total = susceptibles + infectados</li>
-          <li><b>2</b> Prevalencia = infectados ÷ población total</li>
-          <li><b>3</b> Fuerza de infección = contactos × prevalencia × probabilidad de transmisión</li>
-          <li><b>4</b> Nuevas infecciones = fuerza de infección × susceptibles</li>
-          <li><b>5</b> Flujo a hospital = infectados × fracción que se hospitaliza</li>
-        </ol>
-        <div class="footer"><span>Nombres en inglés del paper; implementadas en AnyLogic</span><span>04 / 12</span></div>
+        <div class="footer"><span>Comunicación bidireccional en ejecución (Borshchev, 2013)</span><span>04 / 12</span></div>
       </div>
     </section>
 
@@ -372,7 +367,7 @@
           <span class="tag">06 · Rigor · entrada y aleatoriedad</span>
           <span class="pill">DISTRIBUCIONES · SEMILLAS</span>
         </div>
-        <h2>Estocasticidad controlada</h2>
+        <h2>Azar controlado en las corridas</h2>
         <div class="grid cols-2">
           <div class="panel accent">
             <h3>Análisis de entrada</h3>
@@ -391,7 +386,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Pedagogía del curso: controlar semillas y streams</span><span>06 / 12</span></div>
+        <div class="footer"><span>Pedagogía del curso: controlar semillas y generadores</span><span>06 / 12</span></div>
       </div>
     </section>
 
@@ -448,29 +443,31 @@
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">09 · Resultados del artículo</span>
-          <span class="pill">HALLAZGOS · LECTURA CRÍTICA</span>
+          <span class="tag">09 · Conclusiones del artículo</span>
+          <span class="pill">QUÉ DEMUESTRA EL PAPER</span>
         </div>
-        <h2>Qué concluye el paper — y qué falta</h2>
+        <h2>Qué concluyen los autores</h2>
         <div class="grid cols-2">
-          <div class="panel">
-            <h3>Hallazgos y políticas</h3>
+          <div class="panel accent">
+            <h3>Resultados centrales</h3>
             <ul class="clean">
-              <li>Triage dual, módulos COVID y posición prono bajan no atendidos</li>
-              <li>Más probabilidad de transmisión → más flujo hacia el hospital</li>
-              <li>Proponen usar el híbrido para anticipar saturación</li>
+              <li>El rediseño COVID <strong>atendió a más pacientes</strong> que el hospital “como estaba”</li>
+              <li><strong>Triage dual</strong>, módulos COVID y <strong>posición prono</strong> reducen a quienes se van sin atención</li>
+              <li>Si sube la probabilidad de transmisión, <strong>sube con fuerza</strong> el flujo hacia el hospital</li>
+              <li>El contagio del personal es un cuello de botella: menos sanos ⇒ menos capacidad</li>
             </ul>
           </div>
-          <div class="panel accent">
-            <h3>Lectura crítica</h3>
+          <div class="panel">
+            <h3>Implicación para la gestión</h3>
             <ul class="clean">
-              <li>Tabla 5 (KPIs) y Figura 8 (sensibilidad) son análisis distintos</li>
-              <li>No publican un único juego de parámetros que cierre ambos</li>
-              <li>El código del hospital no es público (autorización institucional)</li>
+              <li>Proponen el híbrido como <strong>herramienta de anticipación</strong> ante emergencias sanitarias</li>
+              <li>Permite probar políticas (camas, personal, triage) <strong>antes</strong> de aplicarlas</li>
+              <li>Validaron con historial hospitalario real de 2021</li>
             </ul>
+            <p class="note" style="margin-top:12px"><strong>Nuestra lectura:</strong> Tabla 5 (KPIs) y Figura 8 (sensibilidad) son pruebas distintas; no publican un único juego de parámetros que cierre ambas a la vez.</p>
           </div>
         </div>
-        <div class="footer"><span>Validamos el híbrido COVID: Tabla 5 y forma de la Figura 8</span><span>09 / 12</span></div>
+        <div class="footer"><span>Base de lo que replicamos y contrastamos en la entrega</span><span>09 / 12</span></div>
       </div>
     </section>
 
@@ -618,20 +615,17 @@
     (function () {
       var slides = Array.from(document.querySelectorAll(".slide"));
       var progress = document.getElementById("progress");
-      var counter = document.getElementById("counter");
       var current = 0;
       slides.forEach(function (_, i) {
         var mark = document.createElement("span");
         if (i === 0) mark.className = "active";
         progress.appendChild(mark);
       });
-      function pad(n) { return String(n).padStart(2, "0"); }
       function go(next) {
         if (next < 0 || next >= slides.length || next === current) return;
         slides[current].classList.remove("active");
         slides[next].classList.add("active");
         current = next;
-        counter.textContent = pad(current + 1) + " / " + pad(slides.length);
         Array.from(progress.children).forEach(function (d, i) {
           d.classList.toggle("active", i === current);
         });
