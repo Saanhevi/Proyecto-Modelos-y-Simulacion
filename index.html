@@ -73,7 +73,14 @@
     .grid { flex: 1; min-height: 0; display: grid; gap: clamp(14px, 1.6vw, 22px); }
     .cols-2 { grid-template-columns: 1fr 1fr; }
     .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
     .cols-2-wide { grid-template-columns: 1.25fr .75fr; }
+    .panel.compact { padding: clamp(12px, 1.4vw, 16px); }
+    .panel.compact h3 { margin-bottom: 8px; font-size: clamp(0.95rem, 1.15vw, 1.1rem); }
+    .panel.compact ul.clean { gap: 8px; }
+    .panel.compact ul.clean li { font-size: clamp(0.88rem, 1.1vw, 1.02rem); line-height: 1.3; }
+    .figure-stage { flex: 1.35; min-height: 0; display: grid; gap: 14px; }
+    .cite a { color: var(--amber); word-break: break-all; }
 
     .panel {
       background: var(--card); border: 1px solid var(--line); border-radius: 20px;
@@ -193,7 +200,7 @@
     #lightbox img { max-width: min(96vw, 1400px); max-height: 90vh; object-fit: contain; background: #fff; border-radius: 12px; }
     #lb-close { position: absolute; top: 16px; right: 20px; font-size: 2rem; border: 0; background: transparent; color: #fff; cursor: pointer; }
     @media (max-width: 980px) {
-      .cols-2, .cols-3, .cols-2-wide, .metric-row { grid-template-columns: 1fr; }
+      .cols-2, .cols-3, .cols-4, .cols-2-wide, .metric-row { grid-template-columns: 1fr; }
       h1 { max-width: none; }
     }
   </style>
@@ -207,7 +214,28 @@
     <section class="slide active" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">01 · Resumen ejecutivo</span>
+          <span class="tag">01 · Descripción del problema</span>
+          <span class="pill">ENTREGA 5</span>
+        </div>
+        <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
+        <p class="lead">¿Cómo anticipar demanda, colas y personal cuando la epidemia satura el hospital?</p>
+        <div class="hero-meta">
+          <span class="chip"><b>Enfoque</b> · Tres métodos juntos: epidemia + personal + flujo del hospital</span>
+          <span class="chip"><b>Caso</b> · Hospital regional de Orizaba (México)</span>
+          <span class="chip"><b>Tiempo</b> · 30 días simulados (8 de calentamiento)</span>
+        </div>
+        <div class="hero-meta" style="margin-top:8px">
+          <span class="chip"><b>Equipo</b> · Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</span>
+        </div>
+        <div class="footer"><span>Pregunta guía de la demostración</span><span>01 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="slide" data-theme="green">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">02 · Resumen ejecutivo</span>
           <span class="pill">DELIMITACIÓN</span>
         </div>
         <h2>Qué problema resolvieron los autores</h2>
@@ -233,28 +261,7 @@
           <h3>Delimitación de nuestra entrega</h3>
           <p class="note">Replicamos el <strong>híbrido del área COVID</strong> y validamos contra <strong>Tabla 5</strong> y <strong>Figura 8</strong>. No reconstruimos el hospital completo de la Figura 7 ni el modelo inicial solo de eventos.</p>
         </div>
-        <div class="footer"><span>Meza-Palacios et al. (2026) · cita al cierre</span><span>01 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 02 -->
-    <section class="slide" data-theme="green">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">02 · Descripción del problema</span>
-          <span class="pill">ENTREGA 5</span>
-        </div>
-        <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
-        <p class="lead">¿Cómo anticipar demanda, colas y personal cuando la epidemia satura el hospital?</p>
-        <div class="hero-meta">
-          <span class="chip"><b>Enfoque</b> · Tres métodos juntos: epidemia + personal + flujo del hospital</span>
-          <span class="chip"><b>Caso</b> · Hospital regional de Orizaba (México)</span>
-          <span class="chip"><b>Tiempo</b> · 30 días simulados (8 de calentamiento)</span>
-        </div>
-        <div class="hero-meta" style="margin-top:8px">
-          <span class="chip"><b>Equipo</b> · Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</span>
-        </div>
-        <div class="footer"><span>Pregunta guía de la demostración</span><span>02 / 12</span></div>
+        <div class="footer"><span>Meza-Palacios et al. (2026) · referencias al cierre</span><span>02 / 12</span></div>
       </div>
     </section>
 
@@ -364,68 +371,53 @@
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">06 · Rigor · entrada y aleatoriedad</span>
-          <span class="pill">DISTRIBUCIONES · SEMILLAS</span>
+          <span class="tag">06 · Rigor metodológico</span>
+          <span class="pill">ENTRADA · ALEATORIEDAD · EXPERIMENTOS · SALIDA</span>
         </div>
-        <h2>Azar controlado en las corridas</h2>
-        <div class="grid cols-2">
-          <div class="panel accent">
+        <h2>Cómo controlamos las corridas</h2>
+        <div class="grid cols-4">
+          <div class="panel compact accent">
             <h3>Análisis de entrada</h3>
             <ul class="clean">
-              <li>Tiempos como triangular (mínimo / más frecuente / máximo)</li>
-              <li>El paper las verifica con pruebas de bondad de ajuste</li>
-              <li>No recalibramos esas duraciones</li>
+              <li>Tiempos triangulares (mín / moda / máx)</li>
+              <li>Bondad de ajuste en el paper</li>
+              <li>No recalibramos duraciones</li>
             </ul>
           </div>
-          <div class="panel accent">
+          <div class="panel compact accent">
             <h3>Números aleatorios</h3>
             <ul class="clean">
-              <li>Cuatro generadores independientes (por bloque del modelo)</li>
-              <li>Cada réplica usa una semilla distinta</li>
-              <li>Así el azar de un bloque no contamina al otro</li>
+              <li>Cuatro generadores independientes</li>
+              <li>Semilla distinta por réplica</li>
+              <li>Sin mezclar azar entre bloques</li>
+            </ul>
+          </div>
+          <div class="panel compact accent">
+            <h3>Diseño de experimentos</h3>
+            <ul class="clean">
+              <li>Factor: probabilidad de transmisión</li>
+              <li>Niveles: 0,02 a 0,06</li>
+              <li>Caso base 0,04 (Tabla 5)</li>
+            </ul>
+          </div>
+          <div class="panel compact accent">
+            <h3>Análisis de salida</h3>
+            <ul class="clean">
+              <li>Paper: 20 réplicas · 8 días warm-up</li>
+              <li>Nosotros: <strong>200</strong> réplicas · IC 95%</li>
+              <li>Error vs Tabla 5 y Figura 8</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Pedagogía del curso: controlar semillas y generadores</span><span>06 / 12</span></div>
+        <div class="footer"><span>Un solo reloj · respuestas: no atendidos, tratados, ingresos, flujo</span><span>06 / 12</span></div>
       </div>
     </section>
 
     <!-- 07 -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">07 · Rigor · experimentos y salida</span>
-          <span class="pill">DISEÑO · RÉPLICAS</span>
-        </div>
-        <h2>Qué variamos y qué medimos</h2>
-        <div class="grid cols-2">
-          <div class="panel accent">
-            <h3>Diseño de experimentos</h3>
-            <ul class="clean">
-              <li><strong>Factor:</strong> probabilidad de transmisión</li>
-              <li><strong>Niveles:</strong> 0,02 · 0,03 · 0,04 · 0,05 · 0,06</li>
-              <li><strong>Caso base:</strong> 0,04 (validación Tabla 5)</li>
-              <li><strong>Respuestas:</strong> no atendidos, tratados, ingresos adultos/niños, flujo a hospital</li>
-            </ul>
-          </div>
-          <div class="panel accent">
-            <h3>Análisis de salida</h3>
-            <ul class="clean">
-              <li>Artículo: 20 réplicas · 8 días de calentamiento · 22 de interés</li>
-              <li>Nuestra entrega: <strong>200</strong> réplicas e intervalos de confianza 95%</li>
-              <li>Error medio absoluto vs Tabla 5 y Figura 8</li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer"><span>Más réplicas = medias más estables para reportar</span><span>07 / 12</span></div>
-      </div>
-    </section>
-
-    <!-- 08 -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">08 · Mapeo de interfaces</span>
+          <span class="tag">07 · Mapeo de interfaces</span>
           <span class="pill">DIAGRAMAS</span>
         </div>
         <h2>Deconstrucción visual del modelo</h2>
@@ -435,7 +427,35 @@
           <div class="ph"><strong>Estados del personal</strong><span>sano → infectado → hospitalizado / recuperado · en AnyLogic</span></div>
           <div class="ph"><strong>Flujo de pacientes</strong><span>cola, triage, camas y egreso · en AnyLogic</span></div>
         </div>
-        <div class="footer"><span>Los diagramas se explican abriendo el modelo</span><span>08 / 12</span></div>
+        <div class="footer"><span>Los diagramas se explican abriendo el modelo</span><span>07 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 08 -->
+    <section class="slide" data-theme="red">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">08 · Resultados · Tabla 5</span>
+          <span class="pill">n = 200 RÉPLICAS</span>
+        </div>
+        <h2>Validación de KPIs del área COVID</h2>
+        <div class="metric-row" style="flex:0 0 auto">
+          <div class="metric"><b>0,5%</b><span>Error medio abs. Tabla 5</span></div>
+          <div class="metric"><b>51,1</b><span>No atendidos (art. 51,6)</span></div>
+          <div class="metric"><b>16,0</b><span>Tratados (art. 15,9)</span></div>
+          <div class="metric"><b>33,2 / 2,1</b><span>Adultos / niños (art. 33,3 / 2,1)</span></div>
+        </div>
+        <div class="figure-stage cols-2">
+          <figure class="figure" data-zoom>
+            <img src="img/fig9_tabla5.png" alt="Comparación Tabla 5" />
+            <figcaption>Dispersión de réplicas vs valores del artículo (Tabla 5)</figcaption>
+          </figure>
+          <figure class="figure" data-zoom>
+            <img src="img/desvios_tabla5.png" alt="Desvíos porcentuales Tabla 5" />
+            <figcaption>Desvío porcentual por indicador</figcaption>
+          </figure>
+        </div>
+        <div class="footer"><span>Clic en la gráfica para ampliar</span><span>08 / 12</span></div>
       </div>
     </section>
 
@@ -506,40 +526,25 @@
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">11 · Validación y errores</span>
-          <span class="pill">n = 200 RÉPLICAS</span>
+          <span class="tag">11 · Resultados · Figura 8</span>
+          <span class="pill">SENSIBILIDAD DEL FLUJO</span>
         </div>
-        <h2>Qué tan cerca quedamos del artículo</h2>
-        <div class="grid cols-2">
-          <div class="panel">
-            <h3>Tabla 5 (KPIs del área COVID)</h3>
-            <table>
-              <thead><tr><th>Indicador</th><th>Nuestra media</th><th>Artículo</th><th>Desvío</th></tr></thead>
-              <tbody>
-                <tr><td>No atendidos</td><td>51,1</td><td>51,6</td><td><strong>−0,9%</strong></td></tr>
-                <tr><td>Tratados</td><td>16,0</td><td>15,9</td><td><strong>+0,6%</strong></td></tr>
-                <tr><td>Adultos</td><td>33,2</td><td>33,3</td><td><strong>−0,2%</strong></td></tr>
-                <tr><td>Niños</td><td>2,1</td><td>2,1</td><td><strong>+0,2%</strong></td></tr>
-              </tbody>
-            </table>
-            <p class="note" style="margin-top:14px">
-              Error medio absoluto Tabla 5
-              <span class="big-num" style="font-size:1.7rem;margin-left:6px">0,5%</span>
-              · Figura 8 ≈ <strong>4,4%</strong>
-            </p>
-          </div>
-          <div class="grid cols-2" style="gap:12px">
-            <figure class="figure" data-zoom>
-              <img src="img/fig9_tabla5.png" alt="Comparación Tabla 5" />
-              <figcaption>Dispersión de réplicas vs artículo</figcaption>
-            </figure>
-            <figure class="figure" data-zoom>
-              <img src="img/fig8_flujo.png" alt="Sensibilidad Figura 8" />
-              <figcaption>Sensibilidad del flujo a hospital</figcaption>
-            </figure>
-          </div>
+        <h2>Cómo responde el flujo a hospital</h2>
+        <div class="metric-row" style="flex:0 0 auto; grid-template-columns: repeat(2, 1fr);">
+          <div class="metric"><b>4,4%</b><span>Error medio abs. vs Figura 8 (suplemento)</span></div>
+          <div class="metric"><b>0,02 → 0,06</b><span>Probabilidad de transmisión (niveles del paper)</span></div>
         </div>
-        <div class="footer"><span>200 réplicas independientes · intervalo de confianza 95%</span><span>11 / 12</span></div>
+        <div class="figure-stage cols-2">
+          <figure class="figure" data-zoom>
+            <img src="img/fig8_flujo.png" alt="Sensibilidad Figura 8" />
+            <figcaption>Flujo a hospital: simulación vs referencia del artículo</figcaption>
+          </figure>
+          <figure class="figure" data-zoom>
+            <img src="img/fig8_escala.png" alt="Escala Figura 8" />
+            <figcaption>Comparación en la escala de sensibilidad reportada</figcaption>
+          </figure>
+        </div>
+        <div class="footer"><span>Clic en la gráfica para ampliar</span><span>11 / 12</span></div>
       </div>
     </section>
 
@@ -548,13 +553,13 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">12 · Cierre</span>
-          <span class="pill">EQUIPO · FUENTES · REPOSITORIO</span>
+          <span class="pill">EQUIPO · APA 7.ª · REPOSITORIO</span>
         </div>
         <h2>Transparencia y entrega</h2>
         <div class="grid cols-2" style="flex:1.15;min-height:0">
-          <div class="panel" style="overflow:hidden">
+          <div class="panel" style="overflow:auto">
             <h3>Contribuciones</h3>
-            <table style="font-size:clamp(0.92rem,1.1vw,1.08rem)">
+            <table style="font-size:clamp(0.88rem,1.05vw,1.02rem)">
               <thead>
                 <tr><th>Miembro</th><th>Rol</th><th>Aporte principal</th></tr>
               </thead>
@@ -582,21 +587,44 @@
               </tbody>
             </table>
             <p class="note" style="margin-top:10px">
-              <strong>Aprendizaje:</strong> hay que sincronizar reloj y puentes entre bloques, y validar Tabla 5 y Figura 8 por separado.
+              <strong>Aprendizaje:</strong> sincronizar reloj y puentes entre bloques; validar Tabla 5 y Figura 8 por separado.
             </p>
             <p class="note" style="margin-top:6px">IA (~30–40% auxiliar): ChatGPT, Gemini y Claude. El equipo auditó ecuaciones y corridas.</p>
+            <p class="note" style="margin-top:10px">Repositorio:
+              <a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">github.com/Saanhevi/Proyecto-Modelos-y-Simulacion</a>
+            </p>
           </div>
-          <div class="stack" style="display:flex;flex-direction:column;gap:12px;min-height:0">
-            <div class="panel accent" style="flex:1;overflow:hidden">
-              <h3>Cita APA 7.ª (artículo)</h3>
-              <p class="cite" style="font-size:clamp(0.88rem,1.05vw,1.02rem)">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
-              <p class="note" style="margin-top:10px">También: Borshchev (2013); Secretaría de Economía / Secretaría de Salud (México); suplemento del artículo.</p>
-            </div>
-            <div class="panel warn" style="flex:0 0 auto">
-              <h3>Repositorio</h3>
-              <p class="note">Modelos, CSV, gráficas y esta presentación:</p>
-              <p class="note" style="margin-top:8px"><a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">github.com/Saanhevi/Proyecto-Modelos-y-Simulacion</a></p>
-            </div>
+          <div class="panel accent" style="overflow:auto">
+            <h3>Referencias (APA 7.ª)</h3>
+            <ul class="refs">
+              <li>
+                <span class="ref-tag">Artículo</span>
+                Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>.
+                <a href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a>
+              </li>
+              <li>
+                <span class="ref-tag">Suplemento</span>
+                Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Supplemental material (STRESS SM5380) [Material suplementario]. <em>Journal of Simulation</em>.
+                <a href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a>
+              </li>
+              <li>
+                <span class="ref-tag">Libro</span>
+                Borshchev, A. (2013). <em>The big book of simulation modeling: Multimethod modeling with AnyLogic 6</em>. AnyLogic North America.
+                <a href="https://www.anylogic.com/resources/books/big-book-of-simulation-modeling/" target="_blank" rel="noopener">https://www.anylogic.com/resources/books/big-book-of-simulation-modeling/</a>
+              </li>
+              <li>
+                <span class="ref-tag">Datos</span>
+                Secretaría de Economía. (s. f.). <em>Orizaba, Veracruz</em>. Data México.
+                <a href="https://www.economia.gob.mx/datamexico/es/profile/geo/orizaba" target="_blank" rel="noopener">https://www.economia.gob.mx/datamexico/es/profile/geo/orizaba</a>
+                (Consultado el 24 de julio de 2026).
+              </li>
+              <li>
+                <span class="ref-tag">Portal</span>
+                Secretaría de Salud. (s. f.). <em>Sistema Nacional de Vigilancia Epidemiológica (SINAVE)</em>.
+                <a href="https://www.sinave.gob.mx/" target="_blank" rel="noopener">https://www.sinave.gob.mx/</a>
+                (Consultado el 24 de julio de 2026; fuente institucional citada por los autores para datos hospitalarios).
+              </li>
+            </ul>
           </div>
         </div>
         <div class="footer"><span>Demo en vivo con AnyLogic · Modelos y Simulación</span><span>12 / 12</span></div>
@@ -604,7 +632,6 @@
     </section>
 
   </div></main>
-
   <div id="progress" aria-hidden="true"></div>
   <div id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
     <button id="lb-close" type="button" aria-label="Cerrar">×</button>
