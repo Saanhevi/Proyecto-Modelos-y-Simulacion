@@ -1,23 +1,11 @@
-# Scripts del paquete Entrega 5
-
-## Regenerar gráficas (Fig. 8, Fig. 9 / Tabla 5, desvíos)
-
-Desde esta carpeta:
+# Scripts del paquete STRESS SM5380
 
 ```bash
-pip install -r requirements.txt
+cd scripts
 python generar_graficas.py
 ```
 
-Lee `../csv/replicas_kpis_streams_n200.csv` (preferido) o `replicas_kpis_n21.csv`, y `../csv/fig8_flujo_diario.csv`.  
-Escribe PNG en `../graficas/` y aliases en `../img/` para `index.html`.
+Dependencias: `pandas`, `numpy`, `matplotlib`.
 
-## Regenerar el PDF de la presentación
-
-```bash
-pip install -r requirements.txt
-playwright install chromium
-python html_to_pdf.py
-```
-
-Genera `../presentacion.pdf` (una página por diapositiva).
+Entrada: `../csv/replicas_kpis_STRESS_f8_n200.csv`, `../csv/fig8_flujo_diario.csv`  
+Salida: `../graficas/*.png`, `../img/*` (para `index.html`), resúmenes en `../csv/`.

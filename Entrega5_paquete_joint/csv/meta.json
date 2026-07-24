@@ -1,17 +1,25 @@
 {
-  "mape_t5": 2.99,
-  "mape_fig8": 8.73,
+  "modelo": "STRESS_SM5380_f8",
+  "mape_t5": 0.49,
+  "mape_fig8": 4.42,
   "n": 200,
-  "untreated": 52.16,
-  "treated": 15.62,
-  "adult": 34.42,
-  "child": 1.98,
-  "arrive_day": 185.55,
-  "abanico": 7008.0,
+  "params": {
+    "contacRate": 3.0,
+    "Infective0": 4000,
+    "patientToHospital": 0.007,
+    "gate": 0.00714,
+    "untreated_false": 0.01048,
+    "p_child": 0.059
+  },
+  "untreated": 51.13,
+  "treated": 16.0,
+  "adult": 33.24,
+  "child": 2.1,
+  "arrive_day": 222.85,
   "desv": {
-    "untreated": 1.1,
-    "treated": -1.8,
-    "adultAdmit": 3.3,
-    "childAdmit": -5.7
+    "untreated": -0.86,
+    "treated": 0.63,
+    "adultAdmit": -0.24,
+    "childAdmit": 0.24
   }
 }

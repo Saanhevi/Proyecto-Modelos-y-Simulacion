@@ -1,31 +1,55 @@
-# Entrega 5 — Paquete de entrega
+# Paquete STRESS SM5380 · Meza-Palacios et al. (2026)
 
-Réplica AnyLogic del artículo Meza-Palacios et al. (2026).
+Réplica AnyLogic alineada al **material suplementario** (STRESS) + calibración
+Rust/AnyLogic para minimizar MAPE de Tabla 5 y Figura 8.
 
-## Abrir la presentación
-- **Rúbrica (12 diapositivas):** doble clic en `presentacion_rubrica_12.html` ← usar esta para Moodle / video.
-- Copia extendida (14 slides, más detalle visual): `index.html`
-- PDF: `presentacion.pdf` (regenerar si hace falta desde la versión de 12)
+## Resultados (AnyLogic n=200)
 
-## Modelo AnyLogic (entrega final)
-**`Modelo_Entrega5_Hospital_Hibrido_streams.alp`** — streams independientes + 200 réplicas.
+| Métrica | Valor |
+|---|---:|
+| **MAPE Tabla 5** | **0,5 %** |
+| **MAPE Figura 8** (ref. SM) | **4,4 %** |
 
-Baseline (sin streams, calibración n=21): `Modelo_Entrega5_Hospital_Hibrido.alp`
+Backup del escenario solo-T5 (F8≈9,2 %): `../exploracion_STRESS_SM5380_T5ok/`
 
-Detalle: `RESULTADOS_STREAMS.md` · `README_STREAMS.md` · `PARAMETROS_COMPROMISO_JOINT.md`
+## Abrir
+
+| Archivo | Uso |
+|---|---|
+| `index.html` | Presentación 12 slides (doble clic) |
+| `Modelo_Hospital_Hibrido_STRESS_SM5380.alp` | Modelo AnyLogic |
+| `img/` | Figuras embebidas en la presentación |
 
 ## Contenido
-- `index.html` + `img/` — presentación
-- `presentacion.pdf` — misma presentación en PDF
-- `DIAGRAMAS_HIBRIDO.md` — ciclos causales DS + desglose macro/meso/micro + acoplamiento bidireccional (Mermaid)
-- `graficas/` — Fig. 8, Fig. 9 / Tabla 5 y desvíos
-- `csv/` — réplicas (incl. `replicas_kpis_streams_n200.csv`) y resúmenes
-- `scripts/` — regenerar gráficas y PDF
 
-## Regenerar gráficas / PDF
-Ver `scripts/README.md`.
+```
+exploracion_STRESS_SM5380/
+├── index.html                 # presentación
+├── Modelo_*.alp               # AnyLogic
+├── csv/                       # réplicas + resúmenes
+├── graficas/                  # PNG de análisis
+├── img/                       # copias para index.html
+├── scripts/generar_graficas.py
+├── README.md                  # este archivo
+├── RESULTADOS.md              # tablas T5 / Fig.8
+├── PARAMETROS.md              # snapshot de parámetros
+├── MATERIAL_SUPLEMENTARIO_SM5380.md
+├── DIAGRAMAS_HIBRIDO.md
+├── RECALIBRACION_RUST.md      # gates STRESS
+└── FIG8_RECALIB_RUST.md       # barrido DS Fig.8
+```
 
-## Resultados (entrega)
-- **MAPE Tabla 5 ≈ 3.0 %** (streams, **n=200**)
-- MAPE Fig. 8 ≈ 8.7 %
-- Baseline histórico: MAPE T5 ≈ 3.7 % (n=21, 1 RNG)
+## Regenerar gráficas
+
+```bash
+cd scripts
+python generar_graficas.py
+```
+
+## Parámetros clave
+
+- DS: `contacRate=3,0` · `I₀=4000` · `p2h=0,007` · FOI producto  
+- SED: gate `0,00714` · untreated `0,01048` · `p_child=0,059`  
+- SM: Source Tri(12,15,18)/día + inject ABM · streams · n=200  
+
+Detalle: `PARAMETROS.md` · `RESULTADOS.md`

@@ -6,10 +6,10 @@
 -->
 <AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.9.202607020720" AlpVersion="8.9.9">
 <Model>
-	<Id>1783897912793</Id>
-	<Name><![CDATA[Modelo_exploracion_Fig8_producto]]></Name>
+	<Id>1783897912893</Id>
+	<Name><![CDATA[Modelo_Hospital_Hibrido_STRESS_SM5380]]></Name>
 	<EngineVersion>6</EngineVersion>
-	<JavaPackageName><![CDATA[modelo_hospital_covid]]></JavaPackageName>
+	<JavaPackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></JavaPackageName>
 	<ModelTimeUnit><![CDATA[Day]]></ModelTimeUnit>
 	<Folders>
 	</Folders>
@@ -18,7 +18,29 @@
 		<ActiveObjectClass>
 			<Id>1783897912797</Id>
 			<Name><![CDATA[Main]]></Name>
+			<AdditionalClassCode><![CDATA[
+// Streams: inicializar no-null (el rate del Source se evalúa en create, ANTES del StartupCode).
+public Random rngSed = new Random(1L);
+public Random rngAbm = new Random(2L);
+public Random rngGate = new Random(3L);
+public Random rngBranch = new Random(4L);
+// STRESS SM5380: evita re-inyectar el mismo personal no disponible en cada ciclo de 6 h
+public int _stressLastPhysUnavail = 0;
+public int _stressLastNurseUnavail = 0;
+public int _stressLastAuxUnavail = 0;
+]]></AdditionalClassCode>
 			<StartupCode><![CDATA[archivoCSV.println("Dia,NoTratados,TasaTransmision,FlujoHospital");
+// Exploracion STRESS/SM5380 (copia; no es el modelo de entrega).
+_stressLastPhysUnavail = 0;
+_stressLastNurseUnavail = 0;
+_stressLastAuxUnavail = 0;
+// Streams independientes (experimento). Semillas derivadas del RNG de esta corrida/replica
+long baseSeed = getDefaultRandomGenerator().nextLong();
+rngSed = new Random(baseSeed ^ 0xA11CEL);
+rngAbm = new Random(baseSeed ^ 0xB0B1L);
+rngGate = new Random(baseSeed ^ 0xC0DEL);
+rngBranch = new Random(baseSeed ^ 0xD00DL);
+traceln("STRESS-SM5380 STREAMS init base=" + baseSeed);
 // admitidosCovid: cualquier patient que ocupo cama COVID (incluye admision < dia 8).
 // kpiTreated (SED joint): egreso en [8,30] si estuvo en admitidosCovid (DischargeInWindow).
 // admitidosVentana: solo admisiones en [8,30] para adultAdmit/childAdmit.
@@ -34,7 +56,7 @@ try {
 	// relativa puede caer en Program Files y fallar sin aviso).
 	java.io.File dir = new java.io.File(System.getProperty("user.home"), "Documents");
 	if (!dir.exists()) dir = new java.io.File(System.getProperty("user.home"));
-	java.io.File f = new java.io.File(dir, "replicas_kpis_EXPLORA_prodFig8.csv");
+	java.io.File f = new java.io.File(dir, "replicas_kpis_STREAMS.csv");
 	boolean writeHeader = !f.exists() || f.length() == 0;
 	java.io.FileWriter fw = new java.io.FileWriter(f, true);
 	if (writeHeader) {
@@ -56,8 +78,7 @@ try {
 		(double) probabilityOfTransmission,
 		(long) kpiArriveCovid, (long) kpiUntreated, (long) kpiTreated,
 		(long) kpiAdultAdmit, (long) kpiChildAdmit));
-	// Actualiza la pantalla del experimento ParametersVariation (AfterSimulationRun
-	// del .alp a veces no se engancha; DestroyCode si corre siempre al dia 30).
+	// Actualiza pantallas de ParametersVariation / ExperimentoReplicas (DestroyCode corre al dia 30).
 	try {
 		if (getExperiment() instanceof ParametersVariation) {
 			ParametersVariation pv = (ParametersVariation) getExperiment();
@@ -67,12 +88,20 @@ try {
 			pv.uiAdult = (int) kpiAdultAdmit;
 			pv.uiChild = (int) kpiChildAdmit;
 			pv.uiDs = (int) kpiDsToHospital;
+		} else if (getExperiment() instanceof ExperimentoReplicas) {
+			ExperimentoReplicas er = (ExperimentoReplicas) getExperiment();
+			er.uiArrive = (int) kpiArriveCovid;
+			er.uiUntreated = (int) kpiUntreated;
+			er.uiTreated = (int) kpiTreated;
+			er.uiAdult = (int) kpiAdultAdmit;
+			er.uiChild = (int) kpiChildAdmit;
+			er.uiDs = (int) kpiDsToHospital;
 		}
 	} catch (Exception e2) {
-		traceln("No se pudo actualizar UI de sensibilidad: " + e2);
+		traceln("No se pudo actualizar UI del experimento: " + e2);
 	}
 } catch (Exception e) {
-	traceln("No se pudo escribir replicas_kpis_EXPLORA_prodFig8.csv: " + e);
+	traceln("No se pudo escribir replicas_kpis_STREAMS.csv: " + e);
 }]]></DestroyCode>
 			<Generic>false</Generic>
 			<GenericParameter>
@@ -407,7 +436,7 @@ try {
 					<EquationStyle>classic</EquationStyle>
 					<Width>20</Width>
 					<Height>20</Height>
-						<InitialValue><![CDATA[119782]]></InitialValue>
+						<InitialValue><![CDATA[119182]]></InitialValue>
 						<Color>-4073239</Color>
 					</Properties>
 				</Variable>
@@ -423,7 +452,7 @@ try {
 					<EquationStyle>classic</EquationStyle>
 					<Width>20</Width>
 					<Height>20</Height>
-						<InitialValue><![CDATA[3400]]></InitialValue>
+						<InitialValue><![CDATA[4000]]></InitialValue>
 						<Color>-4073239</Color>
 					</Properties>
 				</Variable>
@@ -494,7 +523,7 @@ try {
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[2.65]]></Code>
+							<Code><![CDATA[3.0]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1783902568619</Id>
@@ -542,7 +571,7 @@ try {
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[0.009]]></Code>
+							<Code><![CDATA[0.007]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1783902833044</Id>
@@ -779,7 +808,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[orizabaCovidPatients]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -789,7 +818,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueCovidPatients]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -812,7 +841,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[medicalstaffCovidPatient1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -822,7 +851,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueCovidPatients]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -846,7 +875,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[arriveCovidPatients]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -856,7 +885,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueCovidPatients]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -880,7 +909,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[respiratoryTriage1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -890,7 +919,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[patientType]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -913,7 +942,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[patientType]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -923,7 +952,7 @@ try {
 						<ItemName><![CDATA[outT]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToChildrenCovidMod]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -946,7 +975,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildren]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -956,7 +985,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToChildrenCovidMod]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -979,7 +1008,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildren]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -989,7 +1018,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1012,7 +1041,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1022,7 +1051,7 @@ try {
 						<ItemName><![CDATA[out1]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[stableCovid]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1045,7 +1074,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1055,7 +1084,7 @@ try {
 						<ItemName><![CDATA[out2]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovid]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1080,7 +1109,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1090,7 +1119,7 @@ try {
 						<ItemName><![CDATA[out3]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[intubatedCovid]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1115,7 +1144,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1125,7 +1154,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[intubatedCovid]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1148,7 +1177,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[stableCovid]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1158,7 +1187,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildrenExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1181,7 +1210,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovid]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1191,7 +1220,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildrenExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1216,7 +1245,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1226,7 +1255,7 @@ try {
 						<ItemName><![CDATA[outT]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildrenExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1251,7 +1280,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1261,7 +1290,7 @@ try {
 						<ItemName><![CDATA[outF]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildrenExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1287,7 +1316,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdults]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1297,7 +1326,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToAdultCovidMod]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1320,7 +1349,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdults]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1330,7 +1359,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput2]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1353,7 +1382,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput2]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1363,7 +1392,7 @@ try {
 						<ItemName><![CDATA[out1]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[stableCovid1]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1386,7 +1415,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput2]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1396,7 +1425,7 @@ try {
 						<ItemName><![CDATA[out3]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[intubatedCovid1]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1421,7 +1450,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput3]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1431,7 +1460,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[intubatedCovid1]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1454,7 +1483,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[stableCovid1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1464,7 +1493,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1487,7 +1516,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovid1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1497,7 +1526,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1522,7 +1551,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput3]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1532,7 +1561,7 @@ try {
 						<ItemName><![CDATA[outT]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1557,7 +1586,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput3]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1567,7 +1596,7 @@ try {
 						<ItemName><![CDATA[outF]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1593,7 +1622,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput4]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1603,7 +1632,7 @@ try {
 						<ItemName><![CDATA[outT]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovid1]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1626,7 +1655,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovidImprove]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1636,7 +1665,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput4]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1660,7 +1689,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput4]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1670,7 +1699,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[selectOutput2]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1694,7 +1723,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[severeCovidImprove]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1704,7 +1733,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1729,7 +1758,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[patientType]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1739,7 +1768,7 @@ try {
 						<ItemName><![CDATA[outF]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToAdultCovidMod]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1763,7 +1792,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdults]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1773,7 +1802,7 @@ try {
 						<ItemName><![CDATA[outTimeout]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedCovidAreaGoToExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1798,7 +1827,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildren]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1808,7 +1837,7 @@ try {
 						<ItemName><![CDATA[outTimeout]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedCovidAreaGoToExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1833,7 +1862,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageRoom2]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1843,7 +1872,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[patientType]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1869,7 +1898,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageRoom2]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1879,7 +1908,7 @@ try {
 						<ItemName><![CDATA[outTimeout]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedGoToExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1905,7 +1934,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToRespiratoryTriage]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1915,7 +1944,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageDivision]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1938,7 +1967,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToTriageRoom1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1948,7 +1977,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageDivision]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -1971,7 +2000,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToTriageRoom1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -1981,7 +2010,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageRoom2]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2004,7 +2033,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[triageDivision]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2014,7 +2043,7 @@ try {
 						<ItemName><![CDATA[outF]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[respiratoryTriage1]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2038,7 +2067,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[respiratoryTriage1]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2048,7 +2077,7 @@ try {
 						<ItemName><![CDATA[outTimeout]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedGoToExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2075,7 +2104,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[ambulatoryPatient]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2085,7 +2114,7 @@ try {
 						<ItemName><![CDATA[outF]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[sinkExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2111,7 +2140,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedCovidAreaGoToExit]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2121,7 +2150,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[sinkExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2144,7 +2173,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[moveTo2Exit]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2154,7 +2183,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[sinkExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2179,7 +2208,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[UnnattendedGoToExit]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2189,7 +2218,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[sinkExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2214,7 +2243,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[ambulatoryPatient]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2224,7 +2253,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueCovidPatients]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2249,7 +2278,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[moveTo2Exit]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2259,7 +2288,7 @@ try {
 						<ItemName><![CDATA[in]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueChildrenExit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2284,7 +2313,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[queueAdultsExit]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2294,7 +2323,7 @@ try {
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[moveTo2Exit]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2319,7 +2348,7 @@ try {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[ambulatoryPatient]]></ItemName>
 					</SourceEmbeddedObjectReference>
@@ -2329,7 +2358,7 @@ try {
 						<ItemName><![CDATA[outT]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 						<ItemName><![CDATA[goToRespiratoryTriage]]></ItemName>
 					</TargetEmbeddedObjectReference>
@@ -2409,17 +2438,17 @@ event.restart();]]></Action>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+							<Code><![CDATA[6]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[int disponibles = 0;
-for (AuxiliarNurse a : nurseAuxiliares) {
-	if (a.inState(AuxiliarNurse.Susceptible) || a.inState(AuxiliarNurse.Recovered)) {
-		disponibles++;
-	}
+					<Action><![CDATA[int disponibles = (int) nurseAuxiliares.nurseAuxiliaresStat();
+int noDisponibles = nurseAuxiliares.size() - disponibles;
+if (noDisponibles > _stressLastAuxUnavail) {
+	medicalstaffCovidPatient1.inject(noDisponibles - _stressLastAuxUnavail);
 }
+_stressLastAuxUnavail = noDisponibles;
 auxiliaryNurses.set_capacity(Math.max(0, disponibles));
 if (slider2 != null) { slider2.setValue(disponibles); }
 ]]></Action>
@@ -2454,7 +2483,7 @@ if (slider2 != null) { slider2.setValue(disponibles); }
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[if (nurseCovids.size() > 0 && uniform() < 0.04) {
+					<Action><![CDATA[if (nurseCovids.size() > 0 && uniform(rngAbm) < 0.04) {
 	send("Infection", nurseCovids.random());
 }
 ]]></Action>
@@ -2484,17 +2513,17 @@ if (slider2 != null) { slider2.setValue(disponibles); }
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+							<Code><![CDATA[6]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[int disponibles = 0;
-for (NurseCovid n : nurseCovids) {
-	if (n.inState(NurseCovid.Susceptible) || n.inState(NurseCovid.Recovered)) {
-		disponibles++;
-	}
+					<Action><![CDATA[int disponibles = (int) nurseCovids.nurseCovidsStat();
+int noDisponibles = nurseCovids.size() - disponibles;
+if (noDisponibles > _stressLastNurseUnavail) {
+	medicalstaffCovidPatient1.inject(noDisponibles - _stressLastNurseUnavail);
 }
+_stressLastNurseUnavail = noDisponibles;
 nursesCovid.set_capacity(Math.max(0, disponibles));
 if (slider1 != null) { slider1.setValue(disponibles); }
 ]]></Action>
@@ -2529,7 +2558,7 @@ if (slider1 != null) { slider1.setValue(disponibles); }
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[if (nurseAuxiliares.size() > 0 && uniform() < 0.04) {
+					<Action><![CDATA[if (nurseAuxiliares.size() > 0 && uniform(rngAbm) < 0.04) {
 	send("Infection", nurseAuxiliares.random());
 }
 
@@ -2565,7 +2594,7 @@ if (slider1 != null) { slider1.setValue(disponibles); }
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[if (physicianCovids.size() > 0 && uniform() < 0.04) {
+					<Action><![CDATA[if (physicianCovids.size() > 0 && uniform(rngAbm) < 0.04) {
 	send("Infection", physicianCovids.random());
 }]]></Action>
 				</Event>
@@ -2594,17 +2623,18 @@ if (slider1 != null) { slider1.setValue(disponibles); }
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
+							<Code><![CDATA[6]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[int disponibles = 0;
-for (PhysicianCovid p : physicianCovids) {
-	if (p.inState(PhysicianCovid.Susceptible) || p.inState(PhysicianCovid.Recovered)) {
-		disponibles++;
-	}
+					<Action><![CDATA[// STRESS SM5380: set_capacity(Stat) + inject de no disponibles (delta anti re-conteo)
+int disponibles = (int) physicianCovids.physicianCovidsStat();
+int noDisponibles = physicianCovids.size() - disponibles;
+if (noDisponibles > _stressLastPhysUnavail) {
+	medicalstaffCovidPatient1.inject(noDisponibles - _stressLastPhysUnavail);
 }
+_stressLastPhysUnavail = noDisponibles;
 covidPhysicians.set_capacity(Math.max(0, disponibles));
 if (sliderPhysicians != null) {
 	sliderPhysicians.setValue(disponibles);
@@ -2717,7 +2747,7 @@ try {
 					<FileType>FILE</FileType>
 					<Url><![CDATA[]]></Url>
 					<ResourceReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[historico_diario.csv]]></ClassName>
 					</ResourceReference>
 					<FileMode>WRITE</FileMode>
@@ -2774,7 +2804,7 @@ try {
 						<Parameter>
 							<Name><![CDATA[rate]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[2.29556]]></Code>
+								<Code><![CDATA[triangular(12, 15, 18)]]></Code>
 								<Unit Class="RateUnits"><![CDATA[PER_DAY]]></Unit>
 							</Value>
 						</Parameter>
@@ -3424,7 +3454,7 @@ try {
 						<Parameter>
 							<Name><![CDATA[probability]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[0.00879]]></Code>
+								<Code><![CDATA[0.00714]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -3442,10 +3472,10 @@ try {
 						<Parameter>
 							<Name><![CDATA[onExitFalse]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[// Revalidacion MAPE T5 5.3%: gate=0.00879; unt=0.01292; p_child=0.059
-// goToHospital > 0 (acoplamiento original de esa corrida).
+								<Code><![CDATA[// STRESS + DS Fig.8 (Rust SweepStressDs): c=3 I0=4000 p2h=0.007
+// gate=0.00714; unt=0.01048; p_child=0.059 | pred. T5≈1.9% F8≈4.4%
 if (time() >= 8) {
-	if (uniform() < 0.01292) { kpiUntreated++; }
+	if (uniform(rngGate) < 0.01048) { kpiUntreated++; }
 	else { kpiAmbulatory++; }
 }]]></Code>
 							</Value>
@@ -3839,7 +3869,7 @@ if (time() >= 8) {
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular( 5, 12, 25 )]]></Code>
+								<Code><![CDATA[triangular( 5, 12, 25, rngSed )]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -4040,7 +4070,7 @@ if (time() >= 8) {
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular( 5, 12, 25 )]]></Code>
+								<Code><![CDATA[triangular( 5, 12, 25, rngSed )]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -4629,7 +4659,7 @@ if (time() >= 8) { kpiChildAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(560, 6480, 17280)]]></Code>
+								<Code><![CDATA[triangular(560, 6480, 17280, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -4820,7 +4850,7 @@ if (time() >= 8) { kpiChildAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(560, 6480, 17280)]]></Code>
+								<Code><![CDATA[triangular(560, 6480, 17280, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -5011,7 +5041,7 @@ if (time() >= 8) { kpiChildAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(560, 6480, 17280)]]></Code>
+								<Code><![CDATA[triangular(560, 6480, 17280, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -5916,7 +5946,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(1440, 10080, 36000)]]></Code>
+								<Code><![CDATA[triangular(1440, 10080, 36000, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -6107,7 +6137,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(1440, 10080, 36000)]]></Code>
+								<Code><![CDATA[triangular(1440, 10080, 36000, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -6298,7 +6328,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(1440, 10080, 36000)]]></Code>
+								<Code><![CDATA[triangular(1440, 10080, 36000, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -6771,7 +6801,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[delayTime]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[triangular(1440, 10080, 36000)]]></Code>
+								<Code><![CDATA[triangular(1440, 10080, 36000, rngSed)]]></Code>
 								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 							</Value>
 						</Parameter>
@@ -7650,7 +7680,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[80]]></Code>
+								<Code><![CDATA[(int) nEspecialBed]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -8638,7 +8668,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[1]]></Code>
+								<Code><![CDATA[nChemicalAnalyst]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -8884,6 +8914,9 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[50]]></Code>
+							</Value>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[capacityBasedOnAttractors]]></Name>
@@ -9110,12 +9143,12 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<ShowLabel>true</ShowLabel>
 					<PresentationId>1784045342058</PresentationId>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[PhysicianCovid]]></ClassName>
 					</ActiveObjectClass>
 					<GenericParameterSubstitute>
 						<GenericParameterSubstituteReference>
-							<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+							<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 							<ClassName><![CDATA[PhysicianCovid]]></ClassName>
 							<ItemName><![CDATA[1784041531095]]></ItemName>
 						</GenericParameterSubstituteReference>
@@ -9165,12 +9198,12 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<ShowLabel>true</ShowLabel>
 					<PresentationId>1784046342058</PresentationId>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[NurseCovid]]></ClassName>
 					</ActiveObjectClass>
 					<GenericParameterSubstitute>
 						<GenericParameterSubstituteReference>
-							<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+							<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 							<ClassName><![CDATA[NurseCovid]]></ClassName>
 							<ItemName><![CDATA[1784041631095]]></ItemName>
 						</GenericParameterSubstituteReference>
@@ -9220,12 +9253,12 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<ShowLabel>true</ShowLabel>
 					<PresentationId>1784047342058</PresentationId>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[AuxiliarNurse]]></ClassName>
 					</ActiveObjectClass>
 					<GenericParameterSubstitute>
 						<GenericParameterSubstituteReference>
-							<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+							<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 							<ClassName><![CDATA[AuxiliarNurse]]></ClassName>
 							<ItemName><![CDATA[1784041731095]]></ItemName>
 						</GenericParameterSubstituteReference>
@@ -9316,7 +9349,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<Z>2</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-1</Color>
-					<Text><![CDATA[DASHBOARD INTERACTIVO - CAPACIDAD HOSPITALARIA]]></Text>
+					<Text><![CDATA[DASHBOARD (streams) - CAPACIDAD HOSPITALARIA]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>18</Size>
@@ -9662,7 +9695,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>2</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-10197910</Color>
+					<Color>-3289651</Color>
 					<Text><![CDATA[*Nota: Personal médico simulado mediante agentes (MBA)]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
@@ -9962,7 +9995,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>2</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-10197910</Color>
+					<Color>-3289651</Color>
 					<Text><![CDATA[*Valores acumulados del día 8 al 30 de simulación.]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
@@ -9971,6 +10004,72 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
+				<Rectangle>
+					<Id>1999400002101</Id>
+					<Name><![CDATA[DASH_BG_PHYS]]></Name>
+					<X>1505</X><Y>185</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-3289651</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>75</Width>
+					<Height>45</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-14774017</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Rectangle>
+					<Id>1999400002102</Id>
+					<Name><![CDATA[DASH_BG_NURS]]></Name>
+					<X>1505</X><Y>285</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-3289651</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>75</Width>
+					<Height>45</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-14774017</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Rectangle>
+					<Id>1999400002103</Id>
+					<Name><![CDATA[DASH_BG_AUX]]></Name>
+					<X>1505</X><Y>385</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>1</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-3289651</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>75</Width>
+					<Height>45</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-14774017</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
 				<Control Type="Slider">
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1783905353982</Id>
@@ -10427,86 +10526,6 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
-    			<TimePlot>
-					<Id>1784407131913</Id>
-					<Name><![CDATA[plot]]></Name>
-					<X>60</X><Y>1090</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<AutoUpdate>true</AutoUpdate>
-					<RecurrenceProperties>
-						<Id>1784407131911</Id>
-						<OccurrenceAtTime>true</OccurrenceAtTime>
-						<OccurrenceDate>1784448000000</OccurrenceDate>
-						<OccurrenceTime Class="CodeUnitValue">
-							<Code><![CDATA[0]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
-						</OccurrenceTime>
-						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
-						</RecurrenceCode>
-					</RecurrenceProperties>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>260</Width>
-					<Height>210</Height>
-					<BackgroundColor/>
-					<BorderColor/>
-					<ChartArea>
-						<XOffset>50</XOffset>
-						<YOffset>30</YOffset>
-						<Width>180</Width>
-						<Height>120</Height>
-						<BackgroundColor>-1</BackgroundColor>
-						<BorderColor>-16777216</BorderColor>
-						<GridColor>-12566464</GridColor>
-					</ChartArea>
-					<Legend>
-						<Place>SOUTH</Place>
-						<TextColor>-16777216</TextColor>
-						<Size>30</Size>
-					</Legend>
-					<Labels>
-						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
-						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
-						<TextColor>-12566464</TextColor>
-					</Labels>
-					<ShowLegend>true</ShowLegend>
-					<TimeWindowsMovementType>MOVEMENT_WITH_TIME</TimeWindowsMovementType>		
-					<TimeWindowUnits>MODEL_TIME_UNIT</TimeWindowUnits>
-					<VerScaleFromExpression><![CDATA[0]]></VerScaleFromExpression>
-					<VerScaleToExpression><![CDATA[1]]></VerScaleToExpression>
-					<VerScaleType>AUTO</VerScaleType>
-					<DrawLine>true</DrawLine>
-					<Interpolation>STEP</Interpolation>
-					<DatasetExpression>  
-						<Title><![CDATA[Title]]></Title>
-					<Id>1784407135995</Id>
-					<Expression><![CDATA[dataset]]></Expression>
-					<Color>-9807155</Color>
-					<Expression2><![CDATA[0]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>1.0</LineWidth>
-					</DatasetExpression>
-					<DatasetExpression>  
-						<Title><![CDATA[Pacientes no tratados]]></Title>
-					<Id>1784407214248</Id>
-					<Expression><![CDATA[dataset1]]></Expression>
-					<Color>-2987746</Color>
-					<Expression2><![CDATA[kpiUntreated]]></Expression2>
-					<Expression2Flag>true</Expression2Flag>
-						<PointStyle>NONE</PointStyle>
-						<LineWidth>1.0</LineWidth>
-					</DatasetExpression>
-					<SamplesToKeep>100</SamplesToKeep>
-					<TimeWindowExpression><![CDATA[100]]></TimeWindowExpression>
-					<FillAreaUnderLine>true</FillAreaUnderLine>
-					<LabelFormat>MODEL_TIME_UNITS</LabelFormat>
-    			</TimePlot>
 			</Presentation>
 
 				</Level>
@@ -10786,7 +10805,7 @@ if (time() >= 8) { kpiAdultAdmit++; admitidosVentana.add(agent); }]]></Code>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784041583962" Target="1784042392583" Trigger="timeout">
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[triangular(3,5,10)
+							<Code><![CDATA[triangular(3,5,10, main.rngAbm)
 /*El articulo dice 
 que se usa la
 probabilidad 
@@ -10850,19 +10869,14 @@ de infeccion*/]]></Code>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784042392583" Target="1784044798941" Trigger="timeout">
-						<Action><![CDATA[// Lo inyecta al sistema
-main.medicalstaffCovidPatient1.inject(1);
+						<Action><![CDATA[// STRESS: inject+capacidad los sincroniza eventPhysician (SM5380)
 if (main.time() >= 8) { main.kpiStaffInfected++; }
-
-// Reduce el pool en 1
-int nueva_cantidad = main.covidPhysicians.capacity-1;
-main.sliderPhysicians.setValue(nueva_cantidad); // Actualiza la posición visual del slider
-main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del pool]]></Action>
+]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[uniform(0,1) < 0.3
+						<Condition><![CDATA[uniform(0,1, main.rngBranch) < 0.3
 // 30% probabilidad de hospitalizacion]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
@@ -10960,7 +10974,7 @@ main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<AgentLinkBidirectional>true</AgentLinkBidirectional>
 					<MessageType><![CDATA[Object]]></MessageType>
 					<StatechartReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[PhysicianCovid]]></ClassName>
 						<ItemName><![CDATA[statechart]]></ItemName>
 					</StatechartReference>
@@ -10983,7 +10997,7 @@ main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
@@ -11226,7 +11240,7 @@ main.covidPhysicians.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784041683962" Target="1784042492583" Trigger="timeout">
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[triangular(3,5,10)
+							<Code><![CDATA[triangular(3,5,10, main.rngAbm)
 /*El articulo dice 
 que se usa la
 probabilidad 
@@ -11290,19 +11304,14 @@ de infeccion*/]]></Code>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784042492583" Target="1784044898941" Trigger="timeout">
-						<Action><![CDATA[// Lo inyecta al sistema
-main.medicalstaffCovidPatient1.inject(1);
+						<Action><![CDATA[// STRESS: inject+capacidad los sincroniza eventNurseCovid (SM5380)
 if (main.time() >= 8) { main.kpiStaffInfected++; }
-
-// Reduce el pool en 1
-int nueva_cantidad = main.nursesCovid.capacity-1;
-main.slider1.setValue(nueva_cantidad); // Actualiza la posición visual del slider
-main.nursesCovid.set_capacity(nueva_cantidad); // Modifica la capacidad del pool]]></Action>
+]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[uniform(0,1) < 0.3
+						<Condition><![CDATA[uniform(0,1, main.rngBranch) < 0.3
 // 30% probabilidad de hospitalizacion]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
@@ -11400,7 +11409,7 @@ main.nursesCovid.set_capacity(nueva_cantidad); // Modifica la capacidad del pool
 					<AgentLinkBidirectional>true</AgentLinkBidirectional>
 					<MessageType><![CDATA[Object]]></MessageType>
 					<StatechartReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[NurseCovid]]></ClassName>
 						<ItemName><![CDATA[statechart]]></ItemName>
 					</StatechartReference>
@@ -11423,7 +11432,7 @@ main.nursesCovid.set_capacity(nueva_cantidad); // Modifica la capacidad del pool
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
@@ -11666,7 +11675,7 @@ main.nursesCovid.set_capacity(nueva_cantidad); // Modifica la capacidad del pool
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784041783962" Target="1784042592583" Trigger="timeout">
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[triangular(3,5,10)
+							<Code><![CDATA[triangular(3,5,10, main.rngAbm)
 /*El articulo dice 
 que se usa la
 probabilidad 
@@ -11730,19 +11739,14 @@ de infeccion*/]]></Code>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1784042592583" Target="1784044998941" Trigger="timeout">
-						<Action><![CDATA[// Lo inyecta al sistema
-main.medicalstaffCovidPatient1.inject(1);
+						<Action><![CDATA[// STRESS: inject+capacidad los sincroniza eventAuxiliaryNurse (SM5380)
 if (main.time() >= 8) { main.kpiStaffInfected++; }
-
-// Reduce el pool en 1
-int nueva_cantidad = main.auxiliaryNurses.capacity-1;
-main.slider2.setValue(nueva_cantidad); // Actualiza la posición visual del slider
-main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del pool]]></Action>
+]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[DAY]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[uniform(0,1) < 0.3
+						<Condition><![CDATA[uniform(0,1, main.rngBranch) < 0.3
 // 30% probabilidad de hospitalizacion]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
@@ -11840,7 +11844,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<AgentLinkBidirectional>true</AgentLinkBidirectional>
 					<MessageType><![CDATA[Object]]></MessageType>
 					<StatechartReference>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[AuxiliarNurse]]></ClassName>
 						<ItemName><![CDATA[statechart]]></ItemName>
 					</StatechartReference>
@@ -11863,7 +11867,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
-						<PackageName><![CDATA[modelo_hospital_covid]]></PackageName>
+						<PackageName><![CDATA[modelo_hospital_covid_stress_sm5380]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
@@ -11963,7 +11967,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12490271</Color>
-					<Text><![CDATA[Modelo_hospital_COVID_ENTREGA]]></Text>
+					<Text><![CDATA[Modelo_hospital_COVID]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>24</Size>
@@ -12011,6 +12015,39 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 		<ParamVariationExperiment ActiveObjectClassId="1783897912797">
 			<Id>1784322049318</Id>
 			<Name><![CDATA[ExperimentoReplicas]]></Name>
+			<AdditionalClassCode><![CDATA[
+// KPIs de la ultima replica (rellenados desde Main.DestroyCode) para la pantalla.
+public int uiArrive = 0;
+public int uiUntreated = 0;
+public int uiTreated = 0;
+public int uiAdult = 0;
+public int uiChild = 0;
+public int uiDs = 0;
+
+/**
+ * Total de réplicas fijas = Properties → Replications per iteration.
+ * AnyLogic 8.9 lo guarda en ExperimentParamVariation.hk vía setFixedReplicationsNumber
+ * (no hay getter público; el nombre está ofuscado en el engine).
+ */
+public int nReplicasConfig() {
+	try {
+		java.lang.reflect.Field f =
+			com.anylogic.engine.ExperimentParamVariation.class.getDeclaredField("hk");
+		f.setAccessible(true);
+		int v = f.getInt(this);
+		if (v > 0) return v;
+	} catch (Throwable ignore) {}
+	// Fallback por si cambia el ofuscado entre versiones
+	try {
+		java.lang.reflect.Field f =
+			com.anylogic.engine.ExperimentParamVariation.class.getDeclaredField("ig");
+		f.setAccessible(true);
+		int v = f.getInt(this);
+		if (v > 0) return v;
+	} catch (Throwable ignore) {}
+	return 0;
+}
+]]></AdditionalClassCode>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>512</MaximumMemory>
 			<RandomNumberGenerationType>randomSeed</RandomNumberGenerationType>
@@ -12022,9 +12059,9 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 
 			<Presentation>
 				<Text>
-					<Id>1784322081643</Id>
-					<Name><![CDATA[text]]></Name>
-					<X>40</X><Y>30</Y>
+					<Id>1999600001001</Id>
+					<Name><![CDATA[erTitle]]></Name>
+					<X>40</X><Y>25</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12034,62 +12071,18 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12490271</Color>
-					<Text><![CDATA[Modelo_hospital_tercera_version : ExperimentoReplicas]]></Text>
+					<Text><![CDATA[Validación Tabla 5 — ExperimentoReplicas]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>24</Size>
-						<Style>0</Style>
+						<Size>20</Size>
+						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081644</Id>
-					<Name><![CDATA[text1]]></Name>
-					<X>50</X><Y>80</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12171190</Color>
-					<Text><![CDATA[Iterations completed:]]></Text>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>12</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>LEFT</Alignment>
-				</Text>
-				<Text>
-					<Id>1784322081645</Id>
-					<Name><![CDATA[text2]]></Name>
-					<X>240</X><Y>80</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12042869</Color>
-					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format(getNumberOfCompletedIterations())]]></TextCode>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>12</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>RIGHT</Alignment>
-				</Text>
-				<Text>
-					<Id>1784322081646</Id>
-					<Name><![CDATA[text3]]></Name>
-					<X>50</X><Y>110</Y>
+					<Id>1999600001002</Id>
+					<Name><![CDATA[erSub]]></Name>
+					<X>40</X><Y>55</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12099,7 +12092,72 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12566464</Color>
-					<Text><![CDATA[Parameters]]></Text>
+					<Text><![CDATA[réplicas · streams independientes · π fijo = 0.04]]></Text>
+					<TextCode><![CDATA[(nReplicasConfig() > 0 ? nReplicasConfig() : "…") + " réplicas · streams independientes · π fijo = 0.04"]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001003</Id>
+					<Name><![CDATA[erIterL]]></Name>
+					<X>50</X><Y>90</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Réplicas completadas:]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001004</Id>
+					<Name><![CDATA[erIterV]]></Name>
+					<X>320</X><Y>90</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[0]]></Text>
+					<TextCode><![CDATA[format(getCurrentReplication()) + " / " + (nReplicasConfig() > 0 ? format(nReplicasConfig()) : "…")]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>14</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001005</Id>
+					<Name><![CDATA[erSec1]]></Name>
+					<X>50</X><Y>125</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[Parámetros fijos ]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
@@ -12108,9 +12166,9 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Line>
-					<Id>1784322081647</Id>
-					<Name><![CDATA[line]]></Name>
-					<X>40</X><Y>130</Y>
+					<Id>1999600001006</Id>
+					<Name><![CDATA[erLine1]]></Name>
+					<X>40</X><Y>145</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12127,14 +12185,36 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>210</Dx>
+					<Dx>300</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
+				<Rectangle>
+					<Id>1999600001007</Id>
+					<Name><![CDATA[erRectC]]></Name>
+					<X>40</X><Y>155</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
 				<Text>
-					<Id>1784322081648</Id>
-					<Name><![CDATA[text4]]></Name>
-					<X>50</X><Y>150</Y>
+					<Id>1999600001008</Id>
+					<Name><![CDATA[erCL]]></Name>
+					<X>50</X><Y>160</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12153,9 +12233,9 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081649</Id>
-					<Name><![CDATA[text5]]></Name>
-					<X>240</X><Y>150</Y>
+					<Id>1999600001009</Id>
+					<Name><![CDATA[erCV]]></Name>
+					<X>320</X><Y>160</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12167,18 +12247,62 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
 					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format( contacRate )]]></TextCode>
+					<TextCode><![CDATA[format(contacRate)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
-						<Style>0</Style>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001010</Id>
+					<Name><![CDATA[erPiL]]></Name>
+					<X>50</X><Y>188</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[π  probabilityOfTransmission]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001011</Id>
+					<Name><![CDATA[erPiV]]></Name>
+					<X>320</X><Y>188</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16738048</Color>
+					<Text><![CDATA[?]]></Text>
+					<TextCode><![CDATA[format(probabilityOfTransmission)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>14</Size>
+						<Style>1</Style>
 					</Font>
 					<Alignment>RIGHT</Alignment>
 				</Text>
 				<Rectangle>
-					<Id>1784322081650</Id>
-					<Name><![CDATA[rectangle]]></Name>
-					<X>40</X><Y>170</Y>
+					<Id>1999600001012</Id>
+					<Name><![CDATA[erRectP]]></Name>
+					<X>40</X><Y>211</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12191,60 +12315,16 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<LineColor/>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>210</Width>
-					<Height>30</Height>
+					<Width>300</Width>
+					<Height>28</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-657931</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Rectangle>
 				<Text>
-					<Id>1784322081651</Id>
-					<Name><![CDATA[text6]]></Name>
-					<X>50</X><Y>180</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12171190</Color>
-					<Text><![CDATA[probabilityOfTransmission]]></Text>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>12</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>LEFT</Alignment>
-				</Text>
-				<Text>
-					<Id>1784322081652</Id>
-					<Name><![CDATA[text7]]></Name>
-					<X>240</X><Y>180</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12042869</Color>
-					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format( probabilityOfTransmission )]]></TextCode>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>12</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>RIGHT</Alignment>
-				</Text>
-				<Text>
-					<Id>1784322081653</Id>
-					<Name><![CDATA[text8]]></Name>
-					<X>50</X><Y>210</Y>
+					<Id>1999600001013</Id>
+					<Name><![CDATA[erPL]]></Name>
+					<X>50</X><Y>216</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12263,9 +12343,9 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081654</Id>
-					<Name><![CDATA[text9]]></Name>
-					<X>240</X><Y>210</Y>
+					<Id>1999600001014</Id>
+					<Name><![CDATA[erPV]]></Name>
+					<X>320</X><Y>216</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12277,18 +12357,63 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
 					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format( patientToHospital )]]></TextCode>
+					<TextCode><![CDATA[format(patientToHospital)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
-						<Style>0</Style>
+						<Style>1</Style>
 					</Font>
 					<Alignment>RIGHT</Alignment>
 				</Text>
+				<Text>
+					<Id>1999600001020</Id>
+					<Name><![CDATA[erSec2]]></Name>
+					<X>50</X><Y>260</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12566464</Color>
+					<Text><![CDATA[KPIs última réplica (acum. días 8–30)]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Line>
+					<Id>1999600001021</Id>
+					<Name><![CDATA[erLine2]]></Name>
+					<X>40</X><Y>280</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-12566464</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<Dx>300</Dx>
+					<Dy>0</Dy>
+					<Dz>0</Dz>
+				</Line>
 				<Rectangle>
-					<Id>1784322081655</Id>
-					<Name><![CDATA[rectangle1]]></Name>
-					<X>40</X><Y>230</Y>
+					<Id>1999600001100</Id>
+					<Name><![CDATA[erR0]]></Name>
+					<X>40</X><Y>290</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12301,16 +12426,16 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<LineColor/>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>210</Width>
-					<Height>30</Height>
+					<Width>300</Width>
+					<Height>28</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-657931</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Rectangle>
 				<Text>
-					<Id>1784322081656</Id>
-					<Name><![CDATA[text10]]></Name>
-					<X>50</X><Y>240</Y>
+					<Id>1999600001022</Id>
+					<Name><![CDATA[erKL0]]></Name>
+					<X>50</X><Y>295</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12320,7 +12445,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12171190</Color>
-					<Text><![CDATA[nEspecialBed]]></Text>
+					<Text><![CDATA[Llegadas COVID]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
@@ -12329,32 +12454,32 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081657</Id>
-					<Name><![CDATA[text11]]></Name>
-					<X>240</X><Y>240</Y>
+					<Id>1999600001023</Id>
+					<Name><![CDATA[erKV0]]></Name>
+					<X>320</X><Y>295</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
-					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format( nEspecialBed )]]></TextCode>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiArrive)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
-						<Style>0</Style>
+						<Style>1</Style>
 					</Font>
 					<Alignment>RIGHT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081658</Id>
-					<Name><![CDATA[text12]]></Name>
-					<X>50</X><Y>270</Y>
+					<Id>1999600001024</Id>
+					<Name><![CDATA[erKL1]]></Name>
+					<X>50</X><Y>323</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -12364,7 +12489,7 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12171190</Color>
-					<Text><![CDATA[nChemicalAnalyst]]></Text>
+					<Text><![CDATA[No atendidos]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
@@ -12373,25 +12498,245 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Text>
-					<Id>1784322081659</Id>
-					<Name><![CDATA[text13]]></Name>
-					<X>240</X><Y>270</Y>
+					<Id>1999600001025</Id>
+					<Name><![CDATA[erKV1]]></Name>
+					<X>320</X><Y>323</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<VisibleCode><![CDATA[getCurrentIteration() > 0]]></VisibleCode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12042869</Color>
-					<Text><![CDATA[?]]></Text>
-					<TextCode><![CDATA[format( nChemicalAnalyst )]]></TextCode>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiUntreated)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Rectangle>
+					<Id>1999600001102</Id>
+					<Name><![CDATA[erR2]]></Name>
+					<X>40</X><Y>346</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999600001026</Id>
+					<Name><![CDATA[erKL2]]></Name>
+					<X>50</X><Y>351</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Tratados]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
 						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001027</Id>
+					<Name><![CDATA[erKV2]]></Name>
+					<X>320</X><Y>351</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiTreated)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001028</Id>
+					<Name><![CDATA[erKL3]]></Name>
+					<X>50</X><Y>379</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Adultos admitidos]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001029</Id>
+					<Name><![CDATA[erKV3]]></Name>
+					<X>320</X><Y>379</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiAdult)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Rectangle>
+					<Id>1999600001104</Id>
+					<Name><![CDATA[erR4]]></Name>
+					<X>40</X><Y>402</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor/>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>300</Width>
+					<Height>28</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-657931</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1999600001030</Id>
+					<Name><![CDATA[erKL4]]></Name>
+					<X>50</X><Y>407</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Niños admitidos]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001031</Id>
+					<Name><![CDATA[erKV4]]></Name>
+					<X>320</X><Y>407</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiChild)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>RIGHT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001032</Id>
+					<Name><![CDATA[erKL5]]></Name>
+					<X>50</X><Y>435</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171190</Color>
+					<Text><![CDATA[Flujo DS→hospital]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1999600001033</Id>
+					<Name><![CDATA[erKV5]]></Name>
+					<X>320</X><Y>435</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[uiArrive > 0 || getNumberOfCompletedIterations() > 0]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12042869</Color>
+					<Text><![CDATA[—]]></Text>
+					<TextCode><![CDATA[format(uiDs)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>12</Size>
+						<Style>1</Style>
 					</Font>
 					<Alignment>RIGHT</Alignment>
 				</Text>
@@ -12444,17 +12789,17 @@ main.auxiliaryNurses.set_capacity(nueva_cantidad); // Modifica la capacidad del 
 			</ModelTimeProperties>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<Title><![CDATA[Modelo_hospital_tercera_version : ExperimentoReplicas]]></Title>
+				<Title><![CDATA[Validación Tablas 3–5 — ExperimentoReplicas]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 			</PresentationProperties>
 			<ReplicationsProperties>
 				<UseReplication>true</UseReplication>
 				<FixedReplicationsNumber>true</FixedReplicationsNumber>
-				<ReplicationPerIteration>20</ReplicationPerIteration>
+				<ReplicationPerIteration>200</ReplicationPerIteration>
 				<MinimumReplication>2</MinimumReplication>
 				<MaximumReplication>10</MaximumReplication>
-				<ConfidenceLevel>LEVEL_80</ConfidenceLevel>
+				<ConfidenceLevel>LEVEL_95</ConfidenceLevel>
 				<ErrorPercent>0.5</ErrorPercent>
 				<ExpressionForConfidenceComputation><![CDATA[0]]></ExpressionForConfidenceComputation>
 			</ReplicationsProperties>
@@ -12580,7 +12925,7 @@ public int uiDs = 0;
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12566464</Color>
-					<Text><![CDATA[Parámetro en esta corrida]]></Text>
+					<Text><![CDATA[Parámetro ]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
@@ -13052,27 +13397,6 @@ public int uiDs = 0;
 						<Style>1</Style>
 					</Font>
 					<Alignment>RIGHT</Alignment>
-				</Text>
-				<Text>
-					<Id>1999500001030</Id>
-					<Name><![CDATA[pvHint]]></Name>
-					<X>40</X><Y>430</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12566464</Color>
-					<Text><![CDATA[Al terminar: Documents\\replicas_kpis_EXPLORA_prodFig8.csv  →  python analyze_sensitivity.py]]></Text>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>10</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>LEFT</Alignment>
 				</Text>
 			</Presentation>
 

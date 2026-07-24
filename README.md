@@ -1,10 +1,12 @@
 ﻿# Proyecto Modelos y Simulación — Entrega 5
 
-Paquete de entrega: **`Entrega5_paquete_joint/`**
+Paquete de entrega: **`Entrega5_paquete_joint/`** (réplica STRESS / SM5380)
 
-- Modelo final (streams): `Entrega5_paquete_joint/Modelo_Entrega5_Hospital_Hibrido_streams.alp`
-- Presentación: `Entrega5_paquete_joint/index.html` · PDF `presentacion.pdf`
-- Resultados: MAPE Tabla 5 ≈ **3.0%** (n=200) · Fig. 8 ≈ **8.7%**
-- Docs: `RESULTADOS_STREAMS.md`, `README_STREAMS.md`, `PARAMETROS_COMPROMISO_JOINT.md`
+| Pieza | Archivo |
+|---|---|
+| Modelo AnyLogic | `Entrega5_paquete_joint/Modelo_Hospital_Hibrido_STRESS_SM5380.alp` |
+| Presentación (12 slides) | `Entrega5_paquete_joint/index.html` |
+| Resultados | MAPE Tabla 5 ≈ **0,5 %** (n=200) · Fig. 8 ≈ **4,4 %** |
+| Docs | `RESULTADOS.md`, `PARAMETROS.md`, `MATERIAL_SUPLEMENTARIO_SM5380.md` |
 
 Pages: https://saanhevi.github.io/Proyecto-Modelos-y-Simulacion/

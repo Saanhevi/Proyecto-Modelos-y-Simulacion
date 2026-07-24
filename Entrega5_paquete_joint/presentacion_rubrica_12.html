@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entrega 5 · Presentación rúbrica (12 diapositivas)</title>
+  <title>STRESS SM5380 · Presentación (12 diapositivas)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
@@ -225,7 +225,7 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">01 · Descripción del problema</span>
-          <span class="pill">ENTREGA 5</span>
+          <span class="pill">STRESS · SM5380</span>
         </div>
         <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
         <p class="lead">¿Cómo anticipar demanda, colas y personal cuando la epidemia satura el hospital?</p>
@@ -289,7 +289,7 @@
         <h2>Cómo se hablan en tiempo de ejecución</h2>
         <div class="ph" style="flex:1.2">
           <strong>Diagrama de acoplamiento</strong>
-          <span>System Dynamics ↔ Agent-Based Modeling ↔ Discrete-Event Simulation<br />Sustituye este recuadro por tu figura</span>
+          <span>System Dynamics ↔ Agent-Based Modeling ↔ Discrete-Event Simulation<br />Se demuestra en vivo en AnyLogic</span>
         </div>
         <div class="grid cols-2" style="flex:0 0 auto">
           <div class="panel">
@@ -342,23 +342,24 @@
           <div class="panel">
             <h3>Datos del artículo</h3>
             <ul class="clean">
-              <li>Historial hospitalario → Tabla 3</li>
+              <li>Historial hospitalario IMSS / Secretaría de Salud → Tabla 3</li>
               <li>Población ≈ 123 182 (Orizaba)</li>
-              <li>Hospitalización 4–20 % (fuente nacional)</li>
-              <li>Tiempos de estancia: triangulares Tablas 1–2</li>
+              <li>Tiempos triangulares Tablas 1–2 (+ suplemento STRESS)</li>
+              <li>Llegadas base DES: Triangular(12, 15, 18)/día</li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Parámetros de entrega</h3>
             <ul class="clean">
               <li>80 camas · 50 ventiladores · 50 prono</li>
-              <li>contacRate = 2,65 · Infective inicial = 3400</li>
-              <li>patientToHospital = 0,009</li>
+              <li>contacRate = 3,0 · Infective inicial = 4000</li>
+              <li>patientToHospital = 0,007</li>
               <li>probabilityOfTransmission base = 0,04</li>
+              <li>Source base Tri(12, 15, 18)/día · SM5380</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Huecos no publicados se documentan y se validan</span><span>05 / 12</span></div>
+        <div class="footer"><span>Suplemento STRESS: datos con autorización institucional (SINAVE)</span><span>05 / 12</span></div>
       </div>
     </section>
 
@@ -374,8 +375,8 @@
           <div class="panel accent">
             <h3>Análisis de entrada</h3>
             <ul class="clean">
-              <li>Ajuste de distribuciones: triangular (mínimo / moda / máximo)</li>
-              <li>Tablas 1–2 del artículo (estancias y demoras)</li>
+              <li>Ajuste triangular (mínimo / moda / máximo)</li>
+              <li>Tablas 1–2; verificadas en el paper con Chi² y Kolmogorov–Smirnov</li>
               <li>Sin recalibrar esas distribuciones</li>
             </ul>
           </div>
@@ -413,9 +414,9 @@
           <div class="panel accent">
             <h3>Análisis de salida</h3>
             <ul class="clean">
-              <li>200 réplicas independientes</li>
-              <li>Media ± intervalo de confianza 95%</li>
-              <li>Error porcentual absoluto medio vs Tabla 5 y Figura 8</li>
+              <li>Paper (STRESS): 20 réplicas · warm-up 8 · interés 22 / 30 días</li>
+              <li>Nuestra entrega: <strong>200</strong> réplicas + IC 95%</li>
+              <li>Error porcentual absoluto medio vs Tabla 5 y Figura 8 (valores SM)</li>
             </ul>
           </div>
         </div>
@@ -432,12 +433,12 @@
         </div>
         <h2>Deconstrucción visual</h2>
         <div class="grid cols-2" style="flex:1">
-          <div class="ph"><strong>Ciclos causales</strong><span>polaridades + / −</span></div>
-          <div class="ph"><strong>Diagrama de Forrester</strong><span>niveles y flujos</span></div>
-          <div class="ph"><strong>Máquina de estados</strong><span>personal (agentes)</span></div>
-          <div class="ph"><strong>Flujo de proceso</strong><span>Discrete-Event Simulation</span></div>
+          <div class="ph"><strong>Ciclos causales</strong><span>polaridades + / − · en AnyLogic</span></div>
+          <div class="ph"><strong>Diagrama de Forrester</strong><span>niveles y flujos · en AnyLogic</span></div>
+          <div class="ph"><strong>Máquina de estados</strong><span>personal (agentes) · en AnyLogic</span></div>
+          <div class="ph"><strong>Flujo de proceso</strong><span>SED · en AnyLogic</span></div>
         </div>
-        <div class="footer"><span>Sustituye los recuadros por tus diagramas</span><span>08 / 12</span></div>
+        <div class="footer"><span>Causales, Forrester, statecharts y flujo SED se demuestran en AnyLogic</span><span>08 / 12</span></div>
       </div>
     </section>
 
@@ -453,17 +454,17 @@
           <div class="panel">
             <h3>Hallazgos / políticas</h3>
             <ul class="clean">
-              <li>Triage dual, módulos COVID y prono mejoran Tabla 5</li>
-              <li>Figura 8: mayor probabilityOfTransmission → mayor hospitalFlow</li>
-              <li>Proponen anticipar saturación con el híbrido</li>
+              <li>Propuesto vs inicial (SM): untreated 90,5 → 51,6; treated 12,7 → 15,9</li>
+              <li>Figura 8 (SM): π 0,02…0,06 → flujo 1900…8800</li>
+              <li>Política: triage dual, módulos COVID y prono</li>
             </ul>
           </div>
           <div class="panel accent">
             <h3>Lectura crítica</h3>
             <ul class="clean">
               <li>Figura 8 y Tabla 5 son análisis distintos</li>
-              <li>No hay un único ajuste publicado que clave ambos</li>
-              <li>Figura 7 no es del híbrido → fuera de alcance</li>
+              <li>Suplemento aclara inject SD + personal + source Tri(12–18)</li>
+              <li>Código del paper no es público (IMSS/ITO)</li>
             </ul>
           </div>
         </div>
@@ -483,9 +484,10 @@
           <div class="panel">
             <h3>Implementación</h3>
             <ul class="clean">
-              <li>Puente goToHospital → inject</li>
+              <li>Orden (STRESS): SD → trigger DES → chequeo ABM (6 h)</li>
+              <li>Puente goToHospital → inject · personal → inject</li>
               <li>Streams en Additional class code</li>
-              <li><code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code></li>
+              <li><code>Modelo_Hospital_Hibrido_STRESS_SM5380.alp</code></li>
             </ul>
           </div>
           <div class="panel accent">
@@ -515,16 +517,16 @@
             <table>
               <thead><tr><th>Indicador</th><th>Réplica</th><th>Paper</th><th>Desvío</th></tr></thead>
               <tbody>
-                <tr><td>No atendidos</td><td>52,2</td><td>51,6</td><td><strong>+1,1%</strong></td></tr>
-                <tr><td>Tratados</td><td>15,6</td><td>15,9</td><td><strong>−1,8%</strong></td></tr>
-                <tr><td>Adultos</td><td>34,4</td><td>33,3</td><td><strong>+3,3%</strong></td></tr>
-                <tr><td>Niños</td><td>2,0</td><td>2,1</td><td><strong>−5,7%</strong></td></tr>
+                <tr><td>No atendidos</td><td>51,1</td><td>51,6</td><td><strong>−0,9%</strong></td></tr>
+                <tr><td>Tratados</td><td>16,0</td><td>15,9</td><td><strong>+0,6%</strong></td></tr>
+                <tr><td>Adultos</td><td>33,2</td><td>33,3</td><td><strong>−0,2%</strong></td></tr>
+                <tr><td>Niños</td><td>2,1</td><td>2,1</td><td><strong>+0,2%</strong></td></tr>
               </tbody>
             </table>
             <p class="note" style="margin-top:14px">
               Error porcentual absoluto medio Tabla 5
-              <span class="big-num" style="font-size:1.7rem;margin-left:6px">3,0%</span>
-              · Figura 8 ≈ <strong>8,7%</strong>
+              <span class="big-num" style="font-size:1.7rem;margin-left:6px">0,5%</span>
+              · Figura 8 (ref. SM) ≈ <strong>4,4%</strong>
             </p>
           </div>
           <div class="grid cols-2" style="gap:12px">
@@ -538,7 +540,7 @@
             </figure>
           </div>
         </div>
-        <div class="footer"><span>csv/replicas_kpis_streams_n200.csv</span><span>11 / 12</span></div>
+        <div class="footer"><span>csv/replicas_kpis_STRESS_f8_n200.csv · STRESS SM5380</span><span>11 / 12</span></div>
       </div>
     </section>
 
@@ -547,37 +549,61 @@
       <div class="inner">
         <div class="topbar">
           <span class="tag">12 · Cierre</span>
-          <span class="pill">EQUIPO · IA · APA · REPOSITORIO</span>
+          <span class="pill">APRENDIZAJES · EQUIPO · APA</span>
         </div>
         <h2>Transparencia y entrega</h2>
-        <div class="grid cols-2">
-          <div class="panel" style="overflow:auto">
-            <h3>Contribuciones</h3>
-            <table>
-              <thead><tr><th>Miembro</th><th>Rol</th></tr></thead>
-              <tbody>
-                <tr><td><strong>Samuel Herrera</strong></td><td>Arquitectura híbrida</td></tr>
-                <tr><td><strong>Katherinne Olaya</strong></td><td>Análisis y rigor</td></tr>
-                <tr><td><strong>Fredy García</strong></td><td>Implementación</td></tr>
-                <tr><td><strong>Ever Muñoz</strong></td><td>Validación y entrega</td></tr>
-              </tbody>
-            </table>
-            <p class="note" style="margin-top:12px">IA: ChatGPT, Gemini y Claude (~30–40% auxiliar). El equipo auditó ecuaciones y corridas. Sin plagio directo.</p>
+        <div class="panel" style="overflow:auto;flex:0 0 auto">
+          <h3>Contribuciones</h3>
+          <table style="font-size:clamp(0.88rem,1.05vw,1.05rem)">
+            <thead>
+              <tr><th>Miembro</th><th>Rol</th><th>Actividades / contribuciones</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Samuel Herrera</strong></td>
+                <td>Arquitectura híbrida</td>
+                <td>Acoplamiento DS ↔ MBA ↔ SED; puente goToHospital → inject; diseño de interfaces</td>
+              </tr>
+              <tr>
+                <td><strong>Katherinne Olaya</strong></td>
+                <td>Análisis y rigor</td>
+                <td>Datos y parámetros; streams; diseño de experimentos; intervalos de confianza</td>
+              </tr>
+              <tr>
+                <td><strong>Fredy García</strong></td>
+                <td>Implementación</td>
+                <td>Modelo AnyLogic; dashboard; parametrización y corridas de escenario</td>
+              </tr>
+              <tr>
+                <td><strong>Ever Muñoz</strong></td>
+                <td>Validación y entrega</td>
+                <td>Réplicas n=200; MAPE vs Tabla 5 / Figura 8; empaquetado y presentación</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid cols-2" style="flex:1;min-height:0">
+          <div class="panel accent" style="overflow:auto">
+            <h3>Aprendizajes</h3>
+            <ul class="clean">
+              <li>El híbrido exige sincronizar reloj y puentes (inject / mensajes) sin mezclar aleatoriedad entre paradigmas.</li>
+              <li>Validar Tabla 5 y Figura 8 por separado evita forzar un único ajuste cuando el paper no lo publica.</li>
+            </ul>
+            <p class="note" style="margin-top:10px">IA: ChatGPT, Gemini y Claude (~30–40% auxiliar). El equipo auditó ecuaciones y corridas. Sin plagio directo.</p>
           </div>
           <div class="stack" style="display:flex;flex-direction:column;gap:12px;min-height:0">
-            <div class="panel accent" style="overflow:auto;flex:1">
+            <div class="panel" style="overflow:auto;flex:1">
               <h3>Cita APA 7.ª</h3>
-              <p class="cite" style="font-size:clamp(0.9rem,1.1vw,1.02rem)">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
-              <p class="note" style="margin-top:10px">También: Anderson &amp; May (1991); Borshchev (2013); fuentes de datos del paper.</p>
+              <p class="cite" style="font-size:clamp(0.82rem,1vw,0.95rem)">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
+              <p class="note" style="margin-top:8px">También: Anderson &amp; May (1991); Borshchev (2013); Monks et al. (2019, STRESS); fuentes de datos del paper.</p>
             </div>
             <div class="panel warn" style="flex:0 0 auto">
               <h3>Repositorio</h3>
-              <p class="note">Modelos, CSV, gráficas y documentación:</p>
-              <p class="note" style="margin-top:10px;color:var(--amber)"><strong>[PEGAR ENLACE DEL REPOSITORIO GITHUB]</strong></p>
+              <p class="note" style="color:var(--amber)"><strong>[PEGAR ENLACE DEL REPOSITORIO GITHUB]</strong></p>
             </div>
           </div>
         </div>
-        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>12 / 12</span></div>
+        <div class="footer"><span>Demo en vivo con AnyLogic · Modelos y Simulación</span><span>12 / 12</span></div>
       </div>
     </section>
 

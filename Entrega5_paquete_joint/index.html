@@ -3,857 +3,558 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entrega 5 · Capacidad hospitalaria híbrida</title>
+  <title>STRESS SM5380 · Presentación (12 diapositivas)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-  <script type="module">
-    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: "dark",
-      securityLevel: "loose",
-      flowchart: { curve: "basis", htmlLabels: true },
-      themeVariables: {
-        primaryColor: "#1a3d3a",
-        primaryTextColor: "#f5fbf9",
-        primaryBorderColor: "#4fe0cf",
-        lineColor: "#9ec9c2",
-        secondaryColor: "#2c261c",
-        tertiaryColor: "#143330",
-        fontFamily: "DM Sans, sans-serif",
-        fontSize: "14px"
-      }
-    });
-    window.__mermaid = mermaid;
-  </script>
   <style>
     :root {
-      --text: #f5fbf9;
-      --muted: #c5ddd9;
-      --cyan: #4fe0cf;
-      --amber: #ffd166;
-      --line: rgba(255,255,255,.14);
-      --ok: #7dffb3;
+      --text: #f5fbf9; --muted: #b8d4cf; --cyan: #4fe0cf; --amber: #ffd166;
+      --line: rgba(255,255,255,.14); --ok: #7dffb3; --card: rgba(6, 22, 26, .78);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; height: 100%; overflow: hidden;
       background: #041014; color: var(--text);
       font-family: "DM Sans", system-ui, sans-serif;
-      font-size: 18px;
-      font-weight: 500;
+      font-size: 18px; font-weight: 500;
     }
-    #stage { position: fixed; inset: 0; }
     #deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
     .slide {
       position: absolute; inset: 0;
-      visibility: hidden; opacity: 0;
-      transform: translateX(4vw);
-      transition: opacity .45s ease, transform .55s ease, visibility .45s;
+      visibility: hidden; opacity: 0; transform: translateX(2.5vw);
+      transition: opacity .4s ease, transform .5s ease, visibility .4s;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 70% 50% at 0% 0%, var(--glow, rgba(79,224,207,.22)), transparent 55%),
-        linear-gradient(150deg, var(--bg1, #123038) 0%, var(--bg2, #07161a) 55%, #050d10 100%);
+        radial-gradient(ellipse 65% 45% at 8% 0%, var(--glow, rgba(79,224,207,.2)), transparent 55%),
+        linear-gradient(155deg, var(--bg1, #123038) 0%, var(--bg2, #07161a) 58%, #050d10 100%);
     }
     .slide.active { visibility: visible; opacity: 1; transform: none; z-index: 2; }
-    .mermaid-wrap {
-      background: rgba(0,0,0,.28);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 10px 14px;
-      overflow: auto;
-      max-height: min(58vh, 520px);
-    }
-    .mermaid-wrap .mermaid { display: flex; justify-content: center; }
-    .mermaid-wrap svg { max-width: 100%; height: auto; }
-    .eq-box {
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 0.82rem;
-      line-height: 1.45;
-      color: var(--muted);
-      background: rgba(0,0,0,.22);
-      border-left: 3px solid var(--accent, var(--cyan));
-      padding: 10px 12px;
-      border-radius: 0 10px 10px 0;
-      margin-top: 10px;
-    }
-    .slide[data-theme="amber"] {
-      --glow: rgba(255,209,102,.18);
-      --bg1: #2c261c; --bg2: #161410;
-      --accent: #ffd166;
-    }
-    .slide[data-theme="green"] {
-      --glow: rgba(79,224,207,.22);
-      --bg1: #143330; --bg2: #0a1c1c;
-      --accent: #4fe0cf;
-    }
-    .slide[data-theme="violet"] {
-      --glow: rgba(176,160,255,.22);
-      --bg1: #24243a; --bg2: #131522;
-      --accent: #c2b4ff;
-    }
-    .slide[data-theme="red"] {
-      --glow: rgba(255,140,150,.18);
-      --bg1: #332024; --bg2: #1a1214;
-      --accent: #ff9aa2;
-    }
+    .slide[data-theme="amber"] { --glow: rgba(255,209,102,.16); --bg1:#2a2419; --bg2:#14120e; --accent:#ffd166; }
+    .slide[data-theme="green"] { --glow: rgba(79,224,207,.2); --bg1:#143330; --bg2:#0a1c1c; --accent:#4fe0cf; }
+    .slide[data-theme="violet"] { --glow: rgba(176,160,255,.2); --bg1:#232338; --bg2:#12131f; --accent:#c2b4ff; }
+    .slide[data-theme="red"] { --glow: rgba(255,140,150,.16); --bg1:#302022; --bg2:#171214; --accent:#ff9aa2; }
+
     .inner {
-      position: relative; z-index: 1;
-      height: 100%;
-      padding: clamp(28px, 3.5vh, 44px) clamp(36px, 4vw, 64px) clamp(24px, 3vh, 36px);
-      display: flex; flex-direction: column;
-      gap: clamp(10px, 1.4vh, 16px);
-      min-height: 0;
+      height: 100%; min-height: 0;
+      padding: clamp(28px, 3.6vh, 48px) clamp(36px, 4.5vw, 72px) clamp(22px, 3vh, 36px);
+      display: flex; flex-direction: column; gap: clamp(14px, 2vh, 22px);
     }
-    .topbar {
-      display: flex; justify-content: space-between; align-items: center;
-      flex: 0 0 auto;
-    }
+    .topbar { display: flex; justify-content: space-between; align-items: center; }
     .tag {
       color: var(--accent, var(--cyan));
-      font-size: clamp(0.95rem, 1.35vw, 1.15rem);
-      font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      font-size: clamp(0.9rem, 1.15vw, 1.05rem);
+      font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
     }
     .pill {
-      color: var(--amber);
-      border: 1px solid rgba(255,209,102,.45);
-      background: rgba(255,209,102,.08);
-      padding: 8px 14px; border-radius: 999px;
-      font-size: clamp(0.85rem, 1.1vw, 1rem);
-      font-weight: 700;
+      color: var(--amber); border: 1px solid rgba(255,209,102,.4);
+      background: rgba(255,209,102,.07); padding: 7px 14px; border-radius: 999px;
+      font-size: clamp(0.78rem, .95vw, .9rem); font-weight: 700; letter-spacing: .04em;
     }
-    h1, h2, h3 { font-family: "Space Grotesk", "DM Sans", sans-serif; }
+    h1, h2, h3 { font-family: "Space Grotesk", "DM Sans", sans-serif; font-weight: 700; }
     h1 {
-      font-size: clamp(2.4rem, 4.6vw, 3.8rem);
-      line-height: 1.05; letter-spacing: -.03em;
+      font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1.02; letter-spacing: -.04em;
+      max-width: 16ch;
     }
     h1 span { color: var(--cyan); }
     h2 {
-      font-size: clamp(1.85rem, 3.2vw, 2.7rem);
-      line-height: 1.12; letter-spacing: -.02em;
-      max-width: 95%;
+      font-size: clamp(1.7rem, 3vw, 2.45rem); line-height: 1.1; letter-spacing: -.025em;
+      max-width: 22ch;
     }
     h3 {
-      font-size: clamp(1.15rem, 1.7vw, 1.4rem);
-      color: var(--accent, var(--cyan));
-      margin-bottom: 10px;
+      font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+      color: var(--accent, var(--cyan)); margin-bottom: 12px; letter-spacing: -.01em;
     }
     .lead {
       color: var(--muted);
       font-size: clamp(1.15rem, 1.7vw, 1.4rem);
-      line-height: 1.45;
-      max-width: 1100px;
+      line-height: 1.45; max-width: 42ch;
     }
-    .grid {
-      flex: 1; min-height: 0;
-      display: grid; gap: clamp(12px, 1.5vw, 20px);
-    }
+    .grid { flex: 1; min-height: 0; display: grid; gap: clamp(14px, 1.6vw, 22px); }
     .cols-2 { grid-template-columns: 1fr 1fr; }
     .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-    .cols-2-wide { grid-template-columns: 1.15fr .85fr; }
+    .cols-2-wide { grid-template-columns: 1.25fr .75fr; }
+
     .panel {
-      background: rgba(8, 24, 28, .72);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: clamp(14px, 1.6vw, 22px);
-      min-height: 0;
-      overflow: hidden;
+      background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+      padding: clamp(18px, 2vw, 26px); min-height: 0;
       display: flex; flex-direction: column;
     }
-    .panel.accent {
-      border-color: rgba(79,224,207,.45);
-      box-shadow: 0 0 0 1px rgba(79,224,207,.08);
-    }
-    ul.clean {
-      list-style: none;
-      display: flex; flex-direction: column;
-      gap: 12px;
-    }
+    .panel.accent { border-color: color-mix(in srgb, var(--accent, var(--cyan)) 55%, transparent); }
+    .panel.warn { border-color: rgba(255,209,102,.35); background: rgba(70,52,14,.32); }
+
+    ul.clean { list-style: none; display: flex; flex-direction: column; gap: 14px; }
     ul.clean li {
-      position: relative;
-      padding-left: 1.1em;
-      font-size: clamp(1.05rem, 1.45vw, 1.28rem);
-      line-height: 1.4;
-      color: #eef8f6;
+      position: relative; padding-left: 1.15em;
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.4; color: #eef8f6;
     }
     ul.clean li::before {
-      content: "•";
-      position: absolute; left: 0;
-      color: var(--accent, var(--cyan));
-      font-weight: 700;
+      content: ""; position: absolute; left: 0; top: .55em;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent, var(--cyan));
     }
-    .metric-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      flex: 0 0 auto;
-    }
+
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     .metric {
-      background: rgba(8,24,28,.72);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 12px;
-      text-align: center;
+      background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+      padding: 18px 12px; text-align: center;
     }
     .metric b {
-      display: block;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(1.6rem, 2.8vw, 2.3rem);
-      color: var(--cyan);
-      line-height: 1.1;
+      display: block; font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.7rem, 2.8vw, 2.35rem); color: var(--cyan); line-height: 1.05;
     }
     .metric span {
-      display: block;
-      margin-top: 6px;
-      font-size: clamp(0.95rem, 1.25vw, 1.1rem);
-      color: var(--muted);
+      display: block; margin-top: 8px;
+      font-size: clamp(0.9rem, 1.1vw, 1.05rem); color: var(--muted);
     }
-    table {
-      width: 100%; border-collapse: collapse;
-      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-    }
-    th, td {
-      text-align: left;
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
-    }
-    th { color: var(--accent, var(--cyan)); font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; font-size: clamp(1.05rem, 1.35vw, 1.22rem); }
+    th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--line); }
+    th { color: var(--accent, var(--cyan)); font-weight: 700; font-size: .92em; }
+
     .figure {
-      flex: 1; min-height: 0;
-      display: flex; flex-direction: column;
-      background: rgba(255,255,255,.96);
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: zoom-in;
+      flex: 1; min-height: 0; display: flex; flex-direction: column;
+      background: #fff; border-radius: 16px; overflow: hidden; cursor: zoom-in;
     }
-    .figure img {
-      flex: 1; min-height: 0;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-      background: #fff;
-      padding: 8px;
-    }
+    .figure img { flex: 1; min-height: 0; width: 100%; object-fit: contain; padding: 8px; }
     .figure figcaption {
-      flex: 0 0 auto;
-      background: #10272c;
-      color: var(--muted);
-      font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-      padding: 8px 12px;
-      line-height: 1.3;
+      background: #10272c; color: var(--muted);
+      font-size: clamp(0.85rem, 1.05vw, 1rem); padding: 8px 12px;
     }
-    .stack {
-      display: flex; flex-direction: column;
-      gap: 12px; min-height: 0;
+    .ph {
+      flex: 1; min-height: 0; border-radius: 16px;
+      border: 1.5px dashed rgba(255,255,255,.28);
+      background: rgba(0,0,0,.22);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; text-align: center; padding: 16px; color: var(--muted);
     }
-    .stack .figure { flex: 1; }
+    .ph strong { color: var(--text); font-size: 1.05rem; }
+    .ph span { font-size: .92rem; max-width: 22ch; line-height: 1.35; }
+
     .footer {
-      flex: 0 0 auto;
       display: flex; justify-content: space-between; align-items: center;
-      color: var(--muted);
-      font-size: clamp(0.9rem, 1.15vw, 1.05rem);
-      padding-top: 4px;
+      color: var(--muted); font-size: clamp(0.85rem, 1.05vw, 1rem);
     }
-    .cite {
-      font-size: clamp(1.1rem, 1.55vw, 1.35rem);
-      line-height: 1.45;
-      color: #eef8f6;
-    }
+    .cite { font-size: clamp(1.05rem, 1.4vw, 1.22rem); line-height: 1.5; color: #eef8f6; }
     .cite em { color: var(--cyan); font-style: italic; }
-    .big-num {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(2rem, 3.5vw, 2.8rem);
-      color: var(--ok);
-      font-weight: 700;
-    }
-    .note {
-      font-size: clamp(1.05rem, 1.4vw, 1.22rem);
-      line-height: 1.4;
-      color: var(--muted);
-    }
-    .warn {
-      border-color: rgba(255,209,102,.4);
-      background: rgba(80,60,17,.28);
-    }
-    .coupling {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: clamp(1.05rem, 1.4vw, 1.22rem);
-    }
-    .coupling:last-child { border-bottom: 0; }
-    .link {
-      color: var(--amber);
-      font-weight: 700;
-      text-align: center;
-      white-space: nowrap;
-    }
-    #counter {
-      position: fixed; top: 14px; right: 18px; z-index: 20;
-      color: var(--muted); font-weight: 700;
-      font-size: 1rem;
-      background: rgba(0,0,0,.35);
-      padding: 6px 10px; border-radius: 8px;
-    }
-    #progress {
-      position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
-      z-index: 20; display: flex; gap: 7px;
-    }
-    #progress span {
-      width: 9px; height: 9px; border-radius: 50%;
-      background: rgba(255,255,255,.25);
-    }
-    #progress span.active { background: var(--cyan); }
-    #fs {
-      position: fixed; bottom: 12px; right: 16px; z-index: 20;
-      border: 1px solid var(--line); background: rgba(0,0,0,.4);
-      color: var(--text); border-radius: 10px; padding: 8px 10px; cursor: pointer;
-    }
-    #lightbox {
-      position: fixed; inset: 0; z-index: 50;
-      background: rgba(0,0,0,.86);
-      display: none; place-items: center;
-      padding: 24px;
-    }
-    #lightbox.open { display: grid; }
-    #lightbox img {
-      max-width: min(96vw, 1400px);
-      max-height: 90vh;
-      object-fit: contain;
-      background: #fff;
-      border-radius: 12px;
-    }
-    #lb-close {
-      position: absolute; top: 16px; right: 20px;
-      font-size: 2rem; border: 0; background: transparent;
-      color: #fff; cursor: pointer;
-    }
-    code {
+    .big-num { font-family: "Space Grotesk", sans-serif; color: var(--ok); font-weight: 700; }
+    .note { font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.4; color: var(--muted); }
+    .eq {
       font-family: ui-monospace, Consolas, monospace;
-      font-size: .92em;
-      color: var(--cyan);
+      font-size: clamp(0.92rem, 1.15vw, 1.05rem); line-height: 1.55;
+      color: #d7ebe7; background: rgba(0,0,0,.28);
+      border-left: 3px solid var(--accent, var(--cyan));
+      padding: 14px 16px; border-radius: 0 14px 14px 0;
     }
-    ul.refs {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow: auto;
-      min-height: 0;
-    }
+    code { font-family: ui-monospace, Consolas, monospace; color: var(--cyan); font-size: .92em; }
+    a.link-out { color: var(--amber); font-weight: 700; }
+    ul.refs { list-style: none; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
     ul.refs li {
-      font-size: clamp(0.95rem, 1.2vw, 1.08rem);
-      line-height: 1.35;
-      color: #eef8f6;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.04);
+      font-size: clamp(0.92rem, 1.15vw, 1.05rem); line-height: 1.4; color: #eef8f6;
+      padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.04);
       border-left: 3px solid var(--accent, var(--cyan));
     }
     .ref-tag {
-      display: inline-block;
-      margin-right: 8px;
-      margin-bottom: 4px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      color: #04201c;
+      display: inline-block; margin-right: 8px; padding: 2px 8px; border-radius: 999px;
+      font-size: .7rem; font-weight: 700; text-transform: uppercase; color: #04201c;
       background: var(--accent, var(--cyan));
-      vertical-align: middle;
     }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;
+    }
+    .chip {
+      border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px;
+      font-size: clamp(0.9rem, 1.1vw, 1.05rem); color: var(--muted); background: rgba(0,0,0,.2);
+    }
+    .chip b { color: var(--text); font-weight: 700; }
+    .formula-list {
+      list-style: none; display: flex; flex-direction: column; gap: 14px; flex: 1;
+      justify-content: center;
+    }
+    .formula-list li {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: clamp(1rem, 1.35vw, 1.2rem); line-height: 1.45;
+      padding: 14px 18px; border-radius: 14px;
+      background: var(--card); border: 1px solid var(--line);
+      color: #e8f6f3;
+    }
+    .formula-list li b { color: var(--cyan); font-family: "Space Grotesk", sans-serif; margin-right: 8px; }
+    .team-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 0;
+    }
+    .team-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 16px 18px;
+    }
+    .team-card strong { display: block; font-size: 1.15rem; margin-bottom: 4px; }
+    .team-card span { color: var(--muted); font-size: 0.98rem; }
+
+    #counter {
+      position: fixed; top: 14px; right: 18px; z-index: 20; color: var(--muted); font-weight: 700;
+      font-size: .95rem; background: rgba(0,0,0,.4); padding: 6px 10px; border-radius: 8px;
+    }
+    #progress { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20; display: flex; gap: 7px; }
+    #progress span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.22); }
+    #progress span.active { background: var(--cyan); }
+    #fs {
+      position: fixed; bottom: 12px; right: 16px; z-index: 20;
+      border: 1px solid var(--line); background: rgba(0,0,0,.45);
+      color: var(--text); border-radius: 10px; padding: 8px 10px; cursor: pointer;
+    }
+    #lightbox {
+      position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.86);
+      display: none; place-items: center; padding: 24px;
+    }
+    #lightbox.open { display: grid; }
+    #lightbox img { max-width: min(96vw, 1400px); max-height: 90vh; object-fit: contain; background: #fff; border-radius: 12px; }
+    #lb-close { position: absolute; top: 16px; right: 20px; font-size: 2rem; border: 0; background: transparent; color: #fff; cursor: pointer; }
     @media (max-width: 980px) {
       .cols-2, .cols-3, .cols-2-wide, .metric-row { grid-template-columns: 1fr; }
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.55rem; }
+      h1 { max-width: none; }
     }
   </style>
 </head>
+
 <body>
-  <div id="counter">01 / 14</div>
+  <div id="counter">01 / 12</div>
   <button id="fs" type="button" title="Pantalla completa">⛶</button>
   <main id="stage"><div id="deck">
 
-    <!-- 01 CITA -->
+    <!-- 01 -->
     <section class="slide active" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">01 · Cita del artículo</span>
-          <span class="pill">ENTREGA 5 · UNAL</span>
+          <span class="tag">01 · Descripción del problema</span>
+          <span class="pill">STRESS · SM5380</span>
         </div>
-        <h1>Capacidad hospitalaria<br /><span>en emergencias sanitarias</span></h1>
-        <p class="lead">Réplica en AnyLogic de un modelo híbrido (Dinámica de Sistemas + Eventos Discretos + Agentes).</p>
-        <div class="grid cols-2">
-          <div class="panel accent">
-            <h3>Artículo seleccionado</h3>
-            <ul class="clean">
-              <li>Meza-Palacios et al. (2026), <em>Journal of Simulation</em>.</li>
-              <li>Tema: capacidad hospitalaria en emergencias sanitarias.</li>
-              <li>Enfoque: simulación híbrida DS + eventos + agentes.</li>
-              <li>Referencia completa APA al final (diapositiva 14).</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h3>Equipo</h3>
-            <ul class="clean">
-              <li>Samuel Herrera</li>
-              <li>Katherinne Olaya</li>
-              <li>Fredy García</li>
-              <li>Ever Muñoz</li>
-            </ul>
-            <p class="note" style="margin-top:14px">Archivo a abrir en AnyLogic:<br /><code>Modelo_Entrega5_Hospital_Hibrido_streams.alp</code></p>
-          </div>
+        <h1>Capacidad hospitalaria<br /><span>bajo picos COVID</span></h1>
+        <p class="lead">¿Cómo anticipar demanda, colas y personal cuando la epidemia satura el hospital?</p>
+        <div class="hero-meta">
+          <span class="chip"><b>Alcance</b> · System Dynamics + Agent-Based Modeling + Discrete-Event Simulation</span>
+          <span class="chip"><b>Sitio</b> · Orizaba / región</span>
+          <span class="chip"><b>Horizonte</b> · 30 días (calentamiento 8)</span>
         </div>
-        <div class="footer"><span>Modelos y Simulación · 2025970-4</span><span>01 / 14</span></div>
+        <div class="hero-meta" style="margin-top:8px">
+          <span class="chip"><b>Equipo</b> · Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz</span>
+        </div>
+        <div class="footer"><span>Meza-Palacios et al. (2026) · cita APA al cierre</span><span>01 / 12</span></div>
       </div>
     </section>
 
-    <!-- 02 PROBLEMA -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">02 · Descripción del problema</span>
-          <span class="pill">PROBLEMA REAL</span>
-        </div>
-        <h2>¿Qué problema resuelve el artículo?</h2>
-        <div class="grid cols-2">
-          <div class="panel">
-            <h3>Situación</h3>
-            <ul class="clean">
-              <li>En una pandemia, el hospital se satura: faltan camas y personal.</li>
-              <li>El personal también se puede infectar y deja de atender.</li>
-              <li>Hay que anticipar picos de pacientes y decidir cómo operar el triage.</li>
-            </ul>
-          </div>
-          <div class="panel accent">
-            <h3>Qué buscan los autores</h3>
-            <ul class="clean">
-              <li>Predecir cuántos infectados llegan al hospital (Orizaba, México).</li>
-              <li>Organizar mejor la admisión COVID (adulto / niño, gravedad).</li>
-              <li>Incluir el contagio del personal y su efecto en la capacidad.</li>
-              <li>Comparar un hospital “tradicional” vs su propuesta híbrida (Tabla 5).</li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer"><span>Delimitación: modelo híbrido del paper (no todo el hospital general)</span><span>02 / 14</span></div>
-      </div>
-    </section>
-
-    <!-- 03 MULTIMÉTODO -->
+    <!-- 02 -->
     <section class="slide" data-theme="green">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">03 · Desglose multimétodo</span>
-          <span class="pill">DS · AGENTES · EVENTOS</span>
+          <span class="tag">02 · Desglose multimétodo</span>
+          <span class="pill">MACRO · MESO · MICRO</span>
         </div>
-        <h2>Tres niveles, una sola simulación</h2>
+        <h2>Tres niveles, una simulación</h2>
         <div class="grid cols-3">
           <div class="panel">
-            <h3>Macro · Dinámica de Sistemas</h3>
+            <h3>Macro · System Dynamics</h3>
             <ul class="clean">
-              <li>Poblaciones grandes: susceptibles e infectados.</li>
-              <li>Tasas diarias de contagio y de ida al hospital.</li>
-              <li>Responde: ¿cuánta gente enferma y busca atención?</li>
+              <li>Niveles Susceptible, Infective, goToHospital</li>
+              <li>Demanda epidémica agregada</li>
+              <li>¿Cuánta gente busca hospital?</li>
             </ul>
           </div>
           <div class="panel">
-            <h3>Meso · Agentes</h3>
+            <h3>Meso · Agent-Based Modeling</h3>
             <ul class="clean">
-              <li>Médicos, enfermeras y auxiliares como personas.</li>
-              <li>Estados: sano → infectado → hospitalizado / recuperado.</li>
-              <li>Responde: ¿queda suficiente personal para atender?</li>
+              <li>Médicos, enfermeras y auxiliares</li>
+              <li>Estados y mensaje Infection</li>
+              <li>¿Cuánto personal sano queda?</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Micro · Eventos discretos</h3>
+            <h3>Micro · Discrete-Event Simulation</h3>
             <ul class="clean">
-              <li>Cola, triage, camas, tiempos de estancia.</li>
-              <li>Recursos limitados (80 camas COVID del paper).</li>
-              <li>Responde: ¿quién entra, espera o se va sin atención?</li>
+              <li>Cola, triage, camas y egreso</li>
+              <li>80 camas · tiempos triangulares</li>
+              <li>¿Quién entra o se va sin atención?</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Justificación: cada nivel responde una pregunta distinta; juntos cierran el ciclo demanda–capacidad</span><span>03 / 14</span></div>
+        <div class="footer"><span>Cada nivel responde una pregunta distinta</span><span>02 / 12</span></div>
       </div>
     </section>
 
-    <!-- 04 CICLOS CAUSALES -->
-    <section class="slide" data-theme="green">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">04 · Ciclos causales DS</span>
-          <span class="pill">MACRO · DINÁMICA DE SISTEMAS</span>
-        </div>
-        <h2>Diagrama de ciclos causales (comunidad)</h2>
-        <div class="grid cols-2-wide">
-          <div class="mermaid-wrap">
-            <pre class="mermaid">
-flowchart TB
-  subgraph R1["R1 Reforzador — contagio"]
-    S((S))
-    I((I))
-    Prev[prevalence]
-    FOI[FOI = c·prev·π]
-    Inf[infection]
-    S -->|"−"| Inf
-    Inf -->|"+"| I
-    I -->|"+"| Prev
-    Prev -->|"+"| FOI
-    FOI -->|"+"| Inf
-    Inf -->|"−"| S
-  end
-  subgraph B1["B1 Balanceador — hospital"]
-    HF[hospitalFlow]
-    GTH[(goToHospital)]
-    I -->|"+"| HF
-    HF -->|"+"| GTH
-    HF -->|"−"| I
-  end
-            </pre>
-          </div>
-          <div class="stack">
-            <div class="panel">
-              <h3>Lectura</h3>
-              <ul class="clean">
-                <li><strong>R1:</strong> más infectados → más prevalencia → más contagios.</li>
-                <li><strong>B1:</strong> hospitalización drena \(I\) y alimenta la demanda SED.</li>
-                <li>\(+\) mismo sentido · \(−\) sentido opuesto.</li>
-              </ul>
-            </div>
-            <div class="panel accent">
-              <h3>Entrega</h3>
-              <p class="note">\(c=2.65\), \(\pi=0.04\), \(p_{2h}=0.009\), \(N=123\,182\). Detalle Mermaid: <code>DIAGRAMAS_HIBRIDO.md</code>.</p>
-            </div>
-          </div>
-        </div>
-        <div class="footer"><span>El stock goToHospital es el puente DS → arribos discretos</span><span>04 / 14</span></div>
-      </div>
-    </section>
-
-    <!-- 05 ACOPLAMIENTO -->
+    <!-- 03 -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">05 · Comunicación en runtime</span>
-          <span class="pill">DS ↔ MBA ↔ SED</span>
+          <span class="tag">03 · Comunicación entre paradigmas</span>
+          <span class="pill">MISMO RELOJ</span>
         </div>
-        <h2>Acoplamiento bidireccional (mismo reloj)</h2>
-        <div class="grid cols-2-wide">
-          <div class="mermaid-wrap">
-            <pre class="mermaid">
-flowchart LR
-  DS[DS macro<br/>S I goToHospital]
-  SED[SED micro<br/>cola triage camas]
-  MBA[MBA meso<br/>staff statecharts]
-  DS -->|"① inject si GTH>0"| SED
-  MBA -->|"② capacity pools"| SED
-  SED -->|"③ send Infection"| MBA
-  MBA -->|"④ staff→paciente"| SED
-            </pre>
+        <h2>Cómo se hablan en tiempo de ejecución</h2>
+        <div class="ph" style="flex:1.2">
+          <strong>Diagrama de acoplamiento</strong>
+          <span>System Dynamics ↔ Agent-Based Modeling ↔ Discrete-Event Simulation<br />Se demuestra en vivo en AnyLogic</span>
+        </div>
+        <div class="grid cols-2" style="flex:0 0 auto">
+          <div class="panel">
+            <h3>Hacia Discrete-Event Simulation</h3>
+            <ul class="clean">
+              <li>goToHospital &gt; 0 → inject(1)</li>
+              <li>capacity según personal en Susceptible</li>
+            </ul>
           </div>
-          <div class="stack">
-            <div class="panel accent">
-              <h3>Matemática del puente ①</h3>
-              <div class="eq-box">
-                hospitalFlow = I · p<sub>2h</sub><br/>
-                d(GTH)/dt = hospitalFlow<br/>
-                si GTH &gt; 0 ⇒ GTH−− y inject(1)
-              </div>
-            </div>
-            <div class="panel">
-              <h3>Lazo cerrado ②–③</h3>
-              <p class="note">SED expone al staff → MBA infecta → baja <code>ResourcePool.capacity</code> → más espera / untreated en SED.</p>
-            </div>
+          <div class="panel accent">
+            <h3>Desde Discrete-Event Simulation</h3>
+            <ul class="clean">
+              <li>send("Infection", staff.random())</li>
+              <li>Personal hospitalizado como paciente</li>
+            </ul>
           </div>
         </div>
-        <div class="footer"><span>No son tres modelos pegados al final: hablan mientras corre la simulación</span><span>05 / 14</span></div>
+        <div class="footer"><span>Borshchev (2013): comunicación bidireccional en runtime</span><span>03 / 12</span></div>
       </div>
     </section>
 
-    <!-- 06 DATOS -->
+    <!-- 04 -->
+    <section class="slide" data-theme="green">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">04 · Expresiones del artículo</span>
+          <span class="pill">SYSTEM DYNAMICS</span>
+        </div>
+        <h2>Cinco fórmulas (nombres en inglés)</h2>
+        <ol class="formula-list">
+          <li><b>1</b> totalPopulation = Susceptible + Infective</li>
+          <li><b>2</b> prevalenceOfInfection = Infective / totalPopulation</li>
+          <li><b>3</b> forceOfInfection = contacRate × prevalenceOfInfection × probabilityOfTransmission</li>
+          <li><b>4</b> infection = forceOfInfection × Susceptible</li>
+          <li><b>5</b> hospitalFlow = Infective × patientToHospital</li>
+        </ol>
+        <div class="footer"><span>Implementadas tal cual en el modelo AnyLogic</span><span>04 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 05 -->
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">06 · Conjunto de datos</span>
+          <span class="tag">05 · Conjunto de datos</span>
           <span class="pill">FUENTES DEL PAPER</span>
         </div>
         <h2>De dónde salen los números</h2>
         <div class="grid cols-2">
           <div class="panel">
-            <h3>Datos históricos y demográficos</h3>
+            <h3>Datos del artículo</h3>
             <ul class="clean">
-              <li>Historial del hospital (Pérez-Tezoco et al., 2023) → Tabla 3 del artículo.</li>
-              <li>Población de Orizaba / región (Secretaría de Economía, 2024): ~123 000 personas.</li>
-              <li>Hospitalización nacional entre 4 % y 20 % (Secretaría de Salud, 2024).</li>
+              <li>Historial hospitalario IMSS / Secretaría de Salud → Tabla 3</li>
+              <li>Población ≈ 123 182 (Orizaba)</li>
+              <li>Tiempos triangulares Tablas 1–2 (+ suplemento STRESS)</li>
+              <li>Llegadas base DES: Triangular(12, 15, 18)/día</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Qué NO recalibramos</h3>
+            <h3>Parámetros de entrega</h3>
             <ul class="clean">
-              <li>Tiempos de estancia (Tablas 1 y 2 del paper): se dejaron iguales.</li>
-              <li>Camas COVID = 80 (valor del artículo).</li>
-              <li>Solo ajustamos “huecos” no publicados (contacto, semilla inicial, reglas de triage).</li>
+              <li>80 camas · 50 ventiladores · 50 prono</li>
+              <li>contacRate = 3,0 · Infective inicial = 4000</li>
+              <li>patientToHospital = 0,007</li>
+              <li>probabilityOfTransmission base = 0,04</li>
+              <li>Source base Tri(12, 15, 18)/día · SM5380</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Entrada = datos del artículo + parámetros justificados cuando el paper no los da</span><span>06 / 14</span></div>
+        <div class="footer"><span>Suplemento STRESS: datos con autorización institucional (SINAVE)</span><span>05 / 12</span></div>
       </div>
     </section>
 
-    <!-- 05 RIGOR -->
+    <!-- 06 -->
     <section class="slide" data-theme="amber">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">07 · Rigor estadístico</span>
-          <span class="pill">ALEATORIEDAD · RÉPLICAS</span>
+          <span class="tag">06 · Rigor · entrada y semillas</span>
+          <span class="pill">ANÁLISIS DE ENTRADA · STREAMS</span>
         </div>
-        <h2>Cómo tratamos la incertidumbre</h2>
-        <div class="metric-row">
-          <div class="metric"><b>30 días</b><span>horizonte total</span></div>
-          <div class="metric"><b>8 días</b><span>calentamiento</span></div>
-          <div class="metric"><b>200</b><span>corridas independientes</span></div>
-          <div class="metric"><b>95 %</b><span>intervalo de confianza</span></div>
-        </div>
+        <h2>Estocasticidad controlada</h2>
         <div class="grid cols-2">
-          <div class="panel">
-            <h3>Entrada y experimentos</h3>
+          <div class="panel accent">
+            <h3>Análisis de entrada</h3>
             <ul class="clean">
-              <li><strong>Entrada:</strong> tiempos con distribución triangular del paper.</li>
-              <li><strong>Aleatoriedad:</strong> streams independientes (SED / ABM / gates) + semilla distinta por réplica.</li>
-              <li><strong>Factor explorado:</strong> probabilidad de transmisión del virus (0,02 a 0,06), como en la Figura 8.</li>
-              <li><strong>Caso base:</strong> probabilidad = 0,04.</li>
+              <li>Ajuste triangular (mínimo / moda / máximo)</li>
+              <li>Tablas 1–2; verificadas en el paper con Chi² y Kolmogorov–Smirnov</li>
+              <li>Sin recalibrar esas distribuciones</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Salida que reportamos</h3>
+            <h3>Semillas pseudoaleatorias</h3>
             <ul class="clean">
-              <li>Promedio ± intervalo de confianza al 95 %.</li>
-              <li>Error porcentual medio (MAPE) frente a la Tabla 5 del paper.</li>
-              <li>Meta del artículo: desvíos menores al 5 % en validación.</li>
-              <li>Nuestra réplica: <strong>MAPE Tabla 5 ≈ 3,0 %</strong> (n=200, streams) · <strong>Fig. 8 ≈ 8,7 %</strong>.</li>
+              <li>Cuatro streams independientes</li>
+              <li><code>rngSed</code> · <code>rngAbm</code> · <code>rngGate</code> · <code>rngBranch</code></li>
+              <li>Semilla distinta por réplica (randomSeed)</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Sin fórmulas densas en pantalla: el detalle numérico va en la diapositiva de validación</span><span>07 / 14</span></div>
+        <div class="footer"><span>Streams separados por paradigma y por puertas estocásticas</span><span>06 / 12</span></div>
       </div>
     </section>
 
-    <!-- 06 INTERFACES -->
+    <!-- 07 -->
+    <section class="slide" data-theme="amber">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">07 · Rigor · experimentos y salida</span>
+          <span class="pill">DISEÑO · RÉPLICAS</span>
+        </div>
+        <h2>Factores, escenarios y respuesta</h2>
+        <div class="grid cols-2">
+          <div class="panel accent">
+            <h3>Diseño de experimentos</h3>
+            <ul class="clean">
+              <li><strong>Factor:</strong> probabilityOfTransmission</li>
+              <li><strong>Niveles:</strong> 0,02 · 0,03 · 0,04 · 0,05 · 0,06</li>
+              <li><strong>Escenario base:</strong> 0,04 con streams</li>
+              <li><strong>Respuestas:</strong> untreated, treated, adultAdmit, childAdmit, hospitalFlow</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>Análisis de salida</h3>
+            <ul class="clean">
+              <li>Paper (STRESS): 20 réplicas · warm-up 8 · interés 22 / 30 días</li>
+              <li>Nuestra entrega: <strong>200</strong> réplicas + IC 95%</li>
+              <li>Error porcentual absoluto medio vs Tabla 5 y Figura 8 (valores SM)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer"><span>ExperimentoReplicas · ParametersVariation</span><span>07 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 08 -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
           <span class="tag">08 · Mapeo de interfaces</span>
-          <span class="pill">ACOPLAMIENTO EN VIVO</span>
+          <span class="pill">DIAGRAMAS DEL MODELO</span>
         </div>
-        <h2>Cómo se hablan los tres paradigmas</h2>
-        <div class="grid cols-2-wide">
-          <div class="panel accent">
-            <div class="coupling">
-              <div><strong>Dinámica de Sistemas</strong><br /><span class="note">demanda al hospital</span></div>
-              <div class="link">crea paciente →</div>
-              <div><strong>Eventos discretos</strong><br /><span class="note">entra a la cola COVID</span></div>
-            </div>
-            <div class="coupling">
-              <div><strong>Agentes (staff)</strong><br /><span class="note">se infecta / falta</span></div>
-              <div class="link">baja capacidad ↔</div>
-              <div><strong>Eventos discretos</strong><br /><span class="note">menos médicos/enfermeras</span></div>
-            </div>
-            <div class="coupling">
-              <div><strong>Agentes (staff)</strong><br /><span class="note">hospitalizado</span></div>
-              <div class="link">puede llegar como →</div>
-              <div><strong>Paciente COVID</strong><br /><span class="note">en el flujo SED</span></div>
-            </div>
-            <div class="coupling">
-              <div><strong>Eventos / KPIs</strong><br /><span class="note">saturación, no atendidos</span></div>
-              <div class="link">informan →</div>
-              <div><strong>Decisión</strong><br /><span class="note">dashboard en pantalla</span></div>
-            </div>
-          </div>
-          <div class="stack">
-            <div class="panel">
-              <h3>Diagramas</h3>
-              <ul class="clean">
-                <li><strong>DS:</strong> ciclos causales R1 / B1 (slide 04).</li>
-                <li><strong>Acoplamiento:</strong> inject · capacity · Infection (slide 05).</li>
-                <li><strong>Completo:</strong> <code>DIAGRAMAS_HIBRIDO.md</code> (flujo SED + statecharts).</li>
-              </ul>
-            </div>
-            <div class="panel warn">
-              <h3>Punto clave</h3>
-              <p class="note">La comunicación ocurre <strong>mientras corre</strong> la simulación (Borshchev, 2013): no son tres modelos pegados al final.</p>
-            </div>
-          </div>
+        <h2>Deconstrucción visual</h2>
+        <div class="grid cols-2" style="flex:1">
+          <div class="ph"><strong>Ciclos causales</strong><span>polaridades + / − · en AnyLogic</span></div>
+          <div class="ph"><strong>Diagrama de Forrester</strong><span>niveles y flujos · en AnyLogic</span></div>
+          <div class="ph"><strong>Máquina de estados</strong><span>personal (agentes) · en AnyLogic</span></div>
+          <div class="ph"><strong>Flujo de proceso</strong><span>SED · en AnyLogic</span></div>
         </div>
-        <div class="footer"><span>Demo en vivo: mostrar inject DS→SED y cambio de capacidad del personal</span><span>08 / 14</span></div>
+        <div class="footer"><span>Causales, Forrester, statecharts y flujo SED se demuestran en AnyLogic</span><span>08 / 12</span></div>
       </div>
     </section>
 
-    <!-- 07 RESULTADOS ARTÍCULO -->
+    <!-- 09 -->
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
           <span class="tag">09 · Resultados del artículo</span>
-          <span class="pill">HALLAZGOS ORIGINALES</span>
+          <span class="pill">HALLAZGOS · CRÍTICA</span>
         </div>
-        <h2>Qué concluye el paper (antes de nuestra réplica)</h2>
+        <h2>Qué dice el paper — y qué no</h2>
         <div class="grid cols-2">
           <div class="panel">
-            <h3>Tabla 5 · medias del paper</h3>
+            <h3>Hallazgos / políticas</h3>
             <ul class="clean">
-              <li>No atendidos: bajan (~90 → ~52).</li>
-              <li>Tratados: suben (~13 → ~16).</li>
-              <li>Adultos admitidos: suben (~19 → ~33).</li>
-              <li>Niños admitidos: bajan (~4 → ~2).</li>
-            </ul>
-            <p class="note" style="margin-top:12px">Políticas: triage dual, módulos COVID, posición prono, anticipar demanda con DS.</p>
-          </div>
-          <div class="stack">
-            <div class="panel accent">
-              <h3>Lectura crítica</h3>
-              <ul class="clean">
-                <li>La Figura 8 (flujo por transmisión) y la Tabla 5 (hospital) son análisis distintos.</li>
-                <li>No hay un único ajuste publicado que “clave” todo a la vez.</li>
-                <li>La <strong>Figura 7</strong> (no atendidos por día) pertenece al <strong>modelo inicial</strong> del paper, no al híbrido: por eso no la replicamos aquí.</li>
-                <li>Nuestra entrega valida el <strong>híbrido</strong> con Tabla 5 / Fig. 9 y Fig. 8.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="footer"><span>Esta diapositiva resume al artículo; la siguiente muestra nuestra implementación</span><span>09 / 14</span></div>
-      </div>
-    </section>
-
-    <!-- 08 ANYLOGIC -->
-    <section class="slide" data-theme="red">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">10 · Codificación en AnyLogic</span>
-          <span class="pill">DASHBOARD · JUSTIFICACIÓN DE PARÁMETROS</span>
-        </div>
-        <h2>Implementación y por qué esos valores</h2>
-        <div class="grid cols-2">
-          <div class="panel">
-            <h3>Qué hay en el modelo</h3>
-            <ul class="clean">
-              <li>Contagio = contacto × prevalencia × transmisión (producto).</li>
-              <li>Infectados iniciales 3400 · contacto 2,65 · tasa a hospital 0,009.</li>
-              <li>Reglas de triage afinadas para acercar la Tabla 5.</li>
-              <li>Camas = 80 · tiempos = Tablas 1–2 del paper (sin tocar).</li>
-              <li>Archivo: <code>Modelo_Entrega5_Hospital_Hibrido.alp</code></li>
+              <li>Propuesto vs inicial (SM): untreated 90,5 → 51,6; treated 12,7 → 15,9</li>
+              <li>Figura 8 (SM): π 0,02…0,06 → flujo 1900…8800</li>
+              <li>Política: triage dual, módulos COVID y prono</li>
             </ul>
           </div>
           <div class="panel accent">
-            <h3>Por qué son los más indicados</h3>
+            <h3>Lectura crítica</h3>
             <ul class="clean">
-              <li><strong>Producto en la fuerza de infección:</strong> forma estándar en epidemiología (Anderson &amp; May, 1991); la “suma” del PDF explota dimensionalmente.</li>
-              <li><strong>Transmisión 0,02–0,06:</strong> rango del propio artículo (Figura 8); base 0,04 = centro del intervalo.</li>
-              <li><strong>Población ~123 000 (Orizaba):</strong> demografía citada en el paper (Secretaría de Economía, 2024).</li>
-              <li><strong>Hospitalización 4–20 %:</strong> Secretaría de Salud (2024), referida por los autores; nuestra tasa a hospital (0,009) queda dentro de ese marco al combinarla con la prevalencia simulada.</li>
-              <li><strong>c = 2,65 · I₀ = 3400 · p₂ₕ = 0,009:</strong> huecos no publicados; se eligieron por calibración conjunta contra <strong>Tabla 5 / Fig. 9</strong> y la <strong>forma de la Fig. 8</strong> del paper (mínimo error % medio reproducible).</li>
-              <li><strong>Camas y estancias:</strong> valores explícitos del artículo (80 camas; triangulares Tablas 1–2).</li>
+              <li>Figura 8 y Tabla 5 son análisis distintos</li>
+              <li>Suplemento aclara inject SD + personal + source Tri(12–18)</li>
+              <li>Código del paper no es público (IMSS/ITO)</li>
             </ul>
           </div>
         </div>
-        <div class="footer"><span>Dashboard: deslizadores de contacto, transmisión y tasa hospital · demo en vivo</span><span>10 / 14</span></div>
+        <div class="footer"><span>Validamos el híbrido (Tabla 5 / Figura 9 + forma Figura 8)</span><span>09 / 12</span></div>
       </div>
     </section>
 
-    <!-- 09 VALIDACIÓN — solo Fig 9 / Tabla 5 y Fig 8 -->
+    <!-- 10 -->
+    <section class="slide" data-theme="red">
+      <div class="inner">
+        <div class="topbar">
+          <span class="tag">10 · Codificación AnyLogic</span>
+          <span class="pill">DASHBOARD · DEMO</span>
+        </div>
+        <h2>Modelo parametrizado y cuadro de mando</h2>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Implementación</h3>
+            <ul class="clean">
+              <li>Orden (STRESS): SD → trigger DES → chequeo ABM (6 h)</li>
+              <li>Puente goToHospital → inject · personal → inject</li>
+              <li>Streams en Additional class code</li>
+              <li><code>Modelo_Hospital_Hibrido_STRESS_SM5380.alp</code></li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>Dashboard en vivo</h3>
+            <ul class="clean">
+              <li>Sliders: contacRate, probabilityOfTransmission, patientToHospital</li>
+              <li>Indicadores untreated, treated, admits, Susceptible / Infective</li>
+              <li>Capacidad de personal ajustable</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer"><span>Demo en vivo del cuadro de mando</span><span>10 / 12</span></div>
+      </div>
+    </section>
+
+    <!-- 11 -->
     <section class="slide" data-theme="red">
       <div class="inner">
         <div class="topbar">
           <span class="tag">11 · Validación y errores</span>
-          <span class="pill">TABLA 5 · FIGURA 8 · FIGURA 9</span>
+          <span class="pill">ERROR PORCENTUAL ABSOLUTO MEDIO · n = 200</span>
         </div>
-        <h2>Fidelidad de la réplica (200 corridas · streams)</h2>
+        <h2>Fidelidad cuantitativa</h2>
         <div class="grid cols-2">
           <div class="panel">
-            <h3>Tabla 5 (como la Fig. 9 del paper)</h3>
+            <h3>Tabla 5 / Figura 9</h3>
             <table>
-              <thead><tr><th>Indicador</th><th>Nuestra media</th><th>Paper</th><th>Desvío</th></tr></thead>
+              <thead><tr><th>Indicador</th><th>Réplica</th><th>Paper</th><th>Desvío</th></tr></thead>
               <tbody>
-                <tr><td>No atendidos</td><td>52,2</td><td>51,6</td><td><strong>+1,1 %</strong></td></tr>
-                <tr><td>Tratados</td><td>15,6</td><td>15,9</td><td><strong>−1,8 %</strong></td></tr>
-                <tr><td>Adultos</td><td>34,4</td><td>33,3</td><td><strong>+3,3 %</strong></td></tr>
-                <tr><td>Niños</td><td>2,0</td><td>2,1</td><td><strong>−5,7 %</strong></td></tr>
+                <tr><td>No atendidos</td><td>51,1</td><td>51,6</td><td><strong>−0,9%</strong></td></tr>
+                <tr><td>Tratados</td><td>16,0</td><td>15,9</td><td><strong>+0,6%</strong></td></tr>
+                <tr><td>Adultos</td><td>33,2</td><td>33,3</td><td><strong>−0,2%</strong></td></tr>
+                <tr><td>Niños</td><td>2,1</td><td>2,1</td><td><strong>+0,2%</strong></td></tr>
               </tbody>
             </table>
-            <p class="note" style="margin-top:12px">
-              Error porcentual medio (MAPE) Tabla 5:
-              <span class="big-num" style="font-size:1.6rem;display:inline;margin-left:6px">3,0 %</span>
-              · Figura 8 ≈ <strong>8,7 %</strong>
+            <p class="note" style="margin-top:14px">
+              Error porcentual absoluto medio Tabla 5
+              <span class="big-num" style="font-size:1.7rem;margin-left:6px">0,5%</span>
+              · Figura 8 (ref. SM) ≈ <strong>4,4%</strong>
             </p>
           </div>
-          <div class="stack">
+          <div class="grid cols-2" style="gap:12px">
             <figure class="figure" data-zoom>
-              <img src="img/fig9_tabla5.png" alt="Boxplots Tabla 5 / Figura 9" />
-              <figcaption>Figura 9 · boxplots vs Tabla 5 del artículo</figcaption>
+              <img src="img/fig9_tabla5.png" alt="Figura 9" />
+              <figcaption>Figura 9 · boxplots</figcaption>
+            </figure>
+            <figure class="figure" data-zoom>
+              <img src="img/fig8_flujo.png" alt="Figura 8" />
+              <figcaption>Figura 8 · flujo</figcaption>
             </figure>
           </div>
         </div>
-        <div class="footer"><span>Datos: carpeta csv/ · gráficas alineadas al artículo</span><span>11 / 14</span></div>
+        <div class="footer"><span>csv/replicas_kpis_STRESS_f8_n200.csv · STRESS SM5380</span><span>11 / 12</span></div>
       </div>
     </section>
 
-    <!-- 10 APRENDIZAJES + FIG. 8 -->
-    <section class="slide" data-theme="green">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">12 · Aprendizajes del equipo</span>
-          <span class="pill">CONCLUSIONES · FIGURA 8</span>
-        </div>
-        <h2>Qué aprendimos · y la Figura 8 de nuestra réplica</h2>
-        <div class="grid cols-3" style="flex:0.42">
-          <div class="panel">
-            <h3>Académicos</h3>
-            <ul class="clean">
-              <li>Cada paradigma responde una pregunta distinta.</li>
-              <li>Validar es comparar números, no “se ve parecido”.</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h3>Técnicos</h3>
-            <ul class="clean">
-              <li>El acoplamiento debe ocurrir mientras corre el modelo.</li>
-              <li>Hay que cuidar unidades y límites de AnyLogic.</li>
-            </ul>
-          </div>
-          <div class="panel accent">
-            <h3>Decisión</h3>
-            <p class="note">Priorizamos <strong>Tabla 5 / Fig. 9</strong> (MAPE 3,0 %, n=200 streams) y la forma de la <strong>Fig. 8</strong> (MAPE 8,7 %).</p>
-          </div>
-        </div>
-        <div class="grid cols-2" style="flex:1;min-height:0">
-          <figure class="figure" data-zoom>
-            <img src="img/fig8_flujo.png" alt="Figura 8 flujo al hospital" />
-            <figcaption>Figura 8 · flujo de pacientes vs días</figcaption>
-          </figure>
-          <figure class="figure" data-zoom>
-            <img src="img/fig8_escala.png" alt="Figura 8 escala vs paper" />
-            <figcaption>Figura 8 · escala frente al artículo</figcaption>
-          </figure>
-        </div>
-        <div class="footer"><span>Clic en una gráfica para ampliarla</span><span>12 / 14</span></div>
-      </div>
-    </section>
-
-    <!-- 11 CONTRIBUCIONES -->
+    <!-- 12 -->
     <section class="slide" data-theme="violet">
       <div class="inner">
         <div class="topbar">
-          <span class="tag">13 · Contribuciones del equipo</span>
-          <span class="pill">TRANSPARENCIA</span>
+          <span class="tag">12 · Cierre</span>
+          <span class="pill">APRENDIZAJES · EQUIPO · APA</span>
         </div>
-        <h2>Quién hizo qué</h2>
-        <div class="panel" style="flex:1">
-          <table>
+        <h2>Transparencia y entrega</h2>
+        <div class="panel" style="overflow:auto;flex:0 0 auto">
+          <h3>Contribuciones</h3>
+          <table style="font-size:clamp(0.88rem,1.05vw,1.05rem)">
             <thead>
               <tr><th>Miembro</th><th>Rol</th><th>Actividades / contribuciones</th></tr>
             </thead>
@@ -861,61 +562,48 @@ flowchart LR
               <tr>
                 <td><strong>Samuel Herrera</strong></td>
                 <td>Arquitectura híbrida</td>
-                <td>Integración DS–eventos–agentes, acoplamientos y unidades</td>
+                <td>Acoplamiento DS ↔ MBA ↔ SED; puente goToHospital → inject; diseño de interfaces</td>
               </tr>
               <tr>
                 <td><strong>Katherinne Olaya</strong></td>
                 <td>Análisis y rigor</td>
-                <td>Deconstrucción del artículo, datos y diseño experimental</td>
+                <td>Datos y parámetros; streams; diseño de experimentos; intervalos de confianza</td>
               </tr>
               <tr>
                 <td><strong>Fredy García</strong></td>
-                <td>Implementación AnyLogic</td>
-                <td>Flujos, experimentos de réplicas y sensibilidad</td>
+                <td>Implementación</td>
+                <td>Modelo AnyLogic; dashboard; parametrización y corridas de escenario</td>
               </tr>
               <tr>
                 <td><strong>Ever Muñoz</strong></td>
                 <td>Validación y entrega</td>
-                <td>Dashboard, errores/MAPE, paquete de entrega y presentación</td>
+                <td>Réplicas n=200; MAPE vs Tabla 5 / Figura 8; empaquetado y presentación</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="footer"><span>Todos suben la misma presentación a Moodle (FASE A)</span><span>13 / 14</span></div>
-      </div>
-    </section>
-
-    <!-- 12 IA + BIBLIO + YOUTUBE -->
-    <section class="slide" data-theme="amber">
-      <div class="inner">
-        <div class="topbar">
-          <span class="tag">14 · Cierre</span>
-          <span class="pill">IA · BIBLIOGRAFÍA · VIDEO</span>
-        </div>
-        <h2>Integridad, referencias y sustentación</h2>
-        <div class="grid cols-3">
-          <div class="panel warn">
-            <h3>Declaración de IA</h3>
-            <p class="note">Se utilizaron <strong>ChatGPT, Gemini y Claude</strong> como apoyo de asesoramiento, organización de la documentación y guía durante la creación de la réplica del modelo y la graficación (aprox. 30–40 % del material auxiliar). <strong>El equipo auditó ecuaciones, corridas AnyLogic y resultados numéricos.</strong> Está prohibido el plagio: no hubo copia literal sin verificación.</p>
-          </div>
-          <div class="panel">
-            <h3>Bibliografía (APA 7)</h3>
-            <ul class="refs">
-              <li><span class="ref-tag">Artículo</span> Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</li>
-              <li><span class="ref-tag">Teoría</span> Anderson, R. M., &amp; May, R. M. (1991). <em>Infectious diseases of humans</em>. Oxford University Press.</li>
-              <li><span class="ref-tag">Híbridos</span> Borshchev, A. (2013). <em>The Big Book of Simulation Modeling</em>.</li>
-              <li><span class="ref-tag">Datos</span> Pérez-Tezoco et al. (2023). Datos hospitalarios (citados en el artículo).</li>
-              <li><span class="ref-tag">Fuentes</span> Secretaría de Economía (2024); Secretaría de Salud (2024). Demografía y hospitalización 4–20 % (citadas en el paper).</li>
+        <div class="grid cols-2" style="flex:1;min-height:0">
+          <div class="panel accent" style="overflow:auto">
+            <h3>Aprendizajes</h3>
+            <ul class="clean">
+              <li>El híbrido exige sincronizar reloj y puentes (inject / mensajes) sin mezclar aleatoriedad entre paradigmas.</li>
+              <li>Validar Tabla 5 y Figura 8 por separado evita forzar un único ajuste cuando el paper no lo publica.</li>
             </ul>
+            <p class="note" style="margin-top:10px">IA: ChatGPT, Gemini y Claude (~30–40% auxiliar). El equipo auditó ecuaciones y corridas. Sin plagio directo.</p>
           </div>
-          <div class="panel accent">
-            <h3>URL de YouTube</h3>
-            <p class="note">Video ≤ 20 min · rostros + pantalla · demo AnyLogic en vivo.</p>
-            <p class="note" style="margin-top:16px;color:var(--amber)"><strong>[PEGAR ENLACE PÚBLICO AQUÍ]</strong></p>
-            <p class="note" style="margin-top:12px">Obligatorio en la última diapositiva.</p>
+          <div class="stack" style="display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div class="panel" style="overflow:auto;flex:1">
+              <h3>Cita APA 7.ª</h3>
+              <p class="cite" style="font-size:clamp(0.82rem,1vw,0.95rem)">Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>. https://doi.org/10.1080/17477778.2025.2610014</p>
+              <p class="note" style="margin-top:8px">También: Anderson &amp; May (1991); Borshchev (2013); Monks et al. (2019, STRESS); fuentes de datos del paper.</p>
+            </div>
+            <div class="panel warn" style="flex:0 0 auto">
+              <h3>Repositorio</h3>
+              <p class="note" style="color:var(--amber)"><strong>[PEGAR ENLACE DEL REPOSITORIO GITHUB]</strong></p>
+            </div>
           </div>
         </div>
-        <div class="footer"><span>Gracias · Modelos y Simulación</span><span>14 / 14</span></div>
+        <div class="footer"><span>Demo en vivo con AnyLogic · Modelos y Simulación</span><span>12 / 12</span></div>
       </div>
     </section>
 
@@ -979,9 +667,7 @@ flowchart LR
         lbImg.src = "";
       }
       document.getElementById("lb-close").onclick = closeLightbox;
-      lightbox.onclick = function (e) {
-        if (e.target === lightbox || e.target === lbImg) closeLightbox();
-      };
+      lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
     })();
   </script>
 </body>
