@@ -77,8 +77,8 @@
     .cols-2-wide { grid-template-columns: 1.25fr .75fr; }
     .panel.compact { padding: clamp(12px, 1.4vw, 16px); }
     .panel.compact h3 { margin-bottom: 8px; font-size: clamp(0.95rem, 1.15vw, 1.1rem); }
-    .panel.compact ul.clean { gap: 8px; }
-    .panel.compact ul.clean li { font-size: clamp(0.88rem, 1.1vw, 1.02rem); line-height: 1.3; }
+    .panel.compact ul.clean { gap: 10px; }
+    .panel.compact ul.clean li { font-size: clamp(0.98rem, 1.2vw, 1.12rem); line-height: 1.35; }
     .figure-stage { flex: 1.35; min-height: 0; display: grid; gap: 14px; }
     .cite a { color: var(--amber); word-break: break-all; }
 
@@ -155,11 +155,19 @@
     }
     code { font-family: ui-monospace, Consolas, monospace; color: var(--cyan); font-size: .92em; }
     a.link-out { color: var(--amber); font-weight: 700; }
-    ul.refs { list-style: none; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+    ul.refs {
+      list-style: none; display: flex; flex-direction: column;
+      gap: 8px; overflow: visible; flex: 1; min-height: 0; justify-content: space-evenly;
+    }
     ul.refs li {
-      font-size: clamp(0.92rem, 1.15vw, 1.05rem); line-height: 1.4; color: #eef8f6;
-      padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.04);
+      font-size: clamp(0.78rem, 0.95vw, 0.92rem); line-height: 1.35; color: #eef8f6;
+      padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.04);
       border-left: 3px solid var(--accent, var(--cyan));
+    }
+    ul.refs a {
+      color: var(--amber); font-weight: 600;
+      text-decoration: underline; text-underline-offset: 2px;
+      word-break: break-all;
     }
     .ref-tag {
       display: inline-block; margin-right: 8px; padding: 2px 8px; border-radius: 999px;
@@ -375,7 +383,7 @@
           <span class="pill">ENTRADA · ALEATORIEDAD · EXPERIMENTOS · SALIDA</span>
         </div>
         <h2>Cómo controlamos las corridas</h2>
-        <div class="grid cols-4">
+        <div class="grid cols-2">
           <div class="panel compact accent">
             <h3>Análisis de entrada</h3>
             <ul class="clean">
@@ -557,9 +565,9 @@
         </div>
         <h2>Transparencia y entrega</h2>
         <div class="grid cols-2" style="flex:1.15;min-height:0">
-          <div class="panel" style="overflow:auto">
+          <div class="panel" style="overflow:hidden">
             <h3>Contribuciones</h3>
-            <table style="font-size:clamp(0.88rem,1.05vw,1.02rem)">
+            <table style="font-size:clamp(0.82rem,0.98vw,0.95rem)">
               <thead>
                 <tr><th>Miembro</th><th>Rol</th><th>Aporte principal</th></tr>
               </thead>
@@ -586,25 +594,20 @@
                 </tr>
               </tbody>
             </table>
-            <p class="note" style="margin-top:10px">
+            <p class="note" style="margin-top:8px;font-size:clamp(0.82rem,0.95vw,0.95rem)">
               <strong>Aprendizaje:</strong> sincronizar reloj y puentes entre bloques; validar Tabla 5 y Figura 8 por separado.
             </p>
-            <p class="note" style="margin-top:6px">IA (~30–40% auxiliar): ChatGPT, Gemini y Claude. El equipo auditó ecuaciones y corridas.</p>
-            <p class="note" style="margin-top:10px">Repositorio:
+            <p class="note" style="margin-top:4px;font-size:clamp(0.82rem,0.95vw,0.95rem)">IA (~30–40% auxiliar): ChatGPT, Gemini y Claude. El equipo auditó ecuaciones y corridas.</p>
+            <p class="note" style="margin-top:8px;font-size:clamp(0.82rem,0.95vw,0.95rem)">Repositorio:
               <a class="link-out" href="https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion" target="_blank" rel="noopener">github.com/Saanhevi/Proyecto-Modelos-y-Simulacion</a>
             </p>
           </div>
-          <div class="panel accent" style="overflow:auto">
+          <div class="panel accent" style="overflow:hidden;display:flex;flex-direction:column">
             <h3>Referencias (APA 7.ª)</h3>
             <ul class="refs">
               <li>
                 <span class="ref-tag">Artículo</span>
                 Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Development of a hybrid simulation model for hospital capacity in health emergencies. <em>Journal of Simulation</em>.
-                <a href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a>
-              </li>
-              <li>
-                <span class="ref-tag">Suplemento</span>
-                Meza-Palacios, R., Aguilar-Lasserre, A. A., Moras-Sánchez, C. G., &amp; Vázquez-Rodríguez, C. F. (2026). Supplemental material (STRESS SM5380) [Material suplementario]. <em>Journal of Simulation</em>.
                 <a href="https://doi.org/10.1080/17477778.2025.2610014" target="_blank" rel="noopener">https://doi.org/10.1080/17477778.2025.2610014</a>
               </li>
               <li>
@@ -622,7 +625,7 @@
                 <span class="ref-tag">Portal</span>
                 Secretaría de Salud. (s. f.). <em>Sistema Nacional de Vigilancia Epidemiológica (SINAVE)</em>.
                 <a href="https://www.sinave.gob.mx/" target="_blank" rel="noopener">https://www.sinave.gob.mx/</a>
-                (Consultado el 24 de julio de 2026; fuente institucional citada por los autores para datos hospitalarios).
+                (Consultado el 24 de julio de 2026).
               </li>
             </ul>
           </div>
