@@ -1,7 +1,9 @@
 # Diagramas del modelo híbrido (DS · MBA · SED)
 
 Réplica AnyLogic — Meza-Palacios et al. (2026).  
-Modelo: `Modelo_Entrega5_Hospital_Hibrido_streams.alp`
+
+**Versión editable (Excalidraw):** carpeta [`diagramas_excalidraw/`](diagramas_excalidraw/) — abrir en https://excalidraw.com (Arrastrar el `.excalidraw`).  
+Convención visual: stocks ▢ · auxiliares ○ · parámetros ○ (trazo discontinuo) · flujos ◇ · decisiones SED ◇ · Source/Sink ○.
 
 Convención de signos (ciclos causales): **`+`** = mismo sentido · **`−`** = sentido opuesto.
 
