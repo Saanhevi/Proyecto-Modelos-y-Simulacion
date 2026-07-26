@@ -6,7 +6,8 @@ Réplica en **AnyLogic** del modelo híbrido (DS + SBA + SED) del artículo:
 
 **Equipo:** Samuel Herrera · Katherinne Olaya · Fredy García · Ever Muñoz  
 **Curso:** Modelos y Simulación · Universidad Nacional de Colombia  
-**Repositorio del proyecto:** https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion
+**Repositorio del proyecto:** https://github.com/Saanhevi/Proyecto-Modelos-y-Simulacion  
+**Video de sustentación (YouTube):** https://www.youtube.com/watch?v=iBYEbLT7vZM
 
 | Métrica | Valor |
 |---|---:|
@@ -22,9 +23,11 @@ Este paquete corresponde a la **Opción A** de entrega (proyecto fuente comprimi
 ```
 Entrega5_Simulacion_Hibrida_Hospital_COVID/
 ├── README.md                          ← este archivo
+├── ENLACES_REPO_Y_VIDEO.md            ← URL del repo y del video YouTube
 ├── Modelo_Hospital_Hibrido_COVID.alp  ← modelo AnyLogic (abrir aquí)
 ├── presentacion/
-│   ├── index.html                     ← presentación (12 diapositivas)
+│   ├── index.html                     ← presentación interactiva (recomendado)
+│   ├── Presentacion_Entrega5.pdf      ← misma presentación en PDF (solo lectura)
 │   └── img/                           ← figuras embebidas
 ├── csv/                               ← salidas de experimentos
 ├── graficas/                          ← PNG generados con Python
@@ -185,13 +188,35 @@ Si falta un CSV, el script termina con un mensaje indicando qué archivo falta.
 
 ## 4. Presentación
 
-Abrir en el navegador:
+Hay dos formatos en `presentacion/`. **Para revisar gráficas y diagramas con claridad, use la versión HTML** (permite ampliar con un clic). El PDF es solo una copia estática para lectura rápida; ahí las figuras no se pueden ampliar y se ven más pequeñas.
+
+### HTML interactivo (recomendado)
+
+1. Clone o descargue el repositorio (o el ZIP de GitHub → *Code* → *Download ZIP*).
+2. Abra el archivo en el navegador (Chrome, Edge o Firefox):
 
 ```text
 presentacion/index.html
 ```
 
-(flechas / espacio para avanzar). Las imágenes se cargan desde `presentacion/img/` con rutas relativas.
+   Forma sencilla: clic derecho sobre `index.html` → *Abrir con* → su navegador.  
+   También puede arrastrar el archivo a una pestaña vacía.
+
+3. Controles:
+   - **Flechas** o **Espacio** → avanzar / retroceder diapositivas.
+   - **Clic en una gráfica o diagrama** → ampliar a pantalla completa.
+   - **Esc** o clic fuera → cerrar la ampliación.
+   - Botón ⛶ (abajo a la derecha) → pantalla completa del navegador.
+
+Las imágenes se cargan desde `presentacion/img/` con rutas relativas: **no mueva** `index.html` fuera de la carpeta `presentacion/` sin llevarse también `img/`.
+
+### PDF (solo lectura)
+
+```text
+presentacion/Presentacion_Entrega5.pdf
+```
+
+**No** reemplaza al HTML si quiere ver bien los diagramas o las gráficas de validación.
 
 ---
 
