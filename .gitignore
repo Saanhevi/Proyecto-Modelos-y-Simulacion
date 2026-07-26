@@ -1,0 +1,14 @@
+# AnyLogic
+*.autosave
+*.alp.bak
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
